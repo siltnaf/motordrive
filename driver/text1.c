@@ -54,7 +54,7 @@ IO_init();				   //真对 IAP15W4K61S4  IO口初始化
 while(1)
 {
   P55=0;
-  delayms(50);
+  delayms(10);
   P55=1;
   delayms(50);
 
