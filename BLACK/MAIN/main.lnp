@@ -1,0 +1,6 @@
+"main.obj",
+".\delay.obj",
+".\pca.obj",
+".\uart.obj" 
+TO "main" 
+RAMSIZE(256) 
