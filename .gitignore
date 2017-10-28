@@ -1,1 +1,11 @@
 stc/
+*.obj
+*.bak
+*.Administrator
+*.ken
+*.LST
+*.M51
+*.lnp
+*.htm
+*.plg
+*.__i
