@@ -62,6 +62,7 @@ void main()
     IO_Init();				   //真对 IAP15W4K61S4  IO口初始化
 		InitTime0();
 		InitTime1();
+		InitTime2();
 		UartInit();				   //串口初始化
     ENABLE_ALL_INTERRUPT();
 

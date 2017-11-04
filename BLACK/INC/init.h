@@ -3,8 +3,9 @@
 #define INIT_H
 
 #define MAIN_Fosc   12000000UL
-#define Timer0_Reload	  (MAIN_Fosc/1200000)
-
+#define Timer0_Reload	  (100)
+#define Timer1_Reload	  (200)
+#define Timer2_Reload	  (250)
 
 
 void IO_Init(void);

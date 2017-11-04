@@ -40,7 +40,7 @@ void InitTime0(void)
 
 //	  //mode 1: 16-bit timer
 	TMOD &= 0xf0;              //clear timer0 mode 
-	TMOD |= 0x01;              //set timer0 as timer mode 1
+	//TMOD |= 0x01;              //set timer0 as timer mode 1
 	
 	TH0 =(65536-Timer0_Reload)/256;
   TL0 = (65536-Timer0_Reload)%256;
@@ -66,9 +66,9 @@ void InitTime1(void)
 
 //	  //mode 1: 16-bit timer
 	  TMOD &= 0x0f;              //clear timer1 mode 
-	  TMOD |= 0x10;              //set timer1 as timer mode 1
-	  TH1 = 0x00;
-	  TL1 = 0x00;
+	
+		TH1 =(65536-Timer1_Reload)/256;
+		TL1 = (65536-Timer1_Reload)%256;
 		TR1 =1;			 //定时器开始工作
 	  ET1 =1;			 //使能定时器中断
 	 
@@ -83,8 +83,8 @@ void InitTime1(void)
 void InitTime2(void)
 {
 
-	T2L=0;			 //设置定时器2初始值
-	T2H=0;      
+		T2H =(65536-Timer2_Reload)/256;
+		T2L = (65536-Timer2_Reload)%256;
 
   AUXR|=0X10;		 //允许定时器2运行	   12分频
 	IE2|=0X04;       //开启定时器T2中断                                                               
@@ -96,9 +96,11 @@ void UartInit(void)
 {
        SCON=0x50;        
 	   TMOD= 0x00;                      
-	   AUXR=0X40;		 
-       TL1=(65535-(11059200/4/9600));    
-	   TH1=(65535-(11059200/4/9600))>>8;
+	   AUXR=0X50;		 //enable timer2
+       TL1=(65535-(MAIN_Fosc/4/9600));    
+	   TH1=(65535-(MAIN_Fosc/4/9600))>>8;
+	
+	
 	   TR1  = 1;        
 	   ES   = 1;                                                                            
 	   EA   = 1;        	
