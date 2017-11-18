@@ -92,11 +92,12 @@
 #define ON                        (1)
 #define OFF                       (0)
 #define AC_PHASE_INC              (787)
-
-#define HALL_PIN                  (P20)
-#define AC_ZERO_PIN               (P21)
-#define TRIAC_PIN                 (P27)
-#define TEST_PA2_PIN6             (P00)
+#define HALL2_PIN                 (P36)
+#define HALL_PIN                  (P33)
+#define AC_ZERO_PIN               (P32)
+#define TRIAC2_PIN                (P22)
+#define TRIAC_PIN                 (P21)
+#define TEST_PA2_PIN6             (P55)
 
 #define BUFFER_LENGTH             (4)
 #define K_LOW_PASS_FILTER         (8)

@@ -19,8 +19,8 @@ void IO_Init(void)
   P2M1 = 0X00;
 
   P3M0 = 0X00;
-  P3M1 = 0X00;
-
+  P3M1 = 0Xff;
+	
   P4M0 = 0X00;
   P4M1 = 0X00;  
 	

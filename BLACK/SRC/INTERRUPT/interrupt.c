@@ -21,6 +21,6 @@ void tm1() interrupt 3 using 1
 
 void tm2() interrupt 12 using 1
 {
-   	 P55=~P55;				  //¿ØÖÆP5.5¿ÚLEDÉÁË¸		
+   
 }
 
