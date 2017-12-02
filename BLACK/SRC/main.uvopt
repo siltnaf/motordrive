@@ -79,8 +79,8 @@
       </OPTFL>
       <CpuCode>0</CpuCode>
       <DebugOpt>
-        <uSim>1</uSim>
-        <uTrg>0</uTrg>
+        <uSim>0</uSim>
+        <uTrg>1</uTrg>
         <sLdApp>1</sLdApp>
         <sGomain>1</sGomain>
         <sRbreak>1</sRbreak>
@@ -100,7 +100,7 @@
         <tRSysVw>1</tRSysVw>
         <sRunDeb>0</sRunDeb>
         <sLrtime>0</sLrtime>
-        <nTsel>-1</nTsel>
+        <nTsel>10</nTsel>
         <sDll></sDll>
         <sDllPa></sDllPa>
         <sDlgDll></sDlgDll>
@@ -111,9 +111,19 @@
         <tDlgDll></tDlgDll>
         <tDlgPa></tDlgPa>
         <tIfile></tIfile>
-        <pMon></pMon>
+        <pMon>BIN\STCMON51.DLL</pMon>
       </DebugOpt>
       <TargetDriverDllRegistry>
+        <SetRegEntry>
+          <Number>0</Number>
+          <Key>DLGTP51</Key>
+          <Name>(98=-1,-1,-1,-1,0)(82=-1,-1,-1,-1,0)(83=-1,-1,-1,-1,0)(84=-1,-1,-1,-1,0)(85=-1,-1,-1,-1,0)(80=-1,-1,-1,-1,0)(91=-1,-1,-1,-1,0)(92=-1,-1,-1,-1,0)</Name>
+        </SetRegEntry>
+        <SetRegEntry>
+          <Number>0</Number>
+          <Key>STCMON51</Key>
+          <Name>-S7 -B115200 -O0 -U0</Name>
+        </SetRegEntry>
         <SetRegEntry>
           <Number>0</Number>
           <Key>DLGDP51</Key>
@@ -124,8 +134,8 @@
         <Bp>
           <Number>0</Number>
           <Type>0</Type>
-          <LineNumber>12</LineNumber>
-          <EnabledFlag>1</EnabledFlag>
+          <LineNumber>87</LineNumber>
+          <EnabledFlag>0</EnabledFlag>
           <Address>0</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
@@ -133,7 +143,7 @@
           <SizeOfObject>0</SizeOfObject>
           <BreakByAccess>0</BreakByAccess>
           <BreakIfRCount>0</BreakIfRCount>
-          <Filename>D:\project\motor_driver\software\git_root\BLACK\SRC\INTERRUPT\interrupt.c</Filename>
+          <Filename>main.c</Filename>
           <ExecCommand></ExecCommand>
           <Expression></Expression>
         </Bp>
@@ -144,14 +154,44 @@
           <WinNumber>1</WinNumber>
           <ItemText>P55</ItemText>
         </Ww>
+        <Ww>
+          <count>1</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>TriggerProcessed</ItemText>
+        </Ww>
+        <Ww>
+          <count>2</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>TriacTicker</ItemText>
+        </Ww>
+        <Ww>
+          <count>3</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>TriggerOn</ItemText>
+        </Ww>
       </WatchWindow1>
+      <WatchWindow2>
+        <Ww>
+          <count>0</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>TriacTicker,0x0A</ItemText>
+        </Ww>
+      </WatchWindow2>
+      <MemoryWindow1>
+        <Mm>
+          <WinNumber>1</WinNumber>
+          <SubType>0</SubType>
+          <ItemText>TriggerOn</ItemText>
+          <AccSizeX>0</AccSizeX>
+        </Mm>
+      </MemoryWindow1>
       <Tracepoint>
         <THDelay>0</THDelay>
       </Tracepoint>
       <DebugFlag>
         <trace>0</trace>
         <periodic>0</periodic>
-        <aLwin>1</aLwin>
+        <aLwin>0</aLwin>
         <aCover>0</aCover>
         <aSer1>0</aSer1>
         <aSer2>0</aSer2>
@@ -198,6 +238,19 @@
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
+    <File>
+      <GroupNumber>1</GroupNumber>
+      <FileNumber>2</FileNumber>
+      <FileType>2</FileType>
+      <tvExp>0</tvExp>
+      <Focus>0</Focus>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>.\MAIN\STARTUP.A51</PathWithFileName>
+      <FilenameWithoutPath>STARTUP.A51</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
   </Group>
 
   <Group>
@@ -208,7 +261,7 @@
     <RteFlg>0</RteFlg>
     <File>
       <GroupNumber>2</GroupNumber>
-      <FileNumber>2</FileNumber>
+      <FileNumber>3</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
@@ -229,7 +282,7 @@
     <RteFlg>0</RteFlg>
     <File>
       <GroupNumber>3</GroupNumber>
-      <FileNumber>3</FileNumber>
+      <FileNumber>4</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
@@ -250,9 +303,9 @@
     <RteFlg>0</RteFlg>
     <File>
       <GroupNumber>4</GroupNumber>
-      <FileNumber>4</FileNumber>
+      <FileNumber>5</FileNumber>
       <FileType>1</FileType>
-      <tvExp>0</tvExp>
+      <tvExp>1</tvExp>
       <Focus>0</Focus>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
@@ -271,9 +324,9 @@
     <RteFlg>0</RteFlg>
     <File>
       <GroupNumber>5</GroupNumber>
-      <FileNumber>5</FileNumber>
+      <FileNumber>6</FileNumber>
       <FileType>1</FileType>
-      <tvExp>0</tvExp>
+      <tvExp>1</tvExp>
       <Focus>0</Focus>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
@@ -292,9 +345,9 @@
     <RteFlg>0</RteFlg>
     <File>
       <GroupNumber>6</GroupNumber>
-      <FileNumber>6</FileNumber>
+      <FileNumber>7</FileNumber>
       <FileType>1</FileType>
-      <tvExp>0</tvExp>
+      <tvExp>1</tvExp>
       <Focus>0</Focus>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
@@ -305,7 +358,7 @@
     </File>
     <File>
       <GroupNumber>6</GroupNumber>
-      <FileNumber>7</FileNumber>
+      <FileNumber>8</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>

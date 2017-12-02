@@ -27,7 +27,7 @@
 //--------------------------------- // External Interrupt 
 volatile uint8 xdata Exti2IsrTicker;  
 volatile uint8 xdata Exti3IsrTicker;  
-volatile uint8 xdata Timer3OverFlowTicker;
+volatile uint8 xdata Timer2OverFlowTicker;
 volatile uint8 xdata TimerOneIsrTicker; 
 
 volatile uint8 xdata MainTicker; 
@@ -46,13 +46,23 @@ volatile uint8 xdata NewSteadyCtrlFlag;
 volatile uint8 xdata StartLoseStepTickerFlag;
 volatile uint8 xdata Delay200usFlag;
 volatile uint8 xdata Delay200usCounter;
+volatile uint8 xdata AcZeroSignal;
+
+
+
 
 volatile uint16 xdata AdcResult;
 volatile uint16 xdata Ac_Voltage;
+
 volatile uint16 xdata AcVoltagePhase;
 volatile int16 xdata PhaseErrorAcVsHall;
 volatile uint16 xdata RawPhaseErrorAcVsHall;
 volatile int16 xdata FilteredPhaseErrorAcVsHall;
+volatile uint8 xdata TriacTicker;
+volatile uint8 xdata TriggerProcessed;
+volatile uint8 xdata TriggerOn;
+
+
 
 /* Private variables declaration ---------------------------------------------*/
 
@@ -63,15 +73,46 @@ void main()
 		InitTime0();
 		InitTime1();
 		InitTime2();
-		UartInit();				   //串口初始化
+		InitExtInterrupt();
+	  Parameter_Reset();
+		//UartInit();				   //串口初始化
     ENABLE_ALL_INTERRUPT();
 
 		while(1)
 		
 
 		{ 
-	
-			P55=AC_ZERO_PIN;
+			
+if (HALL1_PIN ==1) P55=1;else  P55=0;
+			Enable_Triac1();	
+   
+//           MainTicker++; 
+//           
+//           if((StartStopCtrl == OFF) || (RestartFlag == ON))
+//           {
+//                
+//                 Disable_Triac();
+//               
+//                 Parameter_Reset(); 
+//                 
+//                 if(RestartFlag == ON)
+//                 {
+//                       
+//                       RestartFlag = OFF;
+//                 }
+//                 
+//                               
+//                 StartStopCtrl = ON;
+//           }
+//           else if(StartStopCtrl == ON)
+//           {
+//              
+
+//                Trigger_Angle_Handler();
+//                
+//           }
+   
+
 			
 		}			//防止程序跑飞
    	

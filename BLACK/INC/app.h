@@ -89,14 +89,15 @@
 
 
 
+#define MaxTriggerPulse						(10)
 #define ON                        (1)
 #define OFF                       (0)
 #define AC_PHASE_INC              (787)
 #define HALL2_PIN                 (P36)
-#define HALL_PIN                  (P33)
+#define HALL1_PIN                  (P33)
 #define AC_ZERO_PIN               (P32)
 #define TRIAC2_PIN                (P22)
-#define TRIAC_PIN                 (P21)
+#define TRIAC1_PIN                 (P21)
 #define TEST_PA2_PIN6             (P55)
 
 #define BUFFER_LENGTH             (4)
@@ -107,15 +108,20 @@
 #define STARTUP_ANGLE             (29120)  // 
 #define AIM_PHASE_ERROR           (7282)  // 10012 <=> 55 degree between AC rising edge and HALL falling 
 
+
 extern volatile uint8 xdata Exti2IsrTicker;  
 extern volatile uint8 xdata Exti3IsrTicker;  
-extern volatile uint8 xdata Timer3OverFlowTicker;
-extern volatile uint8 xdata TimerOneIsrTicker; 
+extern volatile uint8 xdata Timer2OverFlowTicker;
+extern volatile uint8 xdata TimerOneIsrTicker;
 
+extern volatile uint8 xdata TriggerProcessed;
+extern volatile uint8 xdata TriggerOn;
+extern volatile uint8 xdata TriacTicker;
 extern volatile uint8 xdata MainTicker; 
 extern volatile uint8 xdata IocIsrTicker;
 extern volatile uint8 xdata LoseStepTicker;
 extern volatile uint8 xdata PosAcFlag;
+
 
 extern volatile uint8 xdata IocFlag;
 extern volatile uint8 xdata RestartFlag;
@@ -144,13 +150,14 @@ extern volatile uint16 xdata InitialTimer1Value;
 extern volatile int16 xdata PID_Error;
 
 extern void Run_Motor(void);
-extern void Global_Triac_Disable(void);
+//extern void Global_Triac_Disable(void);
 extern void Virtual_Timer(void);
-extern void Global_Triac_Enable(void);
+//extern void Global_Triac_Enable(void);
 extern void Get_Init_Angle(void);
 
 extern void Disable_Triac(void);
-extern void Enable_Triac(void);
+extern void Enable_Triac1(void);
+extern void Enable_Triac2(void);
 extern volatile uint8 xdata Startup_Delay_Count;
 extern volatile uint8 xdata Tick1ms_Pwm_Num;  //virtual timer variables
 extern volatile uint16 xdata SynchronizeDalyCount;
