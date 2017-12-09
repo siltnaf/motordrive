@@ -9,43 +9,27 @@
 //AC _zero Handler (detect both rising and falling edge)
 void extint0()   interrupt 0 using 1
 {
-
+	TriggerProcessed=0;
+	Disable_Triac();  
 	
  if(StartStopCtrl == ON)
        {
            if(AC_ZERO_PIN == 1)
-           {                
+                         
                {
                    AcVoltagePhase = 0;                      // Synchronize phase angle with AC rising edge  
 								 
                }
-           }
+          
 //------------------------------------------------------------//    
-          Disable_Triac();             
-					 TriggerProcessed=0;
+                    
+			
 //------------------------------------------------------------//  
            IocIsrTicker++;
 //------------------------------------------------------------// time flow for control            
-           if(IocIsrTicker > 36)                              // 300ms 
-           {
-                 IocFlag = ON;                                // Start Open Loop with phase angle trigger 
-                                                              // used for Power On
-                Enable_Triac1();
-                 
-                
-           }
-//------------------------------------------------------------// 
-           if(IocIsrTicker >= 60)                              // 500ms 
-           {
-                 SynFlag = ON;                                // Start Open Loop with Timer2 Trigger  
-           }
-           if(IocIsrTicker >= 90)                              // 750ms
-           {
-                 IocIsrTicker = 90;                           // Start Phase Closed Loop with Timer2 Trigger 
-                 NewSteadyCtrlFlag = ON;
-           }
+        
 //------------------------------------------------------------//  
-           Get_Init_Angle();
+          Get_Init_Angle();
 //------------------------------------------------------------//  State Control
            if((IocFlag == ON) && (SynFlag == OFF) && (NewSteadyCtrlFlag == OFF))  // AcPhaseAngle StartUp
            {
@@ -77,8 +61,7 @@ void extint0()   interrupt 0 using 1
 //Hall1 signal Handler (detect rising edge only)
 void extint1()   interrupt 2 using 1
 {
-	
-
+		 
  if  (HALL1_PIN==1)
 		{
 		Exti2IsrTicker++;
@@ -166,7 +149,7 @@ void tm1() interrupt 3 using 1
                }  
 
 //------------------------------------------------------------//    
-               Virtual_Timer();                                   // virtual timer application
+        //       Virtual_Timer();                                   // virtual timer application
 //------------------------------------------------------------//     Check Hall rising and falling edge to just motor wheather is run
               // FilteredPhaseErrorAcVsHall += (PhaseErrorAcVsHall - FilteredPhaseErrorAcVsHall) >> K_LOW_PASS_FILTER;
               // AdcResult = 1020;

@@ -375,23 +375,9 @@
         </Group>
         <Group>
           <GroupName>delay</GroupName>
-          <Files>
-            <File>
-              <FileName>delay.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\delay\delay.c</FilePath>
-            </File>
-          </Files>
         </Group>
         <Group>
           <GroupName>debug</GroupName>
-          <Files>
-            <File>
-              <FileName>uart.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\debug\Uart\uart.c</FilePath>
-            </File>
-          </Files>
         </Group>
         <Group>
           <GroupName>INIT</GroupName>
@@ -420,11 +406,6 @@
               <FileName>motorctrl.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\APP\motorctrl.c</FilePath>
-            </File>
-            <File>
-              <FileName>virtualtimer.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\APP\virtualtimer.c</FilePath>
             </File>
           </Files>
         </Group>

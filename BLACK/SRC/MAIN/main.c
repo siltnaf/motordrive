@@ -11,14 +11,9 @@
 
 
 #include  "stc15f2k60s2.h"		  //STC15头文件
-#include  "typedef.h"	    		  //宏定义 常用函数
-#include  "delay.h"				  //延时函数
-#include  "uart.h"
+
 #include  "init.h"
 #include  "app.h"
-#include  "virtualtimer.h"
-
-
 
 
 
@@ -61,6 +56,65 @@ volatile int16 xdata FilteredPhaseErrorAcVsHall;
 volatile uint8 xdata TriacTicker;
 volatile uint8 xdata TriggerProcessed;
 volatile uint8 xdata TriggerOn;
+volatile uint16 xdata TriacPosAngle;
+
+volatile uint16 xdata InitialAngle;
+volatile uint16 xdata MaxAngleLimit;
+volatile uint16 xdata MinAngleLimit;
+volatile uint16 xdata InitialTimer1Value;
+volatile uint8 xdata Startup_Delay_Count;
+
+volatile int16 xdata PID_Error;
+
+void Assign_Status_Flag()
+{
+
+   if((IocIsrTicker > 36)  &&    (IocIsrTicker<60))                   // 300ms 
+           {
+             IocFlag = ON;                                // Start Open Loop with phase angle trigger 
+                                                            // used for Power On
+							Enable_Triac1();
+                             
+           }
+//------------------------------------------------------------// 
+    if(IocIsrTicker >= 60)                              // 500ms 
+           {
+                 SynFlag = ON;                                // Start Open Loop with Timer2 Trigger  
+           }
+    if(IocIsrTicker >= 90)                              // 750ms
+           {
+                 IocIsrTicker = 90;                           // Start Phase Closed Loop with Timer2 Trigger 
+                 NewSteadyCtrlFlag = ON;
+           }
+					 
+					 
+		if((StartStopCtrl == OFF) || (RestartFlag == ON))
+           {
+                
+                 Disable_Triac();           
+                 Parameter_Reset(); 
+                 
+                 if(RestartFlag == ON)
+                 {
+                       
+                       RestartFlag = OFF;
+                 }
+                 
+                               
+                 StartStopCtrl = ON;
+           }
+           else if(StartStopCtrl == ON)
+           {
+    //            Trigger_Angle_Handler();
+					 }
+
+}
+
+
+
+
+
+
 
 
 
@@ -83,35 +137,21 @@ void main()
 
 		{ 
 			
-if (HALL1_PIN ==1) P55=1;else  P55=0;
-			Enable_Triac1();	
-   
-//           MainTicker++; 
-//           
-//           if((StartStopCtrl == OFF) || (RestartFlag == ON))
-//           {
-//                
-//                 Disable_Triac();
-//               
-//                 Parameter_Reset(); 
-//                 
-//                 if(RestartFlag == ON)
-//                 {
-//                       
-//                       RestartFlag = OFF;
-//                 }
-//                 
-//                               
-//                 StartStopCtrl = ON;
-//           }
-//           else if(StartStopCtrl == ON)
-//           {
-//              
+if (TRIAC1_PIN ==1) P55=1;else  P55=0;
+			
+if (AcVoltagePhase >= TriacPosAngle) P47=1;else  P47=0;		
 
-//                Trigger_Angle_Handler();
-//                
-//           }
-   
+			
+		//Enable_Triac1();	
+   Run_Motor();
+        
+						Assign_Status_Flag();
+          
+         
+              
+
+
+          
 
 			
 		}			//防止程序跑飞

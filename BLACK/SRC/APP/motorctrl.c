@@ -61,10 +61,10 @@ void Run_Motor(void)
  Funcion Name: Stop_Motor
  Description: 
 *******************************************************************************/
-void Stop_Motor(void)
-{			
-		 Disable_Triac();
-}
+//void Stop_Motor(void)
+//{			
+//		 Disable_Triac();
+//}
 /*******************************************************************************
  Funcion Name: Enable_Triac
  Description: 

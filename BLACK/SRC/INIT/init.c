@@ -69,8 +69,8 @@ void InitTime1(void)
 //	  //mode 1: 16-bit timer
 	  TMOD &= 0x0f;              //clear timer1 mode 
 	
-		TH1 =(65536-Timer1_Reload)/256;
-		TL1 = (65536-Timer1_Reload)%256;
+		TH1 =(65536-ACCounterWidth)/256;
+		TL1 = (65536-ACCounterWidth)%256;
 		TR1 =1;			 //定时器开始工作
 	  ET1 =1;			 //使能定时器中断
 	 
@@ -94,20 +94,7 @@ void InitTime2(void)
 }
 
 
-void UartInit(void)		
-{
-       SCON=0x50;        
-	   TMOD= 0x00;                      
-	   AUXR=0X50;		 //enable timer2
-       TL1=(65535-(MAIN_Fosc/4/9600));    
-	   TH1=(65535-(MAIN_Fosc/4/9600))>>8;
-	
-	
-	   TR1  = 1;        
-	   ES   = 1;                                                                            
-	   EA   = 1;        	
-	
-}
+
 
 void InitExtInterrupt (void)
 {

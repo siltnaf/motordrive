@@ -4,7 +4,7 @@
 
 #define MAIN_Fosc   12000000UL
 #define TriggerPulseWidth	  (100)
-#define Timer1_Reload	  (25000)
+#define ACCounterWidth	  (200)
 #define InitialTriacPosAngle	  (16666)
 
 

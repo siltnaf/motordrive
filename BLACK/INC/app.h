@@ -92,7 +92,7 @@
 #define MaxTriggerPulse						(10)
 #define ON                        (1)
 #define OFF                       (0)
-#define AC_PHASE_INC              (787)
+#define AC_PHASE_INC              (655)
 #define HALL2_PIN                 (P36)
 #define HALL1_PIN                  (P33)
 #define AC_ZERO_PIN               (P32)
@@ -149,10 +149,13 @@ extern volatile uint16 xdata InitialAngle;
 extern volatile uint16 xdata InitialTimer1Value;
 extern volatile int16 xdata PID_Error;
 
+extern volatile uint16 xdata MaxAngleLimit;
+extern volatile uint16 xdata MinAngleLimit;
+
 extern void Run_Motor(void);
-//extern void Global_Triac_Disable(void);
+
 extern void Virtual_Timer(void);
-//extern void Global_Triac_Enable(void);
+
 extern void Get_Init_Angle(void);
 
 extern void Disable_Triac(void);
