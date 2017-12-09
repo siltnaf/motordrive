@@ -10,7 +10,9 @@
 void extint0()   interrupt 0 using 1
 {
 	TriggerProcessed=0;
-	Disable_Triac();  
+	TriacTicker=0;
+	TriggerOn=0;
+
 	
  if(StartStopCtrl == ON)
        {
@@ -126,37 +128,8 @@ void tm1() interrupt 3 using 1
 
 							TimerOneIsrTicker++;
                AcVoltagePhase += AC_PHASE_INC;
-              (AcVoltagePhase < 32767)? (AcZeroSignal = 1):(AcZeroSignal = 0);
-               
-               //TEST_PA2_PIN6 = TRIAC_PIN;              //AcZeroSingal;
-               //PB_ODR_bit.ODR4 = TRIAC_PIN;         //AcZeroSingal;//TimerOneIsrTicker & 0x01;
-//------------------------------------------------------------//    
-                      
-//------------------------------------------------------------//  
-
-               if(StartStopCtrl == ON)
-               { 
-                    if((IocFlag == ON) && (SynFlag == OFF) && (NewSteadyCtrlFlag == OFF))  // PhaseAngle StartUp
-                    {   
-                        Run_Motor(); 
-                    }
-                    
-                  
-               }
-               else
-               {
-                         Disable_Triac();
-               }  
-
-//------------------------------------------------------------//    
-        //       Virtual_Timer();                                   // virtual timer application
-//------------------------------------------------------------//     Check Hall rising and falling edge to just motor wheather is run
-              // FilteredPhaseErrorAcVsHall += (PhaseErrorAcVsHall - FilteredPhaseErrorAcVsHall) >> K_LOW_PASS_FILTER;
-              // AdcResult = 1020;
-              // Filtered_Ac_AdResult += (AdcResult - Filtered_Ac_AdResult) >> 3;
-
-              // TEST02_GPIO = AcZeroSingal;
-//------------------------------------------------------------//    
+             
+     
                if(StartLoseStepTickerFlag == ON)
                {   
                      LoseStepTicker++; 

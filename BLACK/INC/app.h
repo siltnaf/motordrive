@@ -92,7 +92,7 @@
 #define MaxTriggerPulse						(10)
 #define ON                        (1)
 #define OFF                       (0)
-#define AC_PHASE_INC              (655)
+
 #define HALL2_PIN                 (P36)
 #define HALL1_PIN                  (P33)
 #define AC_ZERO_PIN               (P32)
@@ -100,8 +100,7 @@
 #define TRIAC1_PIN                 (P21)
 #define TEST_PA2_PIN6             (P55)
 
-#define BUFFER_LENGTH             (4)
-#define K_LOW_PASS_FILTER         (8)
+
 
 #define TRIAC_ON_RANGE            (9102)//10
 
@@ -143,6 +142,10 @@ extern volatile uint16 xdata RawPhaseErrorAcVsHall;
 extern volatile int16 xdata FilteredPhaseErrorAcVsHall;
 
 extern volatile uint8 xdata AcZeroSignal;
+
+extern volatile uint8 xdata AcFirePos;
+extern volatile uint8 xdata AcFireNeg;
+
 extern volatile uint16 xdata TriacPosAngle;
 extern volatile uint16 xdata Lose_Step_Delay_Count;
 extern volatile uint16 xdata InitialAngle;

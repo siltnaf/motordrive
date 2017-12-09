@@ -23,33 +23,39 @@
 *******************************************************************************/
 void Run_Motor(void)
 {
-		 if((AcZeroSignal == 1) && (HALL1_PIN == 1))	//AcRisingEdgeFlag
+		 if((AcFirePos == 1) && (HALL1_PIN == 1))	//AcRisingEdgeFlag
 		 {
-					 if((AcVoltagePhase >= TriacPosAngle) && (AcVoltagePhase <= (32767 - TRIAC_ON_RANGE)))	// [Alpha,170]
-					 {
-									
-							Enable_Triac1();
-						
-					 }
-					 else
-					 {
-								 
-									Disable_Triac();
-					 }
+				Enable_Triac1();
+
+//			 if((AcVoltagePhase >= TriacPosAngle) && (AcVoltagePhase <= (32767 - TRIAC_ON_RANGE)))	// [Alpha,170]
+//					 {
+//									
+//							Enable_Triac1();
+//						
+//					 }
+//					 else
+//					 {
+//								 
+//									Disable_Triac();
+//					 }
 		 }
-		 else if((AcZeroSignal == 0) && (HALL1_PIN == 0))
+		 else if((AcFireNeg == 0) && (HALL1_PIN == 0))
 		 {
-					 if((AcVoltagePhase >= (32767 + TriacPosAngle)) && (AcVoltagePhase <= (65535 - TRIAC_ON_RANGE))) // [180+Alpha, 350]
-					 {
-									
-								 Enable_Triac1();
+				
+				Enable_Triac1();
 						
-					 }
-					 else
-					 {
-								 
-									Disable_Triac();
-					 }
+
+//			 if((AcVoltagePhase >= (32767 + TriacPosAngle)) && (AcVoltagePhase <= (65535 - TRIAC_ON_RANGE))) // [180+Alpha, 350]
+//					 {
+//									
+//						Enable_Triac1();
+//						
+////					 }
+//					 else
+//					 {
+//								 
+//									Disable_Triac();
+//					 }
 		 }
 		 else
 		 {

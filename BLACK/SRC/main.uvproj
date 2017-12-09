@@ -407,6 +407,11 @@
               <FileType>1</FileType>
               <FilePath>.\APP\motorctrl.c</FilePath>
             </File>
+            <File>
+              <FileName>AngleCalc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\APP\AngleCalc.c</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>

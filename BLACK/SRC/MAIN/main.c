@@ -64,7 +64,17 @@ volatile uint16 xdata MinAngleLimit;
 volatile uint16 xdata InitialTimer1Value;
 volatile uint8 xdata Startup_Delay_Count;
 
+
+volatile uint8 xdata AcFirePos;
+volatile uint8 xdata AcFireNeg;
+volatile uint8 xdata FireZone;
+
 volatile int16 xdata PID_Error;
+
+
+
+
+
 
 void Assign_Status_Flag()
 {
@@ -108,6 +118,22 @@ void Assign_Status_Flag()
     //            Trigger_Angle_Handler();
 					 }
 
+					 
+		   if(StartStopCtrl == ON)
+               { 
+                    if((IocFlag == ON) && (SynFlag == OFF) && (NewSteadyCtrlFlag == OFF))  // PhaseAngle StartUp
+                    {   
+                        Run_Motor(); 
+                    }
+                    
+                  
+               }
+               else
+               {
+                         Disable_Triac();
+               }  			 
+					 
+					 
 }
 
 
@@ -116,7 +142,31 @@ void Assign_Status_Flag()
 
 
 
+void Power_Assigned()
+{
+	if ((AcVoltagePhase<32767)&& ((AcVoltagePhase> (32767-FireAngle))))
+	  AcFirePos=1;
+					else AcFirePos=0;
+	
 
+	
+	if ((AcVoltagePhase>=32767)&&((AcVoltagePhase> (65535-FireAngle)))) AcFireNeg=0;
+					else AcFireNeg=1;
+	
+	
+	if (AcVoltagePhase<32767) AcZeroSignal=1;else  AcZeroSignal=0;
+	
+	if (((AcVoltagePhase> No_Fire_Zone)&&(AcVoltagePhase<(32768-No_Fire_Zone)))||((AcVoltagePhase> (32767+No_Fire_Zone))&&(AcVoltagePhase<(65535-No_Fire_Zone))))
+		
+	
+//	 || ((AcVoltagePhase>(32767+No_Fire_Zone)) &&)))
+			FireZone=1;
+		else FireZone=0;
+			
+
+
+
+}
 
 /* Private variables declaration ---------------------------------------------*/
 
@@ -137,16 +187,23 @@ void main()
 
 		{ 
 			
-if (TRIAC1_PIN ==1) P55=1;else  P55=0;
+	if (FireZone==1) P55=1;else P55=0;
 			
-if (AcVoltagePhase >= TriacPosAngle) P47=1;else  P47=0;		
+if ((((HALL1_PIN == 1)&&(AcFirePos==1))) ||((HALL1_PIN == 0)&&(AcFireNeg==0))) 
 
-			
-		//Enable_Triac1();	
-   Run_Motor();
+{
+	P47=1;
+	Enable_Triac1();
+
+	}	
+	else P47=0;
+
+	
+
+   //Run_Motor();
         
 						Assign_Status_Flag();
-          
+            Power_Assigned();
          
               
 
