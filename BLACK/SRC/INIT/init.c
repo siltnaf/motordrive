@@ -103,8 +103,9 @@ void InitExtInterrupt (void)
 	EX0=1;
 	PX0=1;
 	IT1=0;  	//detect both falling and rising edge of signal  (Hall1 signal) only rising edge 
-	EX1=1;
+	EX1=1;	  //enable INT1
 	PX1=1;
+	INT_CLKO |= 0x10;  //enable INT2, falling edge 
 	
 }
 
@@ -113,16 +114,30 @@ void InitExtInterrupt (void)
  Funcion Name:  Parameter_Reset
  Description: 
 *******************************************************************************/
-void Parameter_Reset(void)
+void Triac_Reset(void)
 {
-    
+ 
+	Trigger1On=0;
+	Trigger2On=0;
+	Triac1Ticker=0;
+	Triac2Ticker=0;
+
+
+	TRIAC1_PIN=0;
+	TRIAC2_PIN=0;
+
+}
+
+
+void InitParameter(void)
+{
+	
+	Hall1MaxDuration=100;
+	Hall1Duration=0;
 	
 	
-	TriacTicker=0;
-	TriggerProcessed=0;
-	 TriggerOn=0;
-	  Disable_Triac();
-	P27=0;
+	
+	
 	
 }
 

@@ -17,8 +17,8 @@ void InitTime0(void);
 void InitTime1(void);
 void InitTime2(void);
 void InitExtInterrupt(void);
-void UartInit(void);
-void Parameter_Reset(void);
+void InitParameter(void);
+void Triac_Reset(void);
 
 #endif
 

@@ -23,9 +23,34 @@
 *******************************************************************************/
 void Run_Motor(void)
 {
-		 if((AcFirePos == 1) && (HALL1_PIN == 1))	//AcRisingEdgeFlag
-		 {
-				Enable_Triac1();
+		
+
+
+
+if ((FirePower1==1)&&(FireZone==1)&&(Trigger2On==0))
+{
+
+	 Trigger1On=1;
+ 
+}
+else 
+{
+ 
+	Trigger1On=0;
+}
+	if ((FirePower2==1)&&(FireZone==1)&&(Trigger1On==0))
+{
+	//	P55=1;
+		Trigger2On=1;
+	
+ 
+	}	else
+{
+	Trigger2On=0;
+	//P55=0;
+}
+
+
 
 //			 if((AcVoltagePhase >= TriacPosAngle) && (AcVoltagePhase <= (32767 - TRIAC_ON_RANGE)))	// [Alpha,170]
 //					 {
@@ -38,11 +63,7 @@ void Run_Motor(void)
 //								 
 //									Disable_Triac();
 //					 }
-		 }
-		 else if((AcFireNeg == 0) && (HALL1_PIN == 0))
-		 {
-				
-				Enable_Triac1();
+		
 						
 
 //			 if((AcVoltagePhase >= (32767 + TriacPosAngle)) && (AcVoltagePhase <= (65535 - TRIAC_ON_RANGE))) // [180+Alpha, 350]
@@ -51,85 +72,45 @@ void Run_Motor(void)
 //						Enable_Triac1();
 //						
 ////					 }
-//					 else
-//					 {
+//					 else//					 {
 //								 
 //									Disable_Triac();
 //					 }
-		 }
-		 else
-		 {
-									
-									Disable_Triac();
-		 }
-}
-/*******************************************************************************
- Funcion Name: Stop_Motor
- Description: 
-*******************************************************************************/
-//void Stop_Motor(void)
-//{			
-//		 Disable_Triac();
-//}
-/*******************************************************************************
- Funcion Name: Enable_Triac
- Description: 
-*******************************************************************************/
-void Enable_Triac1(void)
-{
-		 
-	if (TriggerOn==0)		TriggerOn=1;
-			
-	 if (TriggerProcessed==0) 
-		{
-		switch (TriacTicker%2)
-			{
-			case 0:	TRIAC1_PIN=1; break;
-			case 1: TRIAC1_PIN=0; break;
 		
-			}
-		}
-	else TRIAC1_PIN=0;		
-	
-	
- 
 }
 
-/*******************************************************************************
- Funcion Name: Enable_Triac
- Description: 
-*******************************************************************************/
-void Enable_Triac2(void)
+void Enable_Triac1(void) 			
+	
 {
-		 
-	if (TriggerOn==0)		TriggerOn=1;
-			
-	 if (TriggerProcessed==0) 
-		{
-		switch (TriacTicker%2)
-			{
-			case 0:	TRIAC2_PIN=1; break;
-			case 1: TRIAC2_PIN=0; break;
-		
-			}
-		}
-	else TRIAC2_PIN=0;		
-	
-	
- 
+//	if (Trigger2On==0)
+//					{	
+//			
+						Trigger1On=1;		
+//						}			else Trigger1On=0;
+																	
 }
 
 
 
+void Enable_Triac2(void) 	
+{
+				if (Trigger1On==0)
+					{	
+				
+						Trigger2On=1;		
+						}		else Trigger2On=0;							
+													
 
+}
 /*******************************************************************************
  Funcion Name: Disable_Triac
  Description: 
 *******************************************************************************/
 	void Disable_Triac(void)
 	{
-			 TRIAC1_PIN = 0;
-			TRIAC2_PIN=0;
+		
+		TRIAC1_PIN = 0;
+		TRIAC2_PIN=0;
 	}
 
 

@@ -108,19 +108,31 @@
 #define AIM_PHASE_ERROR           (7282)  // 10012 <=> 55 degree between AC rising edge and HALL falling 
 
 
+
+
+								
+
+				
+													
+																	
+																	
 extern volatile uint8 xdata Exti2IsrTicker;  
 extern volatile uint8 xdata Exti3IsrTicker;  
 extern volatile uint8 xdata Timer2OverFlowTicker;
 extern volatile uint8 xdata TimerOneIsrTicker;
 
-extern volatile uint8 xdata TriggerProcessed;
-extern volatile uint8 xdata TriggerOn;
-extern volatile uint8 xdata TriacTicker;
+
+extern volatile uint8 xdata Trigger1On;
+extern volatile uint8 xdata Trigger2On;
+extern volatile uint8 xdata Triac1Ticker;
+extern volatile uint8 xdata Triac2Ticker;
 extern volatile uint8 xdata MainTicker; 
 extern volatile uint8 xdata IocIsrTicker;
 extern volatile uint8 xdata LoseStepTicker;
 extern volatile uint8 xdata PosAcFlag;
 
+extern volatile uint8 xdata AcVoltagePhaseReset;
+extern volatile uint8 xdata TriacReset;
 
 extern volatile uint8 xdata IocFlag;
 extern volatile uint8 xdata RestartFlag;
@@ -141,10 +153,28 @@ extern volatile int16 xdata PhaseErrorAcVsHall;
 extern volatile uint16 xdata RawPhaseErrorAcVsHall;
 extern volatile int16 xdata FilteredPhaseErrorAcVsHall;
 
+
+
+extern volatile uint8 xdata FireZone;
+extern volatile uint16 xdata Hall1MaxDuration;
+
+extern volatile uint16 xdata Hall1Duration;
+extern volatile uint8 xdata Hall1HalfFlag;
+extern volatile uint8 xdata VirtualHall2;
+
+extern volatile uint8 xdata InvertedAcSignal;
+
+extern volatile uint8 xdata FirePower1;
+extern volatile uint8 xdata FirePower2;
+
 extern volatile uint8 xdata AcZeroSignal;
 
 extern volatile uint8 xdata AcFirePos;
 extern volatile uint8 xdata AcFireNeg;
+
+extern volatile uint8 xdata InvertAcFireNeg;
+
+extern volatile uint8 xdata InvertAcFirePos;
 
 extern volatile uint16 xdata TriacPosAngle;
 extern volatile uint16 xdata Lose_Step_Delay_Count;
@@ -157,15 +187,17 @@ extern volatile uint16 xdata MinAngleLimit;
 
 extern void Run_Motor(void);
 
-extern void Virtual_Timer(void);
 
 extern void Get_Init_Angle(void);
 
-extern void Disable_Triac(void);
+
 extern void Enable_Triac1(void);
 extern void Enable_Triac2(void);
+
+extern void Disable_Triac(void);
+
 extern volatile uint8 xdata Startup_Delay_Count;
-extern volatile uint8 xdata Tick1ms_Pwm_Num;  //virtual timer variables
+
 extern volatile uint16 xdata SynchronizeDalyCount;
 
 extern void User_Parameter_Init(void);
