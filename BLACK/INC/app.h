@@ -133,7 +133,7 @@ extern volatile uint8 xdata PosAcFlag;
 
 extern volatile uint8 xdata AcVoltagePhaseReset;
 extern volatile uint8 xdata TriacReset;
-
+extern volatile uint8 xdata FireSet;
 extern volatile uint8 xdata IocFlag;
 extern volatile uint8 xdata RestartFlag;
 extern volatile uint8 xdata StartStopCtrl;

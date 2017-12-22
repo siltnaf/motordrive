@@ -10,12 +10,6 @@
 void extint0()   interrupt 0 using 1
 {
 
-
-	
-
-			
-
-				
   
            if(AC_ZERO_PIN == 1)
                          
@@ -98,17 +92,17 @@ void extint1()   interrupt 2 using 1
                    PhaseErrorAcVsHall =  RawPhaseErrorAcVsHall;
              }      
 //------------------------------------------------------------// Motor lose step judgement algorithm
-             if(NewSteadyCtrlFlag == ON)
-             {      
-                   StartLoseStepTickerFlag = ON;           // Enable LooseStepTicker starts to count 
+//             if(NewSteadyCtrlFlag == ON)
+//             {      
+//                   StartLoseStepTickerFlag = ON;           // Enable LooseStepTicker starts to count 
 
-							                    if(LoseStepTicker > 100)                // Check LoseStepTicker 100@5kHz, 200@10kHz (50Hz,20ms)
-                   {
-                      RestartFlag = ON;
-                   }
+//							                    if(LoseStepTicker > 100)                // Check LoseStepTicker 100@5kHz, 200@10kHz (50Hz,20ms)
+//                   {
+//                      RestartFlag = ON;
+//                   }
 
-                   LoseStepTicker = 0;                     // Clear LoseStepTicker
-             }  
+//                   LoseStepTicker = 0;                     // Clear LoseStepTicker
+//             }  
 
 
 					 }
@@ -157,16 +151,17 @@ void tm1() interrupt 3 using 1
 	
 
 {
-
+	
 		if (Triac1Ticker<MaxTriggerPulse)
 		{
 		
-			if (Trigger1On==1)
+			if ((Trigger1On==1)&&(Trigger2On==0))
 					{	
 						
 					TRIAC1_PIN=~TRIAC1_PIN;
 					Triac1Ticker++;
 					}
+					else TRIAC1_PIN=0;
 			}else 
 				{
 				TRIAC1_PIN=0;
@@ -176,14 +171,13 @@ void tm1() interrupt 3 using 1
 	if (Triac2Ticker<MaxTriggerPulse)		
 		{
 
-			if (Trigger2On==1)
+			if ((Trigger2On==1)&&(Trigger1On==0))
 			{
-			TRIAC2_PIN=~TRIAC2_PIN;		
-			Triac2Ticker++;
+				TRIAC2_PIN=~TRIAC2_PIN;		
+				Triac2Ticker++;
 	
-			}
+			} else TRIAC2_PIN=0;
 		}else TRIAC2_PIN=0;
-	
 	
 	if (AcVoltagePhaseReset==1) 
 		{

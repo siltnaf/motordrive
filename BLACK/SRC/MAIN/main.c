@@ -57,6 +57,7 @@ volatile int16 xdata PhaseErrorAcVsHall;
 volatile uint16 xdata RawPhaseErrorAcVsHall;
 volatile int16 xdata FilteredPhaseErrorAcVsHall;
 volatile uint8 xdata Triac1Ticker;
+volatile uint8 xdata FireSet;
 volatile uint8 xdata TriacReset;
 volatile uint8 xdata Triac2Ticker;
 volatile uint8 xdata TriggerProcessed;

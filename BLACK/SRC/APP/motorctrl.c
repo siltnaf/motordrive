@@ -27,29 +27,23 @@ void Run_Motor(void)
 
 
 
-if ((FirePower1==1)&&(FireZone==1)&&(Trigger2On==0))
+if ((FirePower1==1)&&(FireZone==1)&&(Trigger2On==0)&&(FireSet==0))
 {
 
 	 Trigger1On=1;
+	FireSet=1;
  
 }
-else 
-{
- 
-	Trigger1On=0;
-}
-	if ((FirePower2==1)&&(FireZone==1)&&(Trigger1On==0))
+
+
+	if ((FirePower2==1)&&(FireZone==1)&&(Trigger1On==0)&&(FireSet==0))
 {
 	//	P55=1;
 		Trigger2On=1;
+	FireSet=1;
 	
  
-	}	else
-{
-	Trigger2On=0;
-	//P55=0;
-}
-
+	}	
 
 
 //			 if((AcVoltagePhase >= TriacPosAngle) && (AcVoltagePhase <= (32767 - TRIAC_ON_RANGE)))	// [Alpha,170]

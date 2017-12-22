@@ -121,7 +121,7 @@ void Triac_Reset(void)
 	Trigger2On=0;
 	Triac1Ticker=0;
 	Triac2Ticker=0;
-
+	FireSet=0;
 
 	TRIAC1_PIN=0;
 	TRIAC2_PIN=0;

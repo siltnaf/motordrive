@@ -8,7 +8,7 @@
 #define AC_PHASE_INC      (327)
 
 #define InitialTriacPosAngle	  (16666)
-#define FireAngle        (12767)                  //range is 0 to 32767
+#define FireAngle        (15767)                  //range is 0 to 32767
 #define No_Fire_Zone           (5000)
 
 
