@@ -135,11 +135,6 @@ void tm0() interrupt 1 using 1
 
 
 	
-			
- 
-		
-
-	
 	
 
 }
@@ -151,11 +146,10 @@ void tm1() interrupt 3 using 1
 	
 
 {
-	
 		if (Triac1Ticker<MaxTriggerPulse)
 		{
 		
-			if ((Trigger1On==1)&&(Trigger2On==0))
+			if (Trigger1On==1)
 					{	
 						
 					TRIAC1_PIN=~TRIAC1_PIN;
@@ -171,7 +165,7 @@ void tm1() interrupt 3 using 1
 	if (Triac2Ticker<MaxTriggerPulse)		
 		{
 
-			if ((Trigger2On==1)&&(Trigger1On==0))
+			if (Trigger2On==1)
 			{
 				TRIAC2_PIN=~TRIAC2_PIN;		
 				Triac2Ticker++;
@@ -184,18 +178,26 @@ void tm1() interrupt 3 using 1
 			
 			AcVoltagePhaseReset=0;
 			AcVoltagePhase=0;
+			AcMaxDuration=AcDuration;
+			AcDuration=0;
 			
-		} else  AcVoltagePhase += AC_PHASE_INC;
+		} else  
+		
+		{
+			AcVoltagePhase += AC_PHASE_INC;
+			AcDuration++;
+		}
+			
 		
 		
+	 Hall1Duration++;;
 	
-	Hall1Duration+=1;								//find max duration of Hall1  ; time = Hall1Max *100us
             
   
-	if(StartLoseStepTickerFlag == ON)
-    {   
-      LoseStepTicker++; 
-     }   
+//	if(StartLoseStepTickerFlag == ON)
+//    {   
+//      LoseStepTicker++; 
+//     }   
 	  
 	
 }

@@ -113,7 +113,8 @@
 								
 
 				
-													
+extern volatile uint8 xdata MaxSpeedFlag;
+extern volatile uint8 xdata AboveHalfMaxSpeedFlag;													
 																	
 																	
 extern volatile uint8 xdata Exti2IsrTicker;  
@@ -154,6 +155,9 @@ extern volatile uint16 xdata RawPhaseErrorAcVsHall;
 extern volatile int16 xdata FilteredPhaseErrorAcVsHall;
 
 
+extern volatile uint8 xdata AcDuration;
+
+extern volatile uint8 xdata AcMaxDuration;
 
 extern volatile uint8 xdata FireZone;
 extern volatile uint16 xdata Hall1MaxDuration;

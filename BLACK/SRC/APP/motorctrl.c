@@ -30,17 +30,16 @@ void Run_Motor(void)
 if ((FirePower1==1)&&(FireZone==1)&&(Trigger2On==0)&&(FireSet==0))
 {
 
-	 Trigger1On=1;
-	FireSet=1;
+ Enable_Triac1();
  
 }
 
 
 	if ((FirePower2==1)&&(FireZone==1)&&(Trigger1On==0)&&(FireSet==0))
 {
-	//	P55=1;
-		Trigger2On=1;
-	FireSet=1;
+
+
+ Enable_Triac2();
 	
  
 	}	
@@ -76,11 +75,8 @@ if ((FirePower1==1)&&(FireZone==1)&&(Trigger2On==0)&&(FireSet==0))
 void Enable_Triac1(void) 			
 	
 {
-//	if (Trigger2On==0)
-//					{	
-//			
-						Trigger1On=1;		
-//						}			else Trigger1On=0;
+	 Trigger1On=1;
+	FireSet=1;
 																	
 }
 
@@ -88,12 +84,9 @@ void Enable_Triac1(void)
 
 void Enable_Triac2(void) 	
 {
-				if (Trigger1On==0)
-					{	
-				
-						Trigger2On=1;		
-						}		else Trigger2On=0;							
-													
+					
+				Trigger2On=1;
+	FireSet=1;											
 
 }
 /*******************************************************************************

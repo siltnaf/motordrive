@@ -134,9 +134,9 @@ void InitParameter(void)
 	
 	Hall1MaxDuration=100;
 	Hall1Duration=0;
-	
-	
-	
+	AcMaxDuration=100;
+
+	Triac_Reset();
 	
 	
 }

@@ -45,6 +45,9 @@ volatile uint8 xdata AcZeroSignal;
 
 
 
+volatile uint8 xdata AcDuration;
+
+volatile uint8 xdata AcMaxDuration;
 
 volatile uint16 xdata AdcResult;
 volatile uint16 xdata Ac_Voltage;
@@ -92,6 +95,10 @@ volatile uint8 xdata VirtualHall2;
 volatile uint8 xdata InvertedAcSignal;
 
 
+volatile uint8 xdata MaxSpeedFlag;
+volatile uint8 xdata AboveHalfMaxSpeedFlag;
+
+
 
 void Assign_Status_Flag()
 {
@@ -119,6 +126,9 @@ void Assign_Status_Flag()
 	
 					 
 		if (((Hall1HalfFlag==0)&&(HALL1_PIN==1))||((Hall1HalfFlag==1)&&(HALL1_PIN==0))) VirtualHall2=0;else VirtualHall2=1;
+					 
+    if( Hall1MaxDuration<=AcMaxDuration>>1) MaxSpeedFlag=1;else MaxSpeedFlag=0;   //check if Halll signal is 1/2 of AC frequency
+		if( Hall1MaxDuration<=AcMaxDuration) AboveHalfMaxSpeedFlag=1;else AboveHalfMaxSpeedFlag=0;   //check if Halll signal is 1/2 of AC frequency 
 					 
 		if (AcZeroSignal==0) InvertedAcSignal=1;else InvertedAcSignal=0;
 					
@@ -225,8 +235,14 @@ void Power_Assigned()
 		Triac_Reset();
 	}
 	if 	((Triac1Ticker>=MaxTriggerPulse)||(Triac2Ticker>=MaxTriggerPulse))   Disable_Triac();
-//	if (Trigger1On==0) TRIAC1_PIN=0;
-//	if (Trigger2On==0) TRIAC2_PIN=0;
+	
+	
+
+	
+	
+	
+	
+	
 
 }
 
@@ -251,10 +267,14 @@ void main()
 			
 			Run_Motor();   
 
-	
+
+	//		if (MaxSpeedFlag==1) P55=1;else P55=0;
+
+			 if (( PhaseErrorAcVsHall>0) &&(AcVoltagePhase< PhaseErrorAcVsHall)) P55=1; else P55=0;
+			 if ((PhaseErrorAcVsHall<0)&& (AcVoltagePhase > (65535+PhaseErrorAcVsHall))) P47=1; else P47=0;
 			
-		 if (TRIAC1_PIN==1) P55=1;else P55=0;
-		 if (TRIAC2_PIN==1) P47=1;else P47=0;
+			
+ 
 			Assign_Status_Flag();
 			Power_Assigned();
 
