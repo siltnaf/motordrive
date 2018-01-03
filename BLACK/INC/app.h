@@ -102,11 +102,24 @@
 
 
 
+
+
+// state 
+#define	SystemOn									0
+#define SystemOff									1
+#define NormalRun									2
+#define	KickStart									3
+#define	SynMax										4
+#define MaxSteady									5
+
+#define LoseStep									7
+
+
 #define TRIAC_ON_RANGE            (9102)//10
 
 #define STARTUP_ANGLE             (29120)  // 
-#define AIM_PHASE_ERROR           (7282)  // 10012 <=> 55 degree between AC rising edge and HALL falling 
 
+#define TriacMaxPosTime					(10000)   //10ms 
 
 
 
@@ -180,20 +193,28 @@ extern volatile uint8 xdata InvertAcFireNeg;
 
 extern volatile uint8 xdata InvertAcFirePos;
 
-extern volatile uint16 xdata TriacPosAngle;
+extern volatile uint16 xdata TriacPosTime;
 extern volatile uint16 xdata Lose_Step_Delay_Count;
 extern volatile uint16 xdata InitialAngle;
-extern volatile uint16 xdata InitialTimer1Value;
+extern volatile uint16 xdata TriacMinPosTime;
 extern volatile int16 xdata PID_Error;
 
 extern volatile uint16 xdata MaxAngleLimit;
 extern volatile uint16 xdata MinAngleLimit;
 
-extern void Run_Motor(void);
 
+extern volatile uint8 xdata state;
+extern volatile uint16 xdata FireAngle;
+
+extern volatile uint8 xdata SynUpdate;
+extern volatile uint8 xdata SynTicker;
+
+
+extern void Run_Motor(void);
+extern void Trigger_Angle_Handler(void);
 
 extern void Get_Init_Angle(void);
-
+extern volatile uint16 xdata AIM_PHASE_DIFF;
 
 extern void Enable_Triac1(void);
 extern void Enable_Triac2(void);

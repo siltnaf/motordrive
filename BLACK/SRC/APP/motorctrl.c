@@ -45,30 +45,7 @@ if ((FirePower1==1)&&(FireZone==1)&&(Trigger2On==0)&&(FireSet==0))
 	}	
 
 
-//			 if((AcVoltagePhase >= TriacPosAngle) && (AcVoltagePhase <= (32767 - TRIAC_ON_RANGE)))	// [Alpha,170]
-//					 {
-//									
-//							Enable_Triac1();
-//						
-//					 }
-//					 else
-//					 {
-//								 
-//									Disable_Triac();
-//					 }
-		
-						
 
-//			 if((AcVoltagePhase >= (32767 + TriacPosAngle)) && (AcVoltagePhase <= (65535 - TRIAC_ON_RANGE))) // [180+Alpha, 350]
-//					 {
-//									
-//						Enable_Triac1();
-//						
-////					 }
-//					 else//					 {
-//								 
-//									Disable_Triac();
-//					 }
 		
 }
 

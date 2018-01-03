@@ -85,10 +85,10 @@ void InitTime1(void)
 void InitTime2(void)
 {
 
-		T2H =(65536-InitialTriacPosAngle)/256;
-		T2L = (65536-InitialTriacPosAngle)%256;
+		T2H =(65536- TriacPosTime)/256;
+		T2L = (65536- TriacPosTime)%256;
 
-  AUXR|=0X10;		 //允许定时器2运行	   12分频
+  AUXR|=0X14;		 //允许定时器2运行	   12分频
 	IE2|=0X04;       //开启定时器T2中断                                                               
   
 }
@@ -126,6 +126,7 @@ void Triac_Reset(void)
 	TRIAC1_PIN=0;
 	TRIAC2_PIN=0;
 
+
 }
 
 
@@ -135,9 +136,10 @@ void InitParameter(void)
 	Hall1MaxDuration=100;
 	Hall1Duration=0;
 	AcMaxDuration=100;
-
+	FireAngle=0;
 	Triac_Reset();
-	
+	state=SystemOn;
+	TriacPosTime=0;
 	
 }
 

@@ -32,15 +32,13 @@ volatile uint8 xdata PosAcFlag;
 
 volatile uint8 xdata IocFlag;
 volatile uint8 xdata RestartFlag;
-volatile uint8 xdata StartStopCtrl;
+
 volatile uint8 xdata SynFlag;
 volatile uint8 xdata HallEdgeFlag;
-volatile uint8 xdata MotorStallFlag;
-volatile uint8 xdata AdcTrigger;
-volatile uint8 xdata NewSteadyCtrlFlag;
+
+
 volatile uint8 xdata StartLoseStepTickerFlag;
-volatile uint8 xdata Delay200usFlag;
-volatile uint8 xdata Delay200usCounter;
+
 volatile uint8 xdata AcZeroSignal;
 
 
@@ -66,12 +64,12 @@ volatile uint8 xdata Triac2Ticker;
 volatile uint8 xdata TriggerProcessed;
 volatile uint8 xdata Trigger1On;
 volatile uint8 xdata Trigger2On;
-volatile uint16 xdata TriacPosAngle;
+volatile uint16 xdata TriacPosTime;
 
 volatile uint16 xdata InitialAngle;
 volatile uint16 xdata MaxAngleLimit;
 volatile uint16 xdata MinAngleLimit;
-volatile uint16 xdata InitialTimer1Value;
+volatile uint16 xdata TriacMinPosTime;
 volatile uint8 xdata Startup_Delay_Count;
 
 
@@ -97,31 +95,25 @@ volatile uint8 xdata InvertedAcSignal;
 
 volatile uint8 xdata MaxSpeedFlag;
 volatile uint8 xdata AboveHalfMaxSpeedFlag;
+volatile uint8 xdata state;
+volatile uint16 xdata FireAngle;
+
+volatile uint16 xdata AIM_PHASE_DIFF;
+
+volatile uint16 xdata MaxAngle;
+volatile uint16 xdata MinAngle;
+volatile uint16 xdata MiddleAngle;
+volatile uint16 xdata SteadyAngle;
+volatile uint8 xdata SynUpdate;
+volatile uint8 xdata SynTicker;
+
+
 
 
 
 void Assign_Status_Flag()
 {
 
-   if((IocIsrTicker > 36)  &&    (IocIsrTicker<60))                   // 300ms 
-           {
-             IocFlag = ON;                                // Start Open Loop with phase angle trigger 
-                                                            // used for Power On
-							Enable_Triac1();
-                             
-           }
-//------------------------------------------------------------// 
-    if(IocIsrTicker >= 60)                              // 500ms 
-           {
-                 SynFlag = ON;                                // Start Open Loop with Timer2 Trigger  
-           }
-    if(IocIsrTicker >= 90)                              // 750ms
-           {
-                 IocIsrTicker = 90;                           // Start Phase Closed Loop with Timer2 Trigger 
-                 NewSteadyCtrlFlag = ON;
-           }
-					 
-					 
 		if (Hall1Duration<(Hall1MaxDuration>>1))	Hall1HalfFlag=1; else Hall1HalfFlag=0;			
 	
 					 
@@ -133,44 +125,7 @@ void Assign_Status_Flag()
 		if (AcZeroSignal==0) InvertedAcSignal=1;else InvertedAcSignal=0;
 					
 					 
-					 
-//		if((StartStopCtrl == OFF) || (RestartFlag == ON))
-//           {
-//                
-//                 Disable_Triac();           
-//         
-//                 
-//                 if(RestartFlag == ON)
-//                 {
-//                       
-//                       RestartFlag = OFF;
-//                 }
-//                 
-//                               
-//                 StartStopCtrl = ON;
-//           }
-//           else if(StartStopCtrl == ON)
-//           {
-//               Trigger_Angle_Handler();
-//					 }
-
-//					 
-//		   if(StartStopCtrl == ON)
-//               { 
-//                    if((IocFlag == ON) && (SynFlag == OFF) && (NewSteadyCtrlFlag == OFF))  // PhaseAngle StartUp
-//                    {   
-//                       
-//											Run_Motor(); 
-//                    }
-//                    
-//                  
-//               }
-//               else
-//               {
-//                         Disable_Triac();
-//										
-//               }  			 
-//					 
+			
 					 
 }
 
@@ -248,6 +203,101 @@ void Power_Assigned()
 
 /* Private variables declaration ---------------------------------------------*/
 
+
+
+
+
+void Check_Fire_Angle()
+	
+{
+
+switch (state)
+{
+	
+	case SystemOff:    
+											if((IocIsrTicker > 36)  &&    (IocIsrTicker<60))  state=SystemOn;
+											Triac_Reset(); 
+											break;
+										
+	
+	case SystemOn: 			
+											if(IocIsrTicker >= 60)		state = KickStart;                                // Start Open Loop with Timer2 Trigger  	
+											FireAngle=InitFireAngle;
+											
+											break;
+	
+	case KickStart:			
+											if(IocIsrTicker >= 90)                             
+											{
+											IocIsrTicker = 90;                        
+											state = NormalRun;
+											}
+											FireAngle=StartFireAngle;
+											
+											break;
+	
+	case NormalRun:			
+											if (MaxSpeedFlag==1) 
+											{
+												state=SynMax;
+												MinAngle=(StartFireAngle+TargetFireAngle)>>1;
+												MaxAngle=32765;
+												SynUpdate=0;
+												SynTicker=0;
+												
+											}
+											FireAngle=TargetFireAngle;
+											
+											break;
+	
+	case SynMax:			  MiddleAngle=(MaxAngle+MinAngle)>>1;
+											FireAngle=MiddleAngle;
+											if ((MaxAngle>MinAngle)&&(SynUpdate==1))
+												{		
+													if (MaxSpeedFlag==1) MaxAngle=MiddleAngle+1;	
+													else MinAngle=MiddleAngle-1;
+													SynUpdate=0;
+												}
+											else 
+											{
+												state=MaxSteady;
+												AIM_PHASE_DIFF=PhaseErrorAcVsHall;
+												TriacPosTime=(32768-FireAngle)>>2;  //convert 10ms=32768  Fire angle  to time t= (32768-Fireangle) * 10ms/32768 
+												TriacPosTime+=(TriacPosTime>>2);
+												TriacMinPosTime=TriacPosTime;
+											}
+										
+											break;
+	
+	case MaxSteady:			Trigger_Angle_Handler();
+											if (MaxSpeedFlag==0)
+											{
+												state=LoseStep;
+												
+											}
+											
+											break;
+											
+	case LoseStep:			break;
+	
+	
+}
+
+
+
+
+
+
+
+}
+
+
+
+
+
+
+
+
 void main()
 {  	
 	
@@ -264,20 +314,21 @@ void main()
 		
 
 		{ 
+		
 			
-			Run_Motor();   
+				if ((state!=SystemOff)||(state!=MaxSteady)) Run_Motor();
 
 
 	//		if (MaxSpeedFlag==1) P55=1;else P55=0;
 
-			 if (( PhaseErrorAcVsHall>0) &&(AcVoltagePhase< PhaseErrorAcVsHall)) P55=1; else P55=0;
-			 if ((PhaseErrorAcVsHall<0)&& (AcVoltagePhase > (65535+PhaseErrorAcVsHall))) P47=1; else P47=0;
+//			 if (( PhaseErrorAcVsHall>0) &&(AcVoltagePhase< PhaseErrorAcVsHall)) P55=1; else P55=0;
+		//	 if ((PhaseErrorAcVsHall<0)&& (AcVoltagePhase > (65535+PhaseErrorAcVsHall))) P47=1; else P47=0;
 			
-			
+			P47=TRIAC1_PIN;
  
 			Assign_Status_Flag();
 			Power_Assigned();
-
+			Check_Fire_Angle();
 						
 						
 		}			
