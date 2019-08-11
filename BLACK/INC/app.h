@@ -94,7 +94,7 @@
 #define OFF                       (0)
 
 #define HALL2_PIN                 (P36)
-#define HALL1_PIN                  (P33)
+#define H1_PIN                  (P33)
 #define AC_ZERO_PIN               (P32)
 #define TRIAC2_PIN                (P22)
 #define TRIAC1_PIN                 (P21)
@@ -121,8 +121,11 @@
 
 #define TriacMaxPosTime					(10000)   //10ms 
 
+               
 
-
+ 
+#define AcFireNeg					 				AcActual
+ 
 								
 
 				
@@ -130,68 +133,77 @@ extern volatile uint8 xdata MaxSpeedFlag;
 extern volatile uint8 xdata AboveHalfMaxSpeedFlag;													
 																	
 																	
-extern volatile uint8 xdata Exti2IsrTicker;  
-extern volatile uint8 xdata Exti3IsrTicker;  
-extern volatile uint8 xdata Timer2OverFlowTicker;
-extern volatile uint8 xdata TimerOneIsrTicker;
+    
 
 
 extern volatile uint8 xdata Trigger1On;
 extern volatile uint8 xdata Trigger2On;
 extern volatile uint8 xdata Triac1Ticker;
 extern volatile uint8 xdata Triac2Ticker;
-extern volatile uint8 xdata MainTicker; 
-extern volatile uint8 xdata IocIsrTicker;
+ 
+extern volatile uint8 xdata DelayCount;
 extern volatile uint8 xdata LoseStepTicker;
-extern volatile uint8 xdata PosAcFlag;
 
-extern volatile uint8 xdata AcVoltagePhaseReset;
-extern volatile uint8 xdata TriacReset;
-extern volatile uint8 xdata FireSet;
-extern volatile uint8 xdata IocFlag;
+
+extern volatile uint8 xdata AcRisingEdgeDetect;
+ 
+ 
+ 
 extern volatile uint8 xdata RestartFlag;
 extern volatile uint8 xdata StartStopCtrl;
 extern volatile uint8 xdata SynFlag;
-extern volatile uint8 xdata HallEdgeFlag;
+ 
 extern volatile uint8 xdata MotorStallFlag;
-extern volatile uint8 xdata AdcTrigger;
+ 
 extern volatile uint8 xdata NewSteadyCtrlFlag;
 extern volatile uint8 xdata StartLoseStepTickerFlag;
-extern volatile uint8 xdata Delay200usFlag;
-extern volatile uint8 xdata Delay200usCounter;
-
-extern volatile uint16 xdata AdcResult;
-extern volatile uint16 xdata Ac_Voltage;
-extern volatile uint16 xdata AcVoltagePhase;
+ 
+ 
+extern volatile uint16 xdata AcPhase;
 extern volatile int16 xdata PhaseErrorAcVsHall;
 extern volatile uint16 xdata RawPhaseErrorAcVsHall;
 extern volatile int16 xdata FilteredPhaseErrorAcVsHall;
+extern volatile uint16 xdata AcPhaseInc;
+extern volatile uint16 xdata H1PhaseInc;
 
 
 extern volatile uint8 xdata AcDuration;
+extern volatile uint8 xdata AcPeriodCount;
 
-extern volatile uint8 xdata AcMaxDuration;
+extern volatile uint8 xdata H1PhaseIncFlag;
+extern volatile uint8 xdata H1SignalRebuild;
 
+extern volatile uint8 xdata H1RisingEdgeDetect;
+extern volatile uint16 xdata H1PeriodCount;
+extern volatile uint16 xdata H1Duration;
+extern  volatile uint16 xdata H1Phase;
+extern volatile uint16 xdata H1HalfPhase;
+extern volatile uint16 xdata H1FullPhase;
 extern volatile uint8 xdata FireZone;
-extern volatile uint16 xdata Hall1MaxDuration;
+ 
+extern volatile uint16 xdata AcHalfPhase;
+extern volatile uint16 xdata AcFullPhase;
 
-extern volatile uint16 xdata Hall1Duration;
-extern volatile uint8 xdata Hall1HalfFlag;
+extern volatile uint8 xdata H2SignalRebuild;
+
+extern volatile uint8 xdata H1HalfFlag;
 extern volatile uint8 xdata VirtualHall2;
 
-extern volatile uint8 xdata InvertedAcSignal;
+ 
 
 extern volatile uint8 xdata FirePower1;
 extern volatile uint8 xdata FirePower2;
 
-extern volatile uint8 xdata AcZeroSignal;
-
+extern volatile uint8 xdata AcRebuild;
+extern volatile uint8 xdata AcActual;
+ 
 extern volatile uint8 xdata AcFirePos;
 extern volatile uint8 xdata AcFireNeg;
+extern volatile uint8 xdata AcIncFlag;
 
-extern volatile uint8 xdata InvertAcFireNeg;
+ 
 
-extern volatile uint8 xdata InvertAcFirePos;
+ 
 
 extern volatile uint16 xdata TriacPosTime;
 extern volatile uint16 xdata Lose_Step_Delay_Count;
@@ -203,27 +215,23 @@ extern volatile uint16 xdata MaxAngleLimit;
 extern volatile uint16 xdata MinAngleLimit;
 
 
-extern volatile uint8 xdata state;
+extern volatile uint8 xdata current_state;
 extern volatile uint16 xdata FireAngle;
 
 extern volatile uint8 xdata SynUpdate;
 extern volatile uint8 xdata SynTicker;
 
 
-extern void Run_Motor(void);
-extern void Trigger_Angle_Handler(void);
 
-extern void Get_Init_Angle(void);
+
+
 extern volatile uint16 xdata AIM_PHASE_DIFF;
-
-extern void Enable_Triac1(void);
-extern void Enable_Triac2(void);
-
-extern void Disable_Triac(void);
-
-extern volatile uint8 xdata Startup_Delay_Count;
-
+ 
 extern volatile uint16 xdata SynchronizeDalyCount;
 
+
+extern void Run_Motor(void);
+extern void Trigger_Angle_Handler(void);
+extern void Get_Init_Angle(void);
 extern void User_Parameter_Init(void);
 #endif

@@ -102,7 +102,7 @@ void InitExtInterrupt (void)
 	IT0=0;  	//detect both falling and rising edge of signal (AC signal)
 	EX0=1;
 	PX0=1;
-	IT1=0;  	//detect both falling and rising edge of signal  (Hall1 signal) only rising edge 
+	IT1=0;  	//detect both falling and rising edge of signal  (H1 signal) only rising edge 
 	EX1=1;	  //enable INT1
 	PX1=1;
 	INT_CLKO |= 0x10;  //enable INT2, falling edge 
@@ -114,34 +114,63 @@ void InitExtInterrupt (void)
  Funcion Name:  Parameter_Reset
  Description: 
 *******************************************************************************/
-void Triac_Reset(void)
+void Triac1_Reset(void)
 {
  
-	Trigger1On=0;
-	Trigger2On=0;
+	FirePower1=0;
 	Triac1Ticker=0;
-	Triac2Ticker=0;
-	FireSet=0;
-
 	TRIAC1_PIN=0;
+	 
+
+
+}
+
+void Triac2_Reset(void)
+{
+ 
+	 
+	FirePower2=0;
+	Triac2Ticker=0;
 	TRIAC2_PIN=0;
 
 
 }
 
 
+
+
 void InitParameter(void)
 {
 	
-	Hall1MaxDuration=100;
-	Hall1Duration=0;
-	AcMaxDuration=100;
-	FireAngle=0;
-	Triac_Reset();
-	state=SystemOn;
+	AcDuration=0;
+	H1Duration=0;
+	AcPeriodCount=200;            //assume 50Hz
+	AcPhaseInc=327;
+	AcHalfPhase=32767;
+	AcFullPhase=65535;
+	 
+	H1Phase=0;
+	FireAngle=InitFireAngle;
+	Triac1_Reset();
+	Triac2_Reset();
+	AcIncFlag=0;
+  current_state=SystemOff;
 	TriacPosTime=0;
-	
+
 }
 
 
+void Parameter_Reset(void)
+{
+     AcPhase = 0;
+     DelayCount = 0;    
+     SynFlag = 0;
+     NewSteadyCtrlFlag = 0;
+			
+     PID_Error = 0;
+     LoseStepTicker = 0;
+     StartLoseStepTickerFlag = 0;
+  	
+    
+}
 

@@ -20,86 +20,70 @@
 
 /* Private variables definition ----------------------------------------------*/
 //--------------------------------- // External Interrupt 
-volatile uint8 xdata Exti2IsrTicker;  
-volatile uint8 xdata Exti3IsrTicker;  
-volatile uint8 xdata Timer2OverFlowTicker;
-volatile uint8 xdata TimerOneIsrTicker; 
+ 
+ 
+ 
 
-volatile uint8 xdata MainTicker; 
-volatile uint8 xdata IocIsrTicker;
-volatile uint8 xdata LoseStepTicker;
-volatile uint8 xdata PosAcFlag;
 
-volatile uint8 xdata IocFlag;
+volatile uint8 xdata DelayCount;
+
 volatile uint8 xdata RestartFlag;
 
+
+
+
+
+
+volatile uint8 	xdata AcRebuild;
+volatile uint8 	xdata AcIncFlag;
+volatile uint8 	xdata AcRisingEdgeDetect;
+volatile uint8 	xdata AcPeriodCount;
+volatile uint8 	xdata AcDuration;
+volatile uint16 xdata AcPhaseInc; 
+volatile uint16 xdata AcHalfPhase;
+volatile uint16 xdata AcFullPhase;
+volatile uint16 xdata AcPhase;
+
+volatile uint8 	xdata H1SignalRebuild;
+volatile uint8 	xdata H1PhaseIncFlag;
+volatile uint8 	xdata H1RisingEdgeDetect;
+volatile uint16 xdata H1PeriodCount;
+volatile uint16 xdata H1Duration;
+volatile uint16 xdata H1HalfPhase;
+volatile uint16 xdata H1FullPhase;
+volatile uint16 xdata H1PhaseInc;
+volatile uint16 xdata H1Phase;
+
+volatile uint8 xdata H2SignalRebuild;
+
+ 
+volatile uint8 xdata AcFirePos;
+volatile uint8 xdata AcFireNeg;
+volatile uint8 xdata FireZone;
+volatile uint8 xdata FirePower1;
+volatile uint8 xdata FirePower2;
+volatile uint8 xdata Trigger1On;
+volatile uint8 xdata Trigger2On;
+volatile uint8 xdata Triac1Ticker;
+volatile uint8 xdata Triac2Ticker;
+
+
+
+
+
 volatile uint8 xdata SynFlag;
-volatile uint8 xdata HallEdgeFlag;
-
-
+volatile uint8 xdata NewSteadyCtrlFlag;
 volatile uint8 xdata StartLoseStepTickerFlag;
-
-volatile uint8 xdata AcZeroSignal;
-
-
-
-volatile uint8 xdata AcDuration;
-
-volatile uint8 xdata AcMaxDuration;
-
-volatile uint16 xdata AdcResult;
-volatile uint16 xdata Ac_Voltage;
-
-volatile uint16 xdata AcVoltagePhase;
-
-volatile uint8 xdata AcVoltagePhaseReset;
-
+volatile uint8 xdata LoseStepTicker;
 volatile int16 xdata PhaseErrorAcVsHall;
 volatile uint16 xdata RawPhaseErrorAcVsHall;
 volatile int16 xdata FilteredPhaseErrorAcVsHall;
-volatile uint8 xdata Triac1Ticker;
-volatile uint8 xdata FireSet;
-volatile uint8 xdata TriacReset;
-volatile uint8 xdata Triac2Ticker;
-volatile uint8 xdata TriggerProcessed;
-volatile uint8 xdata Trigger1On;
-volatile uint8 xdata Trigger2On;
 volatile uint16 xdata TriacPosTime;
-
 volatile uint16 xdata InitialAngle;
 volatile uint16 xdata MaxAngleLimit;
 volatile uint16 xdata MinAngleLimit;
 volatile uint16 xdata TriacMinPosTime;
-volatile uint8 xdata Startup_Delay_Count;
-
-
-volatile uint8 xdata AcFirePos;
-volatile uint8 xdata AcFireNeg;
-volatile uint8 xdata InvertAcFireNeg;
-
-volatile uint8 xdata InvertAcFirePos;
-
-volatile uint8 xdata FireZone;
-volatile uint8 xdata FirePower1;
-volatile uint8 xdata FirePower2;
-volatile int16 xdata PID_Error;
-
-volatile uint16 xdata Hall1MaxDuration;
-
-volatile uint16 xdata Hall1Duration;
-
-volatile uint8 xdata Hall1HalfFlag;
-volatile uint8 xdata VirtualHall2;
-volatile uint8 xdata InvertedAcSignal;
-
-
-volatile uint8 xdata MaxSpeedFlag;
-volatile uint8 xdata AboveHalfMaxSpeedFlag;
-volatile uint8 xdata state;
-volatile uint16 xdata FireAngle;
-
 volatile uint16 xdata AIM_PHASE_DIFF;
-
 volatile uint16 xdata MaxAngle;
 volatile uint16 xdata MinAngle;
 volatile uint16 xdata MiddleAngle;
@@ -111,135 +95,124 @@ volatile uint8 xdata SynTicker;
 
 
 
-void Assign_Status_Flag()
+
+
+volatile uint8 xdata current_state;
+volatile uint8 xdata next_state;
+volatile uint16 xdata FireAngle;
+volatile uint8 xdata MaxSpeedFlag;
+volatile int16 xdata PID_Error; 
+volatile uint16 xdata temp;	
+
+
+
+
+ 
+void Rebuild_Waveform(void);
+void State_Assign(void);
+void Check_Error(void);
+
+
+
+
+
+
+
+
+
+void Rebuild_Waveform()
 {
 
-		if (Hall1Duration<(Hall1MaxDuration>>1))	Hall1HalfFlag=1; else Hall1HalfFlag=0;			
+
+static unsigned char Zone1_Flag;
+static unsigned char Zone2_Flag;
 	
-					 
-		if (((Hall1HalfFlag==0)&&(HALL1_PIN==1))||((Hall1HalfFlag==1)&&(HALL1_PIN==0))) VirtualHall2=0;else VirtualHall2=1;
-					 
-    if( Hall1MaxDuration<=AcMaxDuration>>1) MaxSpeedFlag=1;else MaxSpeedFlag=0;   //check if Halll signal is 1/2 of AC frequency
-		if( Hall1MaxDuration<=AcMaxDuration) AboveHalfMaxSpeedFlag=1;else AboveHalfMaxSpeedFlag=0;   //check if Halll signal is 1/2 of AC frequency 
-					 
-		if (AcZeroSignal==0) InvertedAcSignal=1;else InvertedAcSignal=0;
-					
-					 
+	//************rebuild AC signal*****************// 
+	
+	if (AcIncFlag==1)
+	{
+		AcIncFlag=0;
+		 AcPhase+=AcPhaseInc;
+	}	if ( AcPhase>=AcFullPhase) AcPhase=0;
 			
-					 
-}
-
-
-
-
-
-
-
-void Power_Assigned()
-{
+	//*************rebuild H1 signal*************//
 	
+	if (H1PhaseIncFlag==1)
+	{
+		H1PhaseIncFlag=0;
+		H1Phase+=H1PhaseInc;
+	}	if (H1Phase>=H1FullPhase) H1Phase=0;
+	if (H1Phase<H1HalfPhase) H1SignalRebuild=1;else  H1SignalRebuild=0;
+ 			
+	//************rebuild H2 signal*************//
 	
+	if (H1Phase<(H1HalfPhase>>1)||(H1Phase>(H1HalfPhase+(H1HalfPhase>>1)))) H2SignalRebuild=0;
+  else H2SignalRebuild=1;
+		
+ 
 	
-	if ((AcVoltagePhase<32767)&& ((AcVoltagePhase> (32767-FireAngle))))
+	//****************create  dead zone ****************//
+
+	if ( AcPhase<AcHalfPhase) AcRebuild=1;else  AcRebuild=0;
+	if (( AcPhase> No_Fire_Zone1)&&( AcPhase<No_Fire_Zone2))	Zone1_Flag=1;	else Zone1_Flag=0;
+	if (( AcPhase> No_Fire_Zone3)&&( AcPhase<No_Fire_Zone4))	Zone2_Flag=1;	else Zone2_Flag=0;
+	if ((Zone1_Flag==1)||(Zone2_Flag==1)) FireZone=1;else FireZone=0;
+			
+	//********define positive wave fire region ***********//
+	if (FireZone==1)
 		{
-			InvertAcFireNeg=0;
-	  AcFirePos=1;
-		}
-					else 
-						{
-						
-						AcFirePos=0;
-						InvertAcFireNeg=1;
-						}
+		if  ( AcPhase> (AcHalfPhase-FireAngle)) 
+				AcFirePos=1; 
+		
+  //**********define negative wave fire region*************//
+	
+		if ( AcPhase> (AcFullPhase-FireAngle)) 
+				AcFireNeg=1;
+			}
+	else 
+			{
+				AcFirePos=0;
+				AcFireNeg=0;
+			}
 
 	
-	if ((AcVoltagePhase>=32767)&&((AcVoltagePhase> (65535-FireAngle)))) 
-	{
-		AcFireNeg=0;
-		InvertAcFirePos=1;
-	}
-					else 
-					{
-						AcFireNeg=1;
-						InvertAcFirePos=0;
-					}
-	
-	
-	if (AcVoltagePhase<32767) AcZeroSignal=1;else  AcZeroSignal=0;
-	
-	if (((AcVoltagePhase> No_Fire_Zone)&&(AcVoltagePhase<(32768-No_Fire_Zone)))||((AcVoltagePhase> (32767+No_Fire_Zone))&&(AcVoltagePhase<(65535-No_Fire_Zone))))
-			FireZone=1;
-			else FireZone=0;
-			
-
-	if ((((HALL1_PIN == 1)&&(AcFirePos==1))) ||((HALL1_PIN == 0)&&(AcFireNeg==0))) 
-			FirePower1=1;
-		else FirePower1=0;
-	
-	
-		if ((((VirtualHall2 == 1)&&(InvertAcFirePos==1))) ||((VirtualHall2 == 0)&&(InvertAcFireNeg==0))) 
-			FirePower2=1;
-		else FirePower2=0;
-	
-	
-	
-	
-	if (FireZone==0)
-	{
-	
-		Triac_Reset();
-	}
-	if 	((Triac1Ticker>=MaxTriggerPulse)||(Triac2Ticker>=MaxTriggerPulse))   Disable_Triac();
-	
-	
-
-	
-	
-	
-	
-	
-
 }
 
-/* Private variables declaration ---------------------------------------------*/
 
 
 
 
-
-void Check_Fire_Angle()
+void State_Assign()
 	
 {
 
-switch (state)
+switch (current_state)
 {
 	
 	case SystemOff:    
-											if((IocIsrTicker > 36)  &&    (IocIsrTicker<60))  state=SystemOn;
-											Triac_Reset(); 
+											if((DelayCount > 36)  &&    (DelayCount<60))  next_state=SystemOn;
+											Triac1_Reset();
+											Triac2_Reset();										
 											break;
-										
 	
 	case SystemOn: 			
-											if(IocIsrTicker >= 60)		state = KickStart;                                // Start Open Loop with Timer2 Trigger  	
+											if(DelayCount >= 60)		next_state = KickStart;                                // Start Open Loop with Timer2 Trigger  	
 											FireAngle=InitFireAngle;
-											
 											break;
 	
 	case KickStart:			
-											if(IocIsrTicker >= 90)                             
+											if(DelayCount >= 90)                             
 											{
-											IocIsrTicker = 90;                        
-											state = NormalRun;
+											DelayCount = 90;                        
+											next_state = NormalRun;
 											}
 											FireAngle=StartFireAngle;
-											
 											break;
 	
 	case NormalRun:			
 											if (MaxSpeedFlag==1) 
 											{
-												state=SynMax;
+												next_state=SynMax;
 												MinAngle=(StartFireAngle+TargetFireAngle)>>1;
 												MaxAngle=32765;
 												SynUpdate=0;
@@ -260,7 +233,7 @@ switch (state)
 												}
 											else 
 											{
-												state=MaxSteady;
+												next_state=MaxSteady;
 												AIM_PHASE_DIFF=PhaseErrorAcVsHall;
 												TriacPosTime=(32768-FireAngle)>>2;  //convert 10ms=32768  Fire angle  to time t= (32768-Fireangle) * 10ms/32768 
 												TriacPosTime+=(TriacPosTime>>2);
@@ -272,7 +245,7 @@ switch (state)
 	case MaxSteady:			Trigger_Angle_Handler();
 											if (MaxSpeedFlag==0)
 											{
-												state=LoseStep;
+												next_state=LoseStep;
 												
 											}
 											
@@ -283,55 +256,88 @@ switch (state)
 	
 }
 
+current_state=next_state;
 
-
-
+if (current_state!=SystemOff) Run_Motor();
 
 
 
 }
 
 
+void Check_Error()
+{
+ 
+	//**********stop trigger after defined number of pulse*******//
+			if (Triac1Ticker>=MaxTriggerPulse) Triac1_Reset();
+			if (Triac2Ticker>=MaxTriggerPulse) Triac2_Reset();
+	
+	
+	//**************no trigger beyond Dead zone*************//
+			if (FireZone==0)	
+					{
+					Triac1_Reset();
+					Triac2_Reset();
+					}
+					
+	//**************retart if needed**************************//				
+			if (RestartFlag == ON)
+            {
+              	Triac1_Reset();
+								Triac2_Reset();
+                Parameter_Reset();
+                RestartFlag = OFF;
+            }
+		
+	//*************only accept AC frequency of 50 or 60 Hz********//
+						
+			if ((AcPeriodCount>165)&&(AcPeriodCount<202))    //allow AC frequency either 50 (20ms) or 60 Hz (16.6ms)
+				{
+					if (AcPeriodCount<169) 
+					{
+						AcPhaseInc=394;			//60Hz-->16.7ms period=394*166, half period=32702
+					  AcHalfPhase=32702;  //half period time count=394*166/2
+						AcFullPhase=65404;  //full period time count=394*166
+					}
+						if (AcPeriodCount>198)
+						{
+							AcPhaseInc=327;			//50Hz-->20ms period=327*200, half period=32700    
+							AcHalfPhase=32700;  //half period time count=327*200/2
+							AcFullPhase=65400;  //full period time count=327*200
+						}
+					}
+				else current_state=SystemOff;
+				
+				if (AcPeriodCount==H1PeriodCount) MaxSpeedFlag=1;
 
-
-
-
+		}
 
 
 void main()
 {  	
 	
     IO_Init();				   //真对 IAP15W4K61S4  IO口初始化
-		InitTime0();
-		InitTime1();
-		InitTime2();
+		InitTime0();					//single 100us count
+		InitTime1();					//divide 20ms into 200 time interval
+		InitTime2();					//calculate post angle time
 		InitExtInterrupt();
-	  Triac_Reset();
+	  Triac1_Reset();
+		Triac2_Reset();
 		InitParameter();
+	  Parameter_Reset();
     ENABLE_ALL_INTERRUPT();
-
-		while(1)
 		
+	
+	
+		while(1){
 
-		{ 
-		
-			
-				if ((state!=SystemOff)||(state!=MaxSteady)) Run_Motor();
+		Check_Error();
+		Rebuild_Waveform();
+		State_Assign();
+			if (( TRIAC2_PIN==1)) P55=1; else P55=0;
+                                          			
+		}
 
-
-	//		if (MaxSpeedFlag==1) P55=1;else P55=0;
-
-//			 if (( PhaseErrorAcVsHall>0) &&(AcVoltagePhase< PhaseErrorAcVsHall)) P55=1; else P55=0;
-		//	 if ((PhaseErrorAcVsHall<0)&& (AcVoltagePhase > (65535+PhaseErrorAcVsHall))) P47=1; else P47=0;
-			
-			P47=TRIAC1_PIN;
- 
-			Assign_Status_Flag();
-			Power_Assigned();
-			Check_Fire_Angle();
-						
-						
-		}			
    	
 }
 

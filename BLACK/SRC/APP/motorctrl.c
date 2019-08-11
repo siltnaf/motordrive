@@ -25,56 +25,27 @@ void Run_Motor(void)
 {
 		
 
-
-
-if ((FirePower1==1)&&(FireZone==1)&&(Trigger2On==0)&&(FireSet==0))
-{
-
- Enable_Triac1();
- 
-}
-
-
-	if ((FirePower2==1)&&(FireZone==1)&&(Trigger1On==0)&&(FireSet==0))
-{
-
-
- Enable_Triac2();
-	
- 
-	}	
-
-
-
-		
-}
-
-void Enable_Triac1(void) 			
-	
-{
-	 Trigger1On=1;
-	FireSet=1;
-																	
-}
-
-
-
-void Enable_Triac2(void) 	
-{
-					
-				Trigger2On=1;
-	FireSet=1;											
-
-}
-/*******************************************************************************
- Funcion Name: Disable_Triac
- Description: 
-*******************************************************************************/
-	void Disable_Triac(void)
+	//****************Trigger Triac*********************//
+  if  (FirePower2==0) 
 	{
-		
-		TRIAC1_PIN = 0;
-		TRIAC2_PIN=0;
+		if (((H1SignalRebuild == 1)&&((AcFirePos&FireZone)==1)&&(AcRebuild==1)) ||  ((H1SignalRebuild == 0)&&((AcFireNeg&FireZone)==1)&&(AcRebuild==0)))
+			FirePower1=1;
+		else FirePower1=0;
+	}
+	if (FirePower1==0)  
+	{
+		if (((H2SignalRebuild == 1)&&((AcFireNeg&FireZone)==1)&&(AcRebuild==0)) ||  ((H1SignalRebuild == 0)&&((AcFirePos&FireZone)==1)&&(AcRebuild==1)))
+			FirePower2=1;
+		else FirePower2=0;
 	}
 
+ 
+  
 
+
+		
+}
+
+
+
+ 
