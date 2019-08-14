@@ -148,15 +148,18 @@ void InitParameter(void)
 	AcPhaseInc=327;
 	AcHalfPhase=32767;
 	AcFullPhase=65535;
-	 
+	new_rpm=2000;
 	H1Phase=0;
-	FireAngle=InitFireAngle;
+ 
+	H1FireAngle=InitFireAngle;
+	H2FireAngle=InitFireAngle;
 	Triac1_Reset();
 	Triac2_Reset();
 	AcIncFlag=0;
   current_state=SystemOff;
 	TriacPosTime=0;
-
+	direction=ccw;               //write direction =ccw or cw, control the rotation direction
+	
 }
 
 

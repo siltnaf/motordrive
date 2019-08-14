@@ -23,28 +23,67 @@
 *******************************************************************************/
 void Run_Motor(void)
 {
-		
+ 
 
 	//****************Trigger Triac*********************//
-  if  (FirePower2==0) 
-	{
-		if (((H1SignalRebuild == 1)&&((AcFirePos&FireZone)==1)&&(AcRebuild==1)) ||  ((H1SignalRebuild == 0)&&((AcFireNeg&FireZone)==1)&&(AcRebuild==0)))
-			FirePower1=1;
-		else FirePower1=0;
+   	switch (FireSeq)
+		{
+			case refresh:
+				
+			//************find FirePower1 and FirePower2 start position**************//
+											if (((H1Rebuild == 1)&&(AcFirePos==1)&&(AcRebuild==1)) ||  ((H1Rebuild == 0)&&(AcFireNeg==1)&&(AcRebuild==0)))
+											Fire1Reg=1;
+											else Fire1Reg=0;
+											if (((H2Rebuild == 1)&&(AcFireNeg==1)&&(AcRebuild==0)) ||  ((H2Rebuild == 0)&&(AcFirePos==1)&&(AcRebuild==1)))
+											Fire2Reg=1; 	
+											else Fire2Reg=0;
+											
+			
+											if ((Fire1Reg==1)||(Fire2Reg==1)) FireSeq=start;
+
+											break;
+			//***************handle case either FirePower1 or FirePower2 is triggered*************//
+			case start:			
+											if ((Fire1Reg==1)&&(Fire2Reg==0)){FirePower1=1;FirePower2=0;FireSeq=complete;}
+											if ((Fire2Reg==1)&&(Fire1Reg==0)){FirePower2=1;FirePower1=0;FireSeq=complete;}
+											if ((Fire1Reg==1)&&(Fire2Reg==1)){FireSeq=sort;}
+											break;
+			//************if both FirePower1 and FirePower2 are triggered, swap the trigger sequence********//
+			case sort:			
+											if (PrioritySwitch==0)
+												{
+													FirePower1=1;
+													FirePower2=0;
+													PrioritySwitch=1;
+													FireSeq=complete;
+												}
+												else 
+												{	
+													FirePower2=1;
+													FirePower1=0;
+													PrioritySwitch=0;
+													FireSeq=complete;
+												}
+												break;
+			case complete:		break;								
+												
 	}
-	if (FirePower1==0)  
-	{
-		if (((H2SignalRebuild == 1)&&((AcFireNeg&FireZone)==1)&&(AcRebuild==0)) ||  ((H1SignalRebuild == 0)&&((AcFirePos&FireZone)==1)&&(AcRebuild==1)))
-			FirePower2=1;
-		else FirePower2=0;
-	}
+		
+		
+		
 
  
-  
+	
+		
+ 
+		
+	}
+ 
+	
 
 
 		
-}
+
 
 
 

@@ -93,14 +93,17 @@
 #define ON                        (1)
 #define OFF                       (0)
 
-#define HALL2_PIN                 (P36)
+#define H2_PIN                 (P36)
 #define H1_PIN                  (P33)
-#define AC_ZERO_PIN               (P32)
+#define AC_PIN               (P32)
 #define TRIAC2_PIN                (P22)
 #define TRIAC1_PIN                 (P21)
 #define TEST_PA2_PIN6             (P55)
 
 
+//rotation direction
+#define cw												0
+#define ccw												1
 
 
 
@@ -111,6 +114,16 @@
 #define	KickStart									3
 #define	SynMax										4
 #define MaxSteady									5
+
+
+//FireSeq
+
+#define refresh										0
+#define start											1
+#define sort											2
+#define complete									3
+
+
 
 #define LoseStep									7
 
@@ -123,10 +136,7 @@
 
                
 
- 
-#define AcFireNeg					 				AcActual
- 
-								
+		
 
 				
 extern volatile uint8 xdata MaxSpeedFlag;
@@ -143,12 +153,12 @@ extern volatile uint8 xdata Triac2Ticker;
  
 extern volatile uint8 xdata DelayCount;
 extern volatile uint8 xdata LoseStepTicker;
-
+extern volatile uint8 xdata FireSeq;
 
 extern volatile uint8 xdata AcRisingEdgeDetect;
  
  
- 
+extern volatile uint16 xdata TargetFireAngle;
 extern volatile uint8 xdata RestartFlag;
 extern volatile uint8 xdata StartStopCtrl;
 extern volatile uint8 xdata SynFlag;
@@ -164,14 +174,16 @@ extern volatile int16 xdata PhaseErrorAcVsHall;
 extern volatile uint16 xdata RawPhaseErrorAcVsHall;
 extern volatile int16 xdata FilteredPhaseErrorAcVsHall;
 extern volatile uint16 xdata AcPhaseInc;
+extern volatile uint16 xdata AcPhasePrecise;
+
 extern volatile uint16 xdata H1PhaseInc;
 
-
+extern volatile uint8  xdata AcEdgeDetect;
 extern volatile uint8 xdata AcDuration;
 extern volatile uint8 xdata AcPeriodCount;
 
 extern volatile uint8 xdata H1PhaseIncFlag;
-extern volatile uint8 xdata H1SignalRebuild;
+extern volatile uint8 xdata H1Rebuild;
 
 extern volatile uint8 xdata H1RisingEdgeDetect;
 extern volatile uint16 xdata H1PeriodCount;
@@ -184,26 +196,32 @@ extern volatile uint8 xdata FireZone;
 extern volatile uint16 xdata AcHalfPhase;
 extern volatile uint16 xdata AcFullPhase;
 
-extern volatile uint8 xdata H2SignalRebuild;
+extern volatile uint8 xdata H2Rebuild;
 
 extern volatile uint8 xdata H1HalfFlag;
 extern volatile uint8 xdata VirtualHall2;
 
- 
-
+extern volatile uint16 xdata new_rpm;
+extern volatile uint8 xdata direction;
 extern volatile uint8 xdata FirePower1;
 extern volatile uint8 xdata FirePower2;
 
 extern volatile uint8 xdata AcRebuild;
 extern volatile uint8 xdata AcActual;
- 
+
+extern volatile uint8 xdata Fire1Reg;
+extern volatile uint8 xdata Fire2Reg;
+extern volatile uint8 xdata Fire3Reg;
+extern volatile uint8 xdata Fire4Reg;
+
+extern volatile uint8 xdata PrioritySwitch;
 extern volatile uint8 xdata AcFirePos;
 extern volatile uint8 xdata AcFireNeg;
 extern volatile uint8 xdata AcIncFlag;
 
- 
+extern volatile uint16 xdata rpm;	
 
- 
+extern volatile uint16 xdata H2FireAngle;
 
 extern volatile uint16 xdata TriacPosTime;
 extern volatile uint16 xdata Lose_Step_Delay_Count;
@@ -216,7 +234,7 @@ extern volatile uint16 xdata MinAngleLimit;
 
 
 extern volatile uint8 xdata current_state;
-extern volatile uint16 xdata FireAngle;
+extern volatile uint16 xdata H1FireAngle;
 
 extern volatile uint8 xdata SynUpdate;
 extern volatile uint8 xdata SynTicker;

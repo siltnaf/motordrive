@@ -7,16 +7,17 @@
 #define ACCounterWidth	  (100)                     //AC  duration divided into 200 step each step increment by 327; totall value is 65535 
 
 
-#define TargetFireAngle        	(15767)                  //range is 0 to 32767
-#define	InitFireAngle				 		(5000)
+
+#define	InitFireAngle				 		(7000)
 #define StartFireAngle				 	(15000)
-#define No_Fire_Zone           	(2000)
+#define MaxFireAngle            (20000)        //max value is 32700-deadzone
+#define No_Fire_Zone           	(3000)         //dead zone 
 #define No_Fire_Zone1            (No_Fire_Zone)
 #define No_Fire_Zone2            (AcHalfPhase-No_Fire_Zone)
 #define No_Fire_Zone3            (AcHalfPhase+No_Fire_Zone)
 #define No_Fire_Zone4            (AcFullPhase-No_Fire_Zone)
-#define FireAngleMargin          (500)
-#define SynSpeed									(10)
+
+
 
 
 
