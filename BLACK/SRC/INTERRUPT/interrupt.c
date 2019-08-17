@@ -22,81 +22,74 @@ void extint0()   interrupt 0 using 1
                }
 							 else 
 								AcActual=0;
-							
-						 
-							 
-           
-			
-//------------------------------------------------------------//  
+						
            DelayCount++;
-//------------------------------------------------------------// time flow for control            
-//						if (SynUpdate==0)
-//						{
-//							SynTicker++;
-//							if (SynTicker>SynSpeed)
-//							{
-//								SynTicker=0;
-//								SynUpdate=1;
-//							}
-//						}
-
-//           
-//						if (current_state==MaxSteady)
-//						{
-//						
-//						TH0 =(65536-TriacPosTime)/256;
-//						TL0 = (65536-TriacPosTime)%256;
-//						TR0=1;
-//						TF0=0;
-//						}
+				
 }
 
 
 
 
-//H1 signal Handler (detect both rising and falling edge )
+//H1 Hall signal  (detect both rising and falling edge )
 void extint1()   interrupt 2 using 1
 {
-
-	
- 
-		 
- if  (H1_PIN==1)
-		{
+		if  (H1_PIN==1)                  //rising edge of H1 signal
+			{
 			H1RisingEdgeDetect=1;  
-
+					
+			}
+			else													//falling edge of H1 signal
+			{					
+				
+				
+									
+/************************************************************************
+;                           -------
+;          AC              |       |
+;             -------------         ----------------------
+;
+;                               -------
+;         H1                   |       |
+;                 -------------         ----------------------
+;
+;                 Targetphase is between falling edge of AC and falling edge of H1 
+;	
+;************************************************************************/
+				
+				
+// caputre falling edge of  H1
+				
+				H1PhaseFallEdge=AcPhasePrecise;
+				
+//					
+//			 if (AcPhasePrecise > AcHalfPhase)
+//			 {
+//			PID_Error = TargetAcH1Phase - (AcPhasePrecise-AcHalfPhase);
 			
-//-------------------------------------------------------------// Get phase difference between AC zero and Hall
-//             RawPhaseErrorAcVsHall = AcPhase;
-//             if(RawPhaseErrorAcVsHall > 32767 )             // Phase advance
-//             {
-//                   PhaseErrorAcVsHall = -(65535 - RawPhaseErrorAcVsHall);
-//             }
-//             else
-//             {
-//                   PhaseErrorAcVsHall =  RawPhaseErrorAcVsHall;
-//             }      
-//------------------------------------------------------------// Motor lose step judgement algorithm
-//             if(NewSteadyCtrlFlag == ON)
-//             {      
-//                   StartLoseStepTickerFlag = ON;           // Enable LooseStepTicker starts to count 
+//			 }
+//			 else 
+//			 {
+//			PID_Error=-(AcPhasePrecise+(AcHalfPhase-TargetAcH1Phase)); 
+				
+//			 }
+				}
+				
+				
+				
+			
+			
+			
+		
+			
+			
 
-//							                    if(LoseStepTicker > 100)                // Check LoseStepTicker 100@5kHz, 200@10kHz (50Hz,20ms)
-//                   {
-//                      RestartFlag = ON;
-//                   }
-
-//                   LoseStepTicker = 0;                     // Clear LoseStepTicker
-//             }  
-
-
-					 }
+				
 }
 
 
 
 /**************************************************************************************************
-;Hall2 signal Handler (detect falling edge only)
+;Hall2 Hall Signal(detect falling edge only)
 ;
 ;increase H2FireAngle if edge drop before H2Rebuild 
 ;
@@ -104,30 +97,21 @@ void extint1()   interrupt 2 using 1
 ;
 ;
 **************************************************************************************************/
-
-
-
-
-
 void extint2()   interrupt 10 using 1
 {
-
-
 	
-		if (H2Rebuild==1)
-		 H2FireAngle+=((H1HalfPhase+(H1HalfPhase>>1)-H1Phase)>>4);
-		else H2FireAngle-=((H1Phase-(H1HalfPhase+(H1HalfPhase>>1)))>>4);
-		if (H2FireAngle>TargetFireAngle) H2FireAngle=TargetFireAngle;
-		if (H2FireAngle<InitFireAngle) H2FireAngle=InitFireAngle;
+		// apply seperate H2Fire angle if speed is below 1/2 max speed
 	
+	  if ((H1PeriodCount>>1)>AcPeriodCount)
+		{
+			if (H2Rebuild==1)
+			H2FireAngle+=((H1HalfPhase+(H1HalfPhase>>1)-H1Phase)>>4);
+			else H2FireAngle-=((H1Phase-(H1HalfPhase+(H1HalfPhase>>1)))>>4);
+			if (H2FireAngle>TargetFireAngle) H2FireAngle=TargetFireAngle;
+			if (H2FireAngle<InitFireAngle) H2FireAngle=InitFireAngle;
+		}
+		else H2FireAngle=TargetFireAngle;
 }
-
-
-
-
-
-
-
 
 
 
@@ -135,10 +119,7 @@ void extint2()   interrupt 10 using 1
 //Timer 0 for TRIAC pulse width  100us
 void tm0() interrupt 1 using 1
 {
-
-
 	
-
 }
 
 
@@ -158,8 +139,6 @@ void tm1() interrupt 3 using 1
 ;both Triac1 and Triac2 trigger at 100us pulse interval 
 ;
 ;totaly no of pulse = MaxTriggerPulse/2
-;
-;
 ;
 ;
 *********************************************************************************************/
@@ -221,10 +200,7 @@ void tm1() interrupt 3 using 1
 ;
 ;
 ;
-**************************************************************************************************/
-				
-				
-				
+**************************************************************************************************/			
 				H1Duration++;
 				if (H1Duration==10)  H1PhaseInc=65535/H1PeriodCount;
 				if (H1Duration==20)  H1FullPhase=(H1PhaseInc*H1PeriodCount);
@@ -232,13 +208,7 @@ void tm1() interrupt 3 using 1
 			}
 	
 	
-            
-  
-//	if(StartLoseStepTickerFlag == ON)
-//    {   
-//      LoseStepTicker++; 
-//     }   
-	  
+
 	
 }
 

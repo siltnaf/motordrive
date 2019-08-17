@@ -32,41 +32,36 @@ void IO_Init(void)
 	
 }
 
-void InitTime0(void)
-{
-	//mode 0: 13-bit timer
-//	  tmod &= 0xf0;              //clear timer0 mode 
-//	  tmod |= 0x08;              //set timer0 as timer mode 0
-//	  tl0 = 0x00;
-//	  th0 = 0x00;
+//void InitTime0(void)
+//{
+//	//mode 0: 13-bit timer
+////	  tmod &= 0xf0;              //clear timer0 mode 
+////	  tmod |= 0x08;              //set timer0 as timer mode 0
+////	  tl0 = 0x00;
+////	  th0 = 0x00;
 
-//	  //mode 1: 16-bit timer
-	TMOD &= 0xf0;              //clear timer0 mode 
-	//TMOD |= 0x01;              //set timer0 as timer mode 1
-	
-	TH0 =(65536-TriggerPulseWidth)/256;
-  TL0 = (65536-TriggerPulseWidth)%256;
-	
-	TR0 =1;			 //定时器开始工作
-	ET0 =1;			 //使能定时器中断
+////	  //mode 1: 16-bit timer
+//	TMOD &= 0xf0;              //clear timer0 mode 
+//	//TMOD |= 0x01;              //set timer0 as timer mode 1
+//	
+//	TH0 =(65536-TriggerPulseWidth)/256;
+//  TL0 = (65536-TriggerPulseWidth)%256;
+//	
+//	TR0 =1;			 //定时器开始工作
+//	ET0 =1;			 //使能定时器中断
 
-	
+//	
 
-    //mode 2: reload mode
-//    tmod &= 0xf0;              //clear timer0 mode 
-//	  tmod |= 0x0a;              //set timer0 as timer mode 2
-//	  th0 = 0x50;//0x00;//
-}
+//    //mode 2: reload mode
+////    tmod &= 0xf0;              //clear timer0 mode 
+////	  tmod |= 0x0a;              //set timer0 as timer mode 2
+////	  th0 = 0x50;//0x00;//
+//}
 
 void InitTime1(void)
 {
-	  //mode 0: 13-bit timer
-//	  tmod &= 0x0f;              //clear timer1 mode 
-//	  tmod |= 0x80;              //set timer1 as timer mode 0
-//	  tl1 = 0x00;
-//	  th1 = 0x00;
-
-//	  //mode 1: 16-bit timer
+	
+	  //mode 1: 16-bit timer
 	  TMOD &= 0x0f;              //clear timer1 mode 
 	
 		TH1 =(65536-ACCounterWidth)/256;
@@ -75,23 +70,18 @@ void InitTime1(void)
 	  ET1 =1;			 //使能定时器中断
 	 
 	
-	  //mode 2: reload mode
-//	  tmod &= 0x0f;
-//	  tmod |= 0xa0;              //set timer1 as timer mode 2
-//	  th1 = 0x32;//0x80;//
 }
 
 
-void InitTime2(void)
-{
+//void InitTime2(void)
+//{
 
-		T2H =(65536- TriacPosTime)/256;
-		T2L = (65536- TriacPosTime)%256;
+//	
 
-  AUXR|=0X14;		 //允许定时器2运行	   12分频
-	IE2|=0X04;       //开启定时器T2中断                                                               
-  
-}
+//  AUXR|=0X14;		 //允许定时器2运行	   12分频
+//	IE2|=0X04;       //开启定时器T2中断                                                               
+//  
+//}
 
 
 
@@ -148,32 +138,19 @@ void InitParameter(void)
 	AcPhaseInc=327;
 	AcHalfPhase=32767;
 	AcFullPhase=65535;
-	new_rpm=2000;
+	new_rpm=3000;
 	H1Phase=0;
- 
+  DelayCount=0;
 	H1FireAngle=InitFireAngle;
 	H2FireAngle=InitFireAngle;
 	Triac1_Reset();
 	Triac2_Reset();
 	AcIncFlag=0;
-  current_state=SystemOff;
-	TriacPosTime=0;
-	direction=ccw;               //write direction =ccw or cw, control the rotation direction
-	
+  current_state=SystemOn;
+	direction=cw;               //write direction =ccw or cw, control the rotation direction
+	AcPhase = 0;
+	PID_Error = 0;
+	TargetAcH1Phase=AcH1PhaseSteady;
 }
 
-
-void Parameter_Reset(void)
-{
-     AcPhase = 0;
-     DelayCount = 0;    
-     SynFlag = 0;
-     NewSteadyCtrlFlag = 0;
-			
-     PID_Error = 0;
-     LoseStepTicker = 0;
-     StartLoseStepTickerFlag = 0;
-  	
-    
-}
 
