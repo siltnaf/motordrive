@@ -150,7 +150,8 @@ void InitParameter(void)
 	direction=cw;               //write direction =ccw or cw, control the rotation direction
 	AcPhase = 0;
 	PID_Error = 0;
-	TargetAcH1Phase=AcH1PhaseSteady;
+	TargetAcH1=InitAcH1Phase;
+	UpdateAcH1=0;
 }
 
 

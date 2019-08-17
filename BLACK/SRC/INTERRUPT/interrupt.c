@@ -64,12 +64,12 @@ void extint1()   interrupt 2 using 1
 //					
 //			 if (AcPhasePrecise > AcHalfPhase)
 //			 {
-//			PID_Error = TargetAcH1Phase - (AcPhasePrecise-AcHalfPhase);
+//			PID_Error = TargetAcH1 - (AcPhasePrecise-AcHalfPhase);
 			
 //			 }
 //			 else 
 //			 {
-//			PID_Error=-(AcPhasePrecise+(AcHalfPhase-TargetAcH1Phase)); 
+//			PID_Error=-(AcPhasePrecise+(AcHalfPhase-TargetAcH1)); 
 				
 //			 }
 				}
@@ -100,9 +100,9 @@ void extint1()   interrupt 2 using 1
 void extint2()   interrupt 10 using 1
 {
 	
-		// apply seperate H2Fire angle if speed is below 1/2 max speed
+		// apply seperate H2Fire angle if speed is below  max speed
 	
-	  if ((H1PeriodCount>>1)>AcPeriodCount)
+	  if (MaxSpeedFlag==0)
 		{
 			if (H2Rebuild==1)
 			H2FireAngle+=((H1HalfPhase+(H1HalfPhase>>1)-H1Phase)>>4);

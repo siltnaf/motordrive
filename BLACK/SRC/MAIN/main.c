@@ -86,15 +86,14 @@ volatile uint8 xdata PrioritySwitch;
 
 //**********max speed steady control************//
 
-volatile int16 xdata AcH1PhaseDiff;
 volatile int16 xdata H1PhaseFallEdge;
-volatile uint16 xdata TargetAcH1Phase;
+volatile uint16 xdata TargetAcH1;
 
 volatile uint8 xdata MaxSpeedFlag;
 volatile int16 xdata PID_Error; 
-
-
-
+volatile uint8 xdata UpdateAcH1;
+volatile uint16 xdata SteadyAcH1;
+volatile uint8 xdata SynFlag;
 
 
 
@@ -125,7 +124,15 @@ switch (current_state)
 	case SystemOff:    
 											
 											Triac1_Reset();
-											Triac2_Reset();										
+											Triac2_Reset();	
+											
+											break;
+	
+	case Standby:				
+											Triac1_Reset();
+											Triac2_Reset();	
+											Check_Speed();
+											if (rpm!=0) next_state=SystemOn;
 											break;
 	
 	case SystemOn: 			
@@ -145,10 +152,17 @@ switch (current_state)
 	case NormalRun:			
 											if (MaxSpeedFlag==1)      //reach max speed 
 											{
-											 if (AcH1PhaseDiff<0)      //phase difference between Ac rising edge and H1 falling edge should be less than half AC cycle
-												 TargetFireAngle+=100;				
+											 if (UpdateAcH1==0)      //phase difference between Ac rising edge and H1 falling edge should be less than half AC cycle
+												{	
+													TargetAcH1=InitAcH1Phase;
+													next_state=FindSteadyPoint;
+												}
 												else
-												next_state=SynMax;
+												{
+													SynFlag=0;
+													TargetAcH1=SteadyAcH1;
+													next_state=SynMax;
+												}
 											}
 											DelayCount = Time2; 
 											Check_Speed();											
@@ -156,18 +170,51 @@ switch (current_state)
 											H1FireAngle=TargetFireAngle;											
 											break;
 	
+	case FindSteadyPoint:								
+											Check_Speed();
+											
+											if (AcEdgeDetect==1) 
+												{
+													Find_TargetFireAngle();	
+													if  (MaxSpeedFlag==1)
+															{
+																if (PID_Error==0) TargetAcH1++;
+															}
+														else 
+															{
+																SteadyAcH1=TargetAcH1-MarginAcH1;
+																UpdateAcH1=1;
+																TargetAcH1=SteadyAcH1;
+																SynFlag=0;
+																next_state=SynMax;
+															}
+												}
+											H1FireAngle=TargetFireAngle;
+										
+												
+											break;
+												
 	case SynMax:			  
-											if (MaxSpeedFlag==0)
+											if ((MaxSpeedFlag==0)&&(SynFlag==1))
 												{		 
-													if (DelayCount>Time3)            //if loss speed in 5 sec, jump to normal run            
+													UpdateAcH1=0;
+													if (DelayCount>Time3)            //if loss speed in 3 sec, jump to normal run            
 														next_state=NormalRun;       
 												}
 												else
-													DelayCount=0;          //Clear DelayCount if run at max speed											
+												{
+													DelayCount=0;          //Clear DelayCount if run at max speed
+													if (MaxSpeedFlag==1) SynFlag=1;
+												}													
 										  Check_Speed();
 											if (AcEdgeDetect==1)	Find_TargetFireAngle();	
 											H1FireAngle=TargetFireAngle;
 											break;
+												
+
+		
+	
+												
 }
 
 current_state=next_state;

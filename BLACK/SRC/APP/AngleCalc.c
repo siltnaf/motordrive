@@ -26,8 +26,11 @@ void Check_Speed()
 ;************************************************************************/
 				if (new_rpm!=rpm)
 				{
+					MaxSpeedFlag=0;
 					rpm=new_rpm;
-				TargetPeriodCount=(((60000/(rpm>>3))*10)>>3);
+					if (rpm!=0)
+						TargetPeriodCount=(((60000/(rpm>>3))*10)>>3);
+					
 					                               
 				}
 			}
@@ -48,14 +51,14 @@ void Find_TargetFireAngle()
 		
 /***********************************************************************
 ; In max steady speed
-;	control the time interval of Ac rising edge and H1 falling edge to TargetAcH1Phase value
+;	control the time interval of Ac rising edge and H1 falling edge to TargetAcH1 value
 ;
 **************************************************************************/
 	
 			if  (MaxSpeedFlag==1)
 			{
 				if (H1PhaseFallEdge>AcHalfPhase)
-					PID_Error=TargetAcH1Phase-(H1PhaseFallEdge-AcHalfPhase);
+					PID_Error=TargetAcH1-(H1PhaseFallEdge-AcHalfPhase);
 				
 		//PID error is +ve means motor is running too fast.		
 				
@@ -82,7 +85,7 @@ void Find_TargetFireAngle()
 		
 				else 
 				
-					PID_Error=-(H1PhaseFallEdge+(AcHalfPhase-TargetAcH1Phase));		
+					PID_Error=-(H1PhaseFallEdge+(AcHalfPhase-TargetAcH1));		
 
 
 /************************************************************************
@@ -102,11 +105,6 @@ void Find_TargetFireAngle()
 ;         Targetphase is between falling edge of AC and falling edge of H1 
 ;	
 ;************************************************************************/
-			
-		
-
-
-				
 
 				TargetFireAngle -= (PID_Error >> 8);               
 			

@@ -13,7 +13,8 @@
 #define MaxFireAngle            (30000)        //max value is 32700-deadzone
 
 
-#define AcH1PhaseSteady       (10000)    //10012 <=> 55 degree between AC falling edge and HALL falling 
+#define InitAcH1Phase       		(5000)    //10012 <=> 55 degree between AC falling edge and HALL falling 
+#define MarginAcH1              (500)
 
 #define No_Fire_Zone           	(3000)         //dead zone 
 #define No_Fire_Zone1            (No_Fire_Zone)
@@ -25,7 +26,50 @@
 #define Time0                 (50)				//0.5s
 #define Time1									(100)				//1s
 #define Time2									(200)				//3s
-#define Time3									(500)				//5s
+#define Time3									(300)				//5s
+
+
+
+
+
+#define MaxTriggerPulse						(10)
+#define ON                        (1)
+#define OFF                       (0)
+
+#define H2_PIN                 		(P36)
+#define H1_PIN                  	(P33)
+#define AC_PIN               			(P32)
+#define TRIAC2_PIN                (P22)
+#define TRIAC1_PIN                (P21)
+#define TEST_PA2_PIN6             (P55)
+
+
+//rotation direction
+#define cw												0
+#define ccw												1
+
+
+
+// state 
+#define	SystemOn									0
+#define SystemOff									1
+#define Standby										2
+#define NormalRun									3
+#define	KickStart									4
+#define	SynMax										5
+#define FindSteadyPoint						6
+
+
+//FireSeq
+
+#define refresh										0
+#define start											1
+#define sort											2
+#define complete									3
+
+
+
+
 
 
 

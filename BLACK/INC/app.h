@@ -29,99 +29,63 @@
 #define ENABLE_EX1_INTERRUPT()   IT1 = 1;EX1 = 1
 #define DISABLE_EX1_INTERRUPT()   IT1 = 1;EX1 = 0
 
-				//#define ENABLE_TIME3_OVERFLOW_INTERRUPT()   T3CON |= 0x20
-				//#define DISABLE_TIME3_OVERFLOW_INTERRUPT()   T3CON &= 0xDF
+#define ENABLE_TIME3_OVERFLOW_INTERRUPT()   T3CON |= 0x20
+#define DISABLE_TIME3_OVERFLOW_INTERRUPT()   T3CON &= 0xDF
 
-				//#define CLR_TIME3_INTERRUPT_FLG()    T3CON &= 0x7F
-				////timer 1 overflow interrupt
-				//#define ENABLE_TIME1_OVERFLOW_INTERRUPT()   ET1 = 1
-				//#define DISABLE_TIME1_OVERFLOW_INTERRUPT()   ET1 = 0
+#define CLR_TIME3_INTERRUPT_FLG()    T3CON &= 0x7F
+////timer 1 overflow interrupt
+#define ENABLE_TIME1_OVERFLOW_INTERRUPT()   ET1 = 1
+#define DISABLE_TIME1_OVERFLOW_INTERRUPT()   ET1 = 0
 
 				////UART1 interrupt
-				//#define ENABLE_UART1_INTERRUPT()   ES0 = 1
-				//#define DISABLE_UART1_INTERRUPT()   ES1 = 0
+#define ENABLE_UART1_INTERRUPT()   ES0 = 1
+#define DISABLE_UART1_INTERRUPT()   ES1 = 0
 
 				////ADC interrupt
-				//#define ENABLE_ADC_INTERRUPT()   ADCTL |= 0x01;eadc = 1
-				//#define DISABLE_ADC_INTERRUPT()   ADCTL &= 0xfe;eadc = 0
+#define ENABLE_ADC_INTERRUPT()   ADCTL |= 0x01;eadc = 1
+#define DISABLE_ADC_INTERRUPT()   ADCTL &= 0xfe;eadc = 0
 
 				////external interrupt 2, including PWM1, PWM2, PWM3
-				//#define ENABLE_PWM1_2_3_INTERRUPT()   i2fr = 1;ex2 = 1
-				//#define DISABLE_PWM1_2_3_INTERRUPT()   i2fr = 1;ex2 = 0
+#define ENABLE_PWM1_2_3_INTERRUPT()   i2fr = 1;ex2 = 1
+#define DISABLE_PWM1_2_3_INTERRUPT()   i2fr = 1;ex2 = 0
 
 				////external interrupt 3, including PWM4
-				//#define ENABLE_PWM4_INTERRUPT()   i3fr = 1;ex3 = 1
-				//#define DISABLE_PWM4_INTERRUPT()   i3fr = 1;ex3 = 0
+#define ENABLE_PWM4_INTERRUPT()   i3fr = 1;ex3 = 1
+#define DISABLE_PWM4_INTERRUPT()   i3fr = 1;ex3 = 0
 
 				////external interrupt 4, including comp2, comp3, comp4
-				//#define ENABLE_EX4_INTERRUPT()   ex4 = 1
-				//#define DISABLE_EX4_INTERRUPT()   ex4 = 0
+#define ENABLE_EX4_INTERRUPT()   ex4 = 1
+#define DISABLE_EX4_INTERRUPT()   ex4 = 0
 
 				////external interrupt 5, including I2C, SPI, SPI_eflash
-				//#define ENABLE_EX5_INTERRUPT()   ex5 = 1
-				//#define DISABLE_EX5_INTERRUPT()   ex5 = 0
+#define ENABLE_EX5_INTERRUPT()   ex5 = 1
+#define DISABLE_EX5_INTERRUPT()   ex5 = 0
 
 				////external interrupt 6, including RTC, LVD18, LVD33, timer4, hwbp(hardware breakpoint)
-				//#define ENABLE_EX6_INTERRUPT()   ex6 = 1
-				//#define DISABLE_EX6_INTERRUPT()   ex6 = 0
+#define ENABLE_EX6_INTERRUPT()   ex6 = 1
+#define DISABLE_EX6_INTERRUPT()   ex6 = 0
 
 				////UART2 interrupt
-				//#define ENABLE_UART2_INTERRUPT()   ien2 = 0x01
-				//#define DISABLE_UART2_INTERRUPT()   ien2 = 0x00
-
-				//#define ENABLE_TIMER3()  T3CON |= 0x04               //enable timer3
-				//#define DISABLE_TIME3()  T3CON &= 0XFB               //disable timer3
-
-				//#define ENABLE_TIMER4()  T4CON |= 0x04               //enable timer4
-				//#define DISABLE_TIME4()  T4CON &= 0XFB               //disable timer4
-
-				//#define TIME01_CLKDIV_SET(LOW_8BIT, HIGH_8BIT)  TIM01_CLK_DIV_L = LOW_8BIT;TIM01_CLK_DIV_H = HIGH_8BIT
-				//#define ENABLE_TIME0()   tr0 = 1
-				//#define DISABLE_TIME0()  tr0 = 0
-				//#define ENABLE_TIME1()   tr1 = 1
-				//#define DISABLE_TIME1()  tr1 = 0
-
-				//#define ADC_CALIBRATE_REFP()  ADCTL |= 0x06
-				//#define ADC_CALIBRATE_REFN()  ADCTL &= 0xfd;ADCTL |= 0x04
-
-				//#define ADC_START()  ADCTL |= 0x20
-				//#define ADC_BUSY     (ADCTL & 0x40)
+#define ENABLE_UART2_INTERRUPT()   ien2 = 0x01
+#define DISABLE_UART2_INTERRUPT()   ien2 = 0x00
 
 
+#define ENABLE_TIMER4()  T4CON |= 0x04               //enable timer4
+#define DISABLE_TIME4()  T4CON &= 0XFB               //disable timer4
 
-#define MaxTriggerPulse						(10)
-#define ON                        (1)
-#define OFF                       (0)
+#define TIME01_CLKDIV_SET(LOW_8BIT, HIGH_8BIT)  TIM01_CLK_DIV_L = LOW_8BIT;TIM01_CLK_DIV_H = HIGH_8BIT
+#define ENABLE_TIME0()   tr0 = 1
+#define DISABLE_TIME0()  tr0 = 0
+#define ENABLE_TIME1()   tr1 = 1
+#define DISABLE_TIME1()  tr1 = 0
 
-#define H2_PIN                 (P36)
-#define H1_PIN                  (P33)
-#define AC_PIN               (P32)
-#define TRIAC2_PIN                (P22)
-#define TRIAC1_PIN                 (P21)
-#define TEST_PA2_PIN6             (P55)
+#define ADC_CALIBRATE_REFP()  ADCTL |= 0x06
+#define ADC_CALIBRATE_REFN()  ADCTL &= 0xfd;ADCTL |= 0x04
 
-
-//rotation direction
-#define cw												0
-#define ccw												1
+#define ADC_START()  ADCTL |= 0x20
+#define ADC_BUSY     (ADCTL & 0x40)
 
 
-
-// state 
-#define	SystemOn									0
-#define SystemOff									1
-#define NormalRun									2
-#define	KickStart									3
-#define	SynMax										4
-#define MaxSteady									5
-
-
-//FireSeq
-
-#define refresh										0
-#define start											1
-#define sort											2
-#define complete									3
 
 
 		
@@ -195,10 +159,13 @@ extern volatile uint8 xdata PrioritySwitch;
 
 //**********max speed steady control************//
 
-extern volatile int16 xdata AcH1PhaseDiff;
-extern volatile int16 xdata H1PhaseFallEdge;
-extern volatile uint16 xdata TargetAcH1Phase;
 
+extern volatile int16 xdata H1PhaseFallEdge;
+extern volatile uint16 xdata TargetAcH1;
+extern volatile uint16 xdata SteadyAcH1;
+extern volatile uint8 xdata SynFlag;
+
+extern volatile uint8 xdata UpdateAcH1;
 extern volatile uint8 xdata MaxSpeedFlag;
 extern volatile int16 xdata PID_Error; 
 
