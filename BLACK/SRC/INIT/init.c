@@ -32,23 +32,25 @@ void IO_Init(void)
 	
 }
 
-//void InitTime0(void)
-//{
+void InitTime0(void)
+{
 //	//mode 0: 13-bit timer
 ////	  tmod &= 0xf0;              //clear timer0 mode 
 ////	  tmod |= 0x08;              //set timer0 as timer mode 0
 ////	  tl0 = 0x00;
 ////	  th0 = 0x00;
 
-////	  //mode 1: 16-bit timer
-//	TMOD &= 0xf0;              //clear timer0 mode 
-//	//TMOD |= 0x01;              //set timer0 as timer mode 1
-//	
-//	TH0 =(65536-TriggerPulseWidth)/256;
-//  TL0 = (65536-TriggerPulseWidth)%256;
-//	
-//	TR0 =1;			 //定时器开始工作
-//	ET0 =1;			 //使能定时器中断
+//	  //mode 1: 16-bit timer
+	TMOD &= 0xf0;              //clear timer0 mode 
+	//TMOD |= 0x01;              //set timer0 as timer mode 1
+	
+	AUXR =0x00 ;           //timer 0 as 12T mode
+	
+	TH0 =(65536-ACCounterWidth)/256;
+  TL0 = (65536-ACCounterWidth)%256;
+	
+	TR0 =1;			 //定时器开始工作
+	ET0 =1;			 //使能定时器中断
 
 //	
 
@@ -56,21 +58,21 @@ void IO_Init(void)
 ////    tmod &= 0xf0;              //clear timer0 mode 
 ////	  tmod |= 0x0a;              //set timer0 as timer mode 2
 ////	  th0 = 0x50;//0x00;//
-//}
-
-void InitTime1(void)
-{
-	
-	  //mode 1: 16-bit timer
-	  TMOD &= 0x0f;              //clear timer1 mode 
-	
-		TH1 =(65536-ACCounterWidth)/256;
-		TL1 = (65536-ACCounterWidth)%256;
-		TR1 =1;			 //定时器开始工作
-	  ET1 =1;			 //使能定时器中断
-	 
-	
 }
+
+//void InitTime1(void)
+//{
+//	
+//	  //mode 1: 16-bit timer
+//	  TMOD &= 0x0f;              //clear timer1 mode 
+//	  AUXR |=0x40 ;           //timer 1 as 1T mode
+//		TH1 =(65536-ACCounterWidth)/256;
+//		TL1 = (65536-ACCounterWidth)%256;
+//		TR1 =1;			 //定时器开始工作
+//	  ET1 =1;			 //使能定时器中断
+//	 
+//	
+//}
 
 
 //void InitTime2(void)
@@ -83,7 +85,20 @@ void InitTime1(void)
 //  
 //}
 
+       
+void InitUart(void)   
+ 
+ {
+     SCON=0x50;        
+     TMOD= 0x00;                      
+     AUXR|=0X40;    
+	   AUXR&=0xC0;    //Timer2 set as 1T mode
+     TL1=(65535-(main_clk/4/9600));    
+     TH1=(65535-(main_clk/4/9600))>>8;
+   	 TR1  = 1;        
+     ENABLE_UART0_INTERRUPT() ;                                                                          
 
+  }
 
 
 void InitExtInterrupt (void)
@@ -131,14 +146,17 @@ void Triac2_Reset(void)
 
 void InitParameter(void)
 {
-	
+	static volatile xdata i;
+	for( i = 0; i < UartDataLen;  ++i )
+   UartData[i] = (char)0;
+	UartArrayPtr=0;
 	AcDuration=0;
 	H1Duration=0;
 	AcPeriodCount=200;            //assume 50Hz
 	AcPhaseInc=327;
 	AcHalfPhase=32767;
 	AcFullPhase=65535;
-	new_rpm=3000;
+	new_rpm=500;
 	H1Phase=0;
   DelayCount=0;
 	H1FireAngle=InitFireAngle;
@@ -146,7 +164,7 @@ void InitParameter(void)
 	Triac1_Reset();
 	Triac2_Reset();
 	AcIncFlag=0;
-  current_state=SystemOn;
+  current_state=Standby;
 	direction=cw;               //write direction =ccw or cw, control the rotation direction
 	AcPhase = 0;
 	PID_Error = 0;

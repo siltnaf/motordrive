@@ -37,9 +37,9 @@
 #define ENABLE_TIME1_OVERFLOW_INTERRUPT()   ET1 = 1
 #define DISABLE_TIME1_OVERFLOW_INTERRUPT()   ET1 = 0
 
-				////UART1 interrupt
-#define ENABLE_UART1_INTERRUPT()   ES0 = 1
-#define DISABLE_UART1_INTERRUPT()   ES1 = 0
+				////UART0 interrupt
+#define ENABLE_UART0_INTERRUPT()   ES = 1
+#define DISABLE_UART0_INTERRUPT()   ES = 0
 
 				////ADC interrupt
 #define ENABLE_ADC_INTERRUPT()   ADCTL |= 0x01;eadc = 1
@@ -169,11 +169,21 @@ extern volatile uint8 xdata UpdateAcH1;
 extern volatile uint8 xdata MaxSpeedFlag;
 extern volatile int16 xdata PID_Error; 
 
+extern volatile uint8 xdata UartData[];
+extern volatile uint8 xdata UartArrayPtr;
+extern volatile uint8 xdata UartRecFlag;
+extern volatile uint8 xdata UartRecIntFlag;
+extern volatile uint16 xdata UartRecInt;
+
 
 extern void Run_Motor(void);
 extern void Check_Speed(void);
 extern void Find_TargetFireAngle(void);
 extern void Rebuild_Waveform(void);
 extern void Check_Error(void);
+extern void UartSendByte(uint8 dat);
+extern void UartSendStr(uint8 *s);
+extern int StrComp(uint8 *s,uint8 *t);
+extern uint16 CharToInt(uint8 *s);
 
 #endif

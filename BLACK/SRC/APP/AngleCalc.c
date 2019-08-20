@@ -122,11 +122,11 @@ void Find_TargetFireAngle()
 				
 				if (H1PeriodCount<TargetPeriodCount)
 					{
-							 TargetFireAngle--;							
+							 TargetFireAngle-=(TargetPeriodCount-H1PeriodCount)>>2;							
 					}	
 					else
 					{
-						 TargetFireAngle++;			
+						 TargetFireAngle+=(H1PeriodCount-TargetPeriodCount)>>1;			
 					}
 			}
 			
@@ -194,7 +194,8 @@ static unsigned char Zone2_Flag;
 ;    It gives more precise value of triac firing angle 
 ;     
 ;************************************************************************/
-	AcPhasePrecise=AcPhase+(256-TL1)*3;    //each step of AcPhase increment is  327 , and there is 100 count in T1 timer, so each count stand for 3*(255-TL1)
+	AcPhasePrecise=AcPhase+(256-TL1)*3;    //each step of AcPhase increment is  ~320 , and there is 1200 count in T1 timer, so each count stand for 4/15 * counter_value
+//	AcPhasePrecise=AcPhase+((((256-TL1)+((256-TH1)<<8))<<2)/15);    //each step of AcPhase increment is  ~320 , and there is 1200 count in T1 timer, so each count stand for 4/15 * counter_value
 	if (( AcPhasePrecise> No_Fire_Zone1)&&( AcPhasePrecise<No_Fire_Zone2))	Zone1_Flag=1;	else Zone1_Flag=0;
 	if (( AcPhasePrecise> No_Fire_Zone3)&&( AcPhasePrecise<No_Fire_Zone4))	Zone2_Flag=1;	else Zone2_Flag=0;
 	if ((Zone1_Flag==1)||(Zone2_Flag==1)) FireZone=1;else FireZone=0;
@@ -243,22 +244,22 @@ void Check_Error()
 		
 	//*************only accept AC frequency of 50 or 60 Hz********//
 						
-			if ((AcPeriodCount>165)&&(AcPeriodCount<202))    //allow AC frequency either 50 (20ms) or 60 Hz (16.6ms)
-				{
-					if (AcPeriodCount<169) 
-					{
-						AcPhaseInc=394;			//60Hz-->16.7ms period=394*166, half period=32702
-					  AcHalfPhase=32702;  //half period time count=394*166/2
-						AcFullPhase=65404;  //full period time count=394*166
-					}
-						if (AcPeriodCount>198)
-						{
-							AcPhaseInc=327;			//50Hz-->20ms period=327*200, half period=32700    
-							AcHalfPhase=32700;  //half period time count=327*200/2
-							AcFullPhase=65400;  //full period time count=327*200
-						}
-					}
-				else current_state=SystemOff;
+//			if ((AcPeriodCount>165)&&(AcPeriodCount<202))    //allow AC frequency either 50 (20ms) or 60 Hz (16.6ms)
+//				{
+//					if (AcPeriodCount<169) 
+//					{
+//						AcPhaseInc=394;			//60Hz-->16.7ms period=394*166, half period=32702
+//					  AcHalfPhase=32702;  //half period time count=394*166/2
+//						AcFullPhase=65404;  //full period time count=394*166
+//					}
+//						if (AcPeriodCount>198)
+//						{
+//							AcPhaseInc=327;			//50Hz-->20ms period=327*200, half period=32700    
+//							AcHalfPhase=32700;  //half period time count=327*200/2
+//							AcFullPhase=65400;  //full period time count=327*200
+//						}
+//					}
+//				else current_state=SystemOff;
 
 
 		}

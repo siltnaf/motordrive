@@ -104,13 +104,18 @@ volatile uint8 xdata SynFlag;
 void Rebuild_Waveform(void);
 void State_Assign(void);
 void Check_Error(void);
+void Check_Uart(void);
 
+volatile uint8 xdata UartData[UartDataLen];
+volatile uint8 xdata UartArrayPtr;
+volatile uint8 xdata UartRecFlag;
+volatile uint8 xdata UartRecIntFlag;
+volatile uint16 xdata UartRecInt;
 
-
-
-
-
-
+const char Str_off[4]={'o','f','f','\0'};                                                
+const char Str_cw[3]={'c','w','\0'};
+const char Str_ccw[4]={'c','c','w','\0'};
+const char Str_on[3]={'o','n','\0'};
 
 
 
@@ -125,7 +130,7 @@ switch (current_state)
 											
 											Triac1_Reset();
 											Triac2_Reset();	
-											
+											next_state=SystemOff;
 											break;
 	
 	case Standby:				
@@ -219,14 +224,56 @@ switch (current_state)
 
 current_state=next_state;
 
-current_state=SynMax;
+//current_state=SynMax;
 
 
 
 }
 
+void Check_Uart()
+{
 
-
+		if (UartRecFlag==1)
+			{
+			
+				UartRecFlag=0;	
+				  
+				if	(StrComp(UartData,Str_off)==1)
+						{
+							UartSendStr("Current Status is off\n\r");
+							current_state=SystemOff;
+						}
+				if	(StrComp(UartData,Str_on)==1)
+						{
+							UartSendStr("Current Status is running\n\r");
+							current_state=Standby;
+						}
+				if	(StrComp(UartData,Str_cw)==1)
+						{
+							UartSendStr("Current direction is clockwise\n\r");
+							direction=cw;
+						}
+				if	(StrComp(UartData,Str_ccw)==1)
+						{
+							UartSendStr("Current direction is anti-clockwise\n\r");
+							direction=ccw; 
+						}
+				if (UartRecIntFlag==1)
+						{
+									UartSendStr("Rpm is set to ");
+									UartSendStr(UartData);
+									UartSendStr("\n\r");
+									new_rpm=CharToInt(UartData);
+									if ((new_rpm>0)&&(new_rpm<=3000)) 
+											current_state=Standby;
+										else current_state=SystemOff;
+						}
+				UartRecIntFlag=1;
+		
+		
+			}
+}
+	
 
 
 
@@ -234,17 +281,20 @@ void main()
 {  	
 	
     IO_Init();				   //
-		InitTime1();					//divide 20ms into 200 time interval
+		InitTime0();					//divide 20ms into 200 time interval
+		InitUart() ;
 		InitExtInterrupt();
-
 		InitParameter(); 
     ENABLE_ALL_INTERRUPT();
+	
+	
+		while(1)
+			{
 		
-	
-		while(1){
-
-	
-
+			
+		Check_Uart();
+				
+		
 		Rebuild_Waveform();			
 		
 		State_Assign();

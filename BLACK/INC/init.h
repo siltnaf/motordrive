@@ -3,8 +3,13 @@
 #define INIT_H
 
 #define MAIN_Fosc   12000000UL
+#define main_clk     12000000
 #define TriggerPulseWidth	  (100)                   //count 100us trigger pulse width
 #define ACCounterWidth	  (100)                     //AC  duration divided into 200 step each step increment by 327; totall value is 65535 
+#define UartDataLen         40
+
+
+
 
 //Fire angle is count from falling edge of AC and backwards
 
@@ -74,8 +79,8 @@
 
 
 void IO_Init(void);
-
-void InitTime1(void);
+void InitTime0(void);
+void InitUart(void); 
 
 void InitExtInterrupt(void);
 void InitParameter(void);

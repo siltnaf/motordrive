@@ -119,17 +119,7 @@ void extint2()   interrupt 10 using 1
 //Timer 0 for TRIAC pulse width  100us
 void tm0() interrupt 1 using 1
 {
-	
-}
-
-
-//Timer 1 for count phase angle of AC 100us
-
-void tm1() interrupt 3 using 1
-	
-
-{
-	
+	 
 		AcIncFlag=1;
 		H1PhaseIncFlag=1;
 	
@@ -208,9 +198,23 @@ void tm1() interrupt 3 using 1
 			}
 	
 	
+}
+
+
+//Timer 1 for count phase angle of AC 100us
+
+void tm1() interrupt 3 using 1
+	
+
+{
+	
 
 	
 }
+
+
+
+
 
 
 
@@ -223,4 +227,45 @@ void tm2() interrupt 12 using 1
 
 
 }
+
+
+void uart_int(void) interrupt 4 using 1
+{ 
+static unsigned char tmp,i;
+static signed char int_tmp;    
+	
+	if (RI) 
+    {
+
+      tmp = SBUF;
+
+	  if (tmp!=13) 
+		{
+			UartData[UartArrayPtr]=tmp;					//pack received character to UartData
+			if (UartArrayPtr<UartDataLen) UartArrayPtr++;
+			 else UartArrayPtr=0;
+			 int_tmp=tmp-48;
+			if ((int_tmp<0)||(int_tmp>9))
+			 UartRecIntFlag=0;
+			
+			
+		}
+		else
+		{
+	  for (i=UartArrayPtr;i<UartDataLen;i++)
+				UartData[i] = (char)0;
+		
+		UartArrayPtr=0;
+		UartRecFlag=1;
+		}
+
+      RI = 0;
+    }
+}  
+
+
+   
+
+
+
 

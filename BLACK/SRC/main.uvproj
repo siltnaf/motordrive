@@ -414,6 +414,11 @@
               <FileType>1</FileType>
               <FilePath>.\APP\AngleCalc.c</FilePath>
             </File>
+            <File>
+              <FileName>uart.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\APP\uart.c</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>
