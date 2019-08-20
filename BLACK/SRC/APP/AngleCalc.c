@@ -154,7 +154,7 @@ void Rebuild_Waveform()
 static unsigned char Zone1_Flag;
 static unsigned char Zone2_Flag;
 	
-	//************rebuild AC signal*****************// 
+
 	
 	if (AcIncFlag==1)
 	{
@@ -243,23 +243,44 @@ void Check_Error()
 					}
 		
 	//*************only accept AC frequency of 50 or 60 Hz********//
-						
-//			if ((AcPeriodCount>165)&&(AcPeriodCount<202))    //allow AC frequency either 50 (20ms) or 60 Hz (16.6ms)
-//				{
-//					if (AcPeriodCount<169) 
-//					{
-//						AcPhaseInc=394;			//60Hz-->16.7ms period=394*166, half period=32702
-//					  AcHalfPhase=32702;  //half period time count=394*166/2
-//						AcFullPhase=65404;  //full period time count=394*166
-//					}
-//						if (AcPeriodCount>198)
-//						{
-//							AcPhaseInc=327;			//50Hz-->20ms period=327*200, half period=32700    
-//							AcHalfPhase=32700;  //half period time count=327*200/2
-//							AcFullPhase=65400;  //full period time count=327*200
-//						}
-//					}
-//				else current_state=SystemOff;
+		
+/************ AC signal********************************************* 
+;        apply Kalman Filter to AC pulse width
+;	
+;				Kalman Gain=Es	/ (Es+Em)
+;	Since Em0 find in scope is 100us, assume the first Es0=50us,
+; x is the full period of ac	
+;	K[0]=   Es[0]/(Es[0]+Em[0]) 
+;	x[1]=x[0]+K[0](x[0]-m[0]),   Es[1]=(1-K[1])Es[0]	
+;
+;
+;
+;
+;
+;
+;	
+;	
+;*****************************************************************************/	
+	
+					
+			if ((AcPeriodCount>165)&&(AcPeriodCount<202))    //allow AC frequency either 50 (20ms) or 60 Hz (16.6ms)
+				{
+					if (AcPeriodCount<169) 
+					{
+						AcPhaseInc=394;			//60Hz-->16.7ms period=394*166, half period=32702
+					  AcHalfPhase=32702;  //half period time count=394*166/2
+						AcFullPhase=65404;  //full period time count=394*166
+					}
+						if (AcPeriodCount>198)
+						{
+							AcPhaseInc=327;			//50Hz-->20ms period=327*200, half period=32700    
+							AcHalfPhase=32700;  //half period time count=327*200/2
+							AcFullPhase=65400;  //full period time count=327*200
+						}
+					}
+				else 
+					if (DelayCount>Time3)
+						current_state=SystemOff;
 
 
 		}

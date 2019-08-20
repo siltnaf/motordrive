@@ -11,7 +11,7 @@ void extint0()   interrupt 0 using 1
 {					
 	
 					FireSeq=refresh;																//At each start of AC cycle, refresh the trigger position
-			
+			   
 					 AcEdgeDetect=1;
            if(AC_PIN == 1)
                       
@@ -21,8 +21,10 @@ void extint0()   interrupt 0 using 1
 											 
                }
 							 else 
+							 {
 								AcActual=0;
-						
+								temp=AcPhasePrecise;
+							 }
            DelayCount++;
 				
 }
