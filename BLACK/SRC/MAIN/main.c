@@ -44,7 +44,7 @@ volatile uint16 xdata AcHalfPhase;
 volatile uint16 xdata AcFullPhase;
 volatile uint16 xdata AcPhase;
 volatile uint16 xdata AcPhasePrecise;
-
+volatile uint8 	xdata AcFallingEdgeDetect;
 
 //***********construct H1 ,H2 waveform**********************//
 
@@ -112,10 +112,6 @@ volatile uint8 xdata UartRecFlag;
 volatile uint8 xdata UartRecIntFlag;
 volatile uint16 xdata UartRecInt;
 
-const char Str_off[4]={'o','f','f','\0'};                                                
-const char Str_cw[3]={'c','w','\0'};
-const char Str_ccw[4]={'c','c','w','\0'};
-const char Str_on[3]={'o','n','\0'};
 
 
 
@@ -171,15 +167,15 @@ switch (current_state)
 											}
 											DelayCount = Time2; 
 											Check_Speed();											
-										  if (AcEdgeDetect==1)	Find_TargetFireAngle();
+										  Find_TargetFireAngle();
 											H1FireAngle=TargetFireAngle;											
 											break;
 	
 	case FindSteadyPoint:								
 											Check_Speed();
 											
-											if (AcEdgeDetect==1) 
-												{
+										 
+												 
 													Find_TargetFireAngle();	
 													if  (MaxSpeedFlag==1)
 															{
@@ -193,7 +189,7 @@ switch (current_state)
 																SynFlag=0;
 																next_state=SynMax;
 															}
-												}
+											 
 											H1FireAngle=TargetFireAngle;
 										
 												
@@ -212,7 +208,7 @@ switch (current_state)
 													if (MaxSpeedFlag==1) SynFlag=1;
 												}													
 										  Check_Speed();
-											if (AcEdgeDetect==1)	Find_TargetFireAngle();	
+											 Find_TargetFireAngle(); 
 											H1FireAngle=TargetFireAngle;
 											break;
 												
@@ -230,50 +226,6 @@ current_state=next_state;
 
 }
 
-void Check_Uart()
-{
-
-		if (UartRecFlag==1)
-			{
-			
-				UartRecFlag=0;	
-				  
-				if	(StrComp(UartData,Str_off)==1)
-						{
-							UartSendStr("Current Status is off\n\r");
-							current_state=SystemOff;
-						}
-				if	(StrComp(UartData,Str_on)==1)
-						{
-							UartSendStr("Current Status is running\n\r");
-							current_state=Standby;
-						}
-				if	(StrComp(UartData,Str_cw)==1)
-						{
-							UartSendStr("Current direction is clockwise\n\r");
-							direction=cw;
-						}
-				if	(StrComp(UartData,Str_ccw)==1)
-						{
-							UartSendStr("Current direction is anti-clockwise\n\r");
-							direction=ccw; 
-						}
-				if (UartRecIntFlag==1)
-						{
-									UartSendStr("Rpm is set to ");
-									UartSendStr(UartData);
-									UartSendStr("\n\r");
-									new_rpm=CharToInt(UartData);
-									if ((new_rpm>0)&&(new_rpm<=3000)) 
-											current_state=Standby;
-										else current_state=SystemOff;
-						}
-				UartRecIntFlag=1;
-		
-		
-			}
-}
-	
 
 
 
@@ -296,11 +248,10 @@ void main()
 				
 		
 		Rebuild_Waveform();			
-		
-		State_Assign();
+		if (AcFallingEdgeDetect==1){	State_Assign();AcFallingEdgeDetect=0;}
 		Check_Error();
-		if (current_state!=SystemOff) Run_Motor();
-		if (TRIAC1_PIN==1) P55=1; else P55=0;                                      			
+		if ((current_state!=SystemOff)&&(FireZone==1)) Run_Motor();
+		if (TRIAC2_PIN==1) P55=1; else P55=0;                                      			
 		}
 
    	

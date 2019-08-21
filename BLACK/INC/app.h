@@ -117,7 +117,7 @@ extern volatile uint16 xdata AcHalfPhase;
 extern volatile uint16 xdata AcFullPhase;
 extern volatile uint16 xdata AcPhase;
 extern volatile uint16 xdata AcPhasePrecise;
-
+extern volatile uint8 	xdata AcFallingEdgeDetect;
 
 //***********construct H1 ,H2 waveform**********************//
 
@@ -185,5 +185,5 @@ extern void UartSendByte(uint8 dat);
 extern void UartSendStr(uint8 *s);
 extern int StrComp(uint8 *s,uint8 *t);
 extern uint16 CharToInt(uint8 *s);
-
+extern void Check_Uart(void);
 #endif

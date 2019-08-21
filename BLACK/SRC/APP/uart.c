@@ -3,6 +3,11 @@
 #include	"app.h"
 #include "init.h"
 
+const char Str_off[4]={'o','f','f','\0'};                                                
+const char Str_cw[3]={'c','w','\0'};
+const char Str_ccw[4]={'c','c','w','\0'};
+const char Str_on[3]={'o','n','\0'};
+
      
             
 
@@ -65,6 +70,54 @@ uint16 CharToInt(uint8 *s)
 	
 	
 
+void Check_Uart()
+{
+static uint16 tmp_rpm;
+	
+		if (UartRecFlag==1)
+			{
+			
+				UartRecFlag=0;	
+				  
+				if	(StrComp(UartData,Str_off)==1)
+						{
+							UartSendStr("Current Status is off\n\r");
+							current_state=SystemOff;
+						}
+				if	(StrComp(UartData,Str_on)==1)
+						{
+							UartSendStr("Current Status is running\n\r");
+							current_state=Standby;
+						}
+				if	(StrComp(UartData,Str_cw)==1)
+						{
+							UartSendStr("Current direction is clockwise\n\r");
+							direction=cw;
+						}
+				if	(StrComp(UartData,Str_ccw)==1)
+						{
+							UartSendStr("Current direction is anti-clockwise\n\r");
+							direction=ccw; 
+						}
+				if (UartRecIntFlag==1)
+						{
+									UartSendStr("Rpm is set to ");
+									UartSendStr(UartData);
+									UartSendStr("\n\r");
+									tmp_rpm=CharToInt(UartData);
+									if ((tmp_rpm>0)&&(tmp_rpm<=3000))
+										{
+											new_rpm=tmp_rpm;
+											current_state=Standby;
+										}
+										else current_state=SystemOff;
+						}
+				UartRecIntFlag=1;
+		
+		
+			}
+}
+	
    
            
 

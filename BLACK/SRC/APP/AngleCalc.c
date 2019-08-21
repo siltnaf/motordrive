@@ -122,11 +122,11 @@ void Find_TargetFireAngle()
 				
 				if (H1PeriodCount<TargetPeriodCount)
 					{
-							 TargetFireAngle-=(TargetPeriodCount-H1PeriodCount)>>2;							
+							 TargetFireAngle-=(TargetPeriodCount-H1PeriodCount)>>1;							
 					}	
 					else
 					{
-						 TargetFireAngle+=(H1PeriodCount-TargetPeriodCount)>>1;			
+						 TargetFireAngle+=(H1PeriodCount-TargetPeriodCount);			
 					}
 			}
 			
@@ -157,10 +157,14 @@ static unsigned char Zone2_Flag;
 
 	
 	if (AcIncFlag==1)
-	{
-		AcIncFlag=0;
-		 AcPhase+=AcPhaseInc;
-	}	if ( AcPhase>=AcFullPhase) AcPhase=0;
+			{
+				AcIncFlag=0;
+				AcPhase+=AcPhaseInc;
+			}	
+		else
+			AcPhasePrecise=AcPhase+(256-TL1)*3;    //each step of AcPhase increment is  ~320 , and there is 1200 count in T1 timer, so each count stand for 4/15 * counter_value
+	
+	if ( AcPhase>=AcFullPhase) AcPhase=0;
 	if ( AcPhase<AcHalfPhase) AcRebuild=1;else  AcRebuild=0;
 	//*************rebuild H1 signal*************//
 	
@@ -194,8 +198,8 @@ static unsigned char Zone2_Flag;
 ;    It gives more precise value of triac firing angle 
 ;     
 ;************************************************************************/
-	AcPhasePrecise=AcPhase+(256-TL1)*3;    //each step of AcPhase increment is  ~320 , and there is 1200 count in T1 timer, so each count stand for 4/15 * counter_value
-//	AcPhasePrecise=AcPhase+((((256-TL1)+((256-TH1)<<8))<<2)/15);    //each step of AcPhase increment is  ~320 , and there is 1200 count in T1 timer, so each count stand for 4/15 * counter_value
+	
+
 	if (( AcPhasePrecise> No_Fire_Zone1)&&( AcPhasePrecise<No_Fire_Zone2))	Zone1_Flag=1;	else Zone1_Flag=0;
 	if (( AcPhasePrecise> No_Fire_Zone3)&&( AcPhasePrecise<No_Fire_Zone4))	Zone2_Flag=1;	else Zone2_Flag=0;
 	if ((Zone1_Flag==1)||(Zone2_Flag==1)) FireZone=1;else FireZone=0;
@@ -235,9 +239,9 @@ void Check_Error()
 {
  
 	//**************no trigger beyond Dead zone*************//
-			if ((FireZone==0)||(AcEdgeDetect==1))	
+			if ((FireZone==0) )	
 					{
-					AcEdgeDetect=0;
+					 
 					Triac1_Reset();
 					Triac2_Reset();
 					}

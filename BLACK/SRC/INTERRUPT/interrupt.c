@@ -11,19 +11,24 @@ void extint0()   interrupt 0 using 1
 {					
 	
 					FireSeq=refresh;																//At each start of AC cycle, refresh the trigger position
-			   
+			   TH0 =(65536-ACCounterWidth)/256;
+				 TL0 = (65536-ACCounterWidth)%256;
 					 AcEdgeDetect=1;
            if(AC_PIN == 1)
                       
                {							 
                 AcRisingEdgeDetect=1;                     // Synchronize phase angle with AC rising edge  
-								AcActual=1;																// for test AcRebuild and actual AC waveform difference			
+								AcPhase=0;
+								
+								 AcActual=1;																// for test AcRebuild and actual AC waveform difference			
 											 
                }
 							 else 
 							 {
+								 AcFallingEdgeDetect=1;
+								 AcPhase=AcHalfPhase;
 								AcActual=0;
-								temp=AcPhasePrecise;
+								 
 							 }
            DelayCount++;
 				
@@ -107,8 +112,8 @@ void extint2()   interrupt 10 using 1
 	  if (MaxSpeedFlag==0)
 		{
 			if (H2Rebuild==1)
-			H2FireAngle+=((H1HalfPhase+(H1HalfPhase>>1)-H1Phase)>>4);
-			else H2FireAngle-=((H1Phase-(H1HalfPhase+(H1HalfPhase>>1)))>>4);
+						H2FireAngle+=((H1HalfPhase+(H1HalfPhase>>1)-H1Phase));
+				else H2FireAngle-=((H1Phase-(H1HalfPhase+(H1HalfPhase>>1))));
 			if (H2FireAngle>TargetFireAngle) H2FireAngle=TargetFireAngle;
 			if (H2FireAngle<InitFireAngle) H2FireAngle=InitFireAngle;
 		}
@@ -168,9 +173,9 @@ void tm0() interrupt 1 using 1
 		if (AcRisingEdgeDetect==1) 
 			{
 				AcRisingEdgeDetect=0;
-				AcPhase=0;
+				
 				AcPeriodCount=(AcDuration+AcPeriodCount)>>1 ;    
-				AcDuration=0;
+				AcDuration=1;
 			} else  AcDuration++;
 
 			
