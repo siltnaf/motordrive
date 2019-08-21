@@ -11,8 +11,10 @@ void extint0()   interrupt 0 using 1
 {					
 	
 					FireSeq=refresh;																//At each start of AC cycle, refresh the trigger position
-			   TH0 =(65536-ACCounterWidth)/256;
-				 TL0 = (65536-ACCounterWidth)%256;
+					TH0 =(65536-ACCounterWidth)/256;								//reset  timer0
+					TL0 = (65536-ACCounterWidth)%256;
+					TR0 =1;			
+					ET0 =1;			 
 					 AcEdgeDetect=1;
            if(AC_PIN == 1)
                       

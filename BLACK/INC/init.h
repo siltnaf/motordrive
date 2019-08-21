@@ -13,7 +13,7 @@
 
 //Fire angle is count from falling edge of AC and backwards
 
-#define	InitFireAngle				 		(7000)
+#define	InitFireAngle				 		(10000)
 #define StartFireAngle				 	(15000)
 #define MaxFireAngle            (30000)        //max value is 32700-deadzone
 
@@ -21,7 +21,7 @@
 #define InitAcH1Phase       		(5000)    //10012 <=> 55 degree between AC falling edge and HALL falling 
 #define MarginAcH1              (500)
 
-#define No_Fire_Zone           	(3000)         //dead zone 
+#define No_Fire_Zone           	(5000)         //dead zone 
 #define No_Fire_Zone1            (No_Fire_Zone)
 #define No_Fire_Zone2            (AcHalfPhase-No_Fire_Zone)
 #define No_Fire_Zone3            (AcHalfPhase+No_Fire_Zone)

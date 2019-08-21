@@ -113,6 +113,8 @@ volatile uint8 xdata UartRecIntFlag;
 volatile uint16 xdata UartRecInt;
 
 
+//volatile uint16 xdata Ac[400]=0;
+//volatile uint8 xdata AcPtr;
 
 
 void State_Assign()
@@ -242,16 +244,14 @@ void main()
 	
 		while(1)
 			{
-		
-			
+	
 		Check_Uart();
-				
-		
+	
 		Rebuild_Waveform();			
-		if (AcFallingEdgeDetect==1){	State_Assign();AcFallingEdgeDetect=0;}
+		if (AcEdgeDetect==1){	State_Assign();AcEdgeDetect=0;}
 		Check_Error();
 		if ((current_state!=SystemOff)&&(FireZone==1)) Run_Motor();
-		if (TRIAC2_PIN==1) P55=1; else P55=0;                                      			
+		if (AcRebuild==1) P55=1; else P55=0;                                      			
 		}
 
    	

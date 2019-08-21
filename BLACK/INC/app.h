@@ -174,7 +174,11 @@ extern volatile uint8 xdata UartArrayPtr;
 extern volatile uint8 xdata UartRecFlag;
 extern volatile uint8 xdata UartRecIntFlag;
 extern volatile uint16 xdata UartRecInt;
+ 
+//extern volatile uint16 xdata Ac[400];
+//extern volatile uint8 xdata AcPtr;
 
+ 
 
 extern void Run_Motor(void);
 extern void Check_Speed(void);

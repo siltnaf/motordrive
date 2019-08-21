@@ -8,7 +8,7 @@ const char Str_cw[3]={'c','w','\0'};
 const char Str_ccw[4]={'c','c','w','\0'};
 const char Str_on[3]={'o','n','\0'};
 
-     
+
             
 
 void UartSendByte(uint8 dat)

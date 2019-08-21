@@ -158,8 +158,11 @@ static unsigned char Zone2_Flag;
 	
 	if (AcIncFlag==1)
 			{
+			
 				AcIncFlag=0;
 				AcPhase+=AcPhaseInc;
+//				Ac[AcPtr]=AcPhase;
+//				AcPtr++;
 			}	
 		else
 			AcPhasePrecise=AcPhase+(256-TL1)*3;    //each step of AcPhase increment is  ~320 , and there is 1200 count in T1 timer, so each count stand for 4/15 * counter_value
@@ -239,9 +242,9 @@ void Check_Error()
 {
  
 	//**************no trigger beyond Dead zone*************//
-			if ((FireZone==0) )	
+			if ((FireZone==0))	
 					{
-					 
+					
 					Triac1_Reset();
 					Triac2_Reset();
 					}
