@@ -12,7 +12,7 @@
 void Check_Speed()
 {
 	if (AcPeriodCount==H1PeriodCount) 
-				MaxSpeedFlag=1;
+			if (new_rpm==max_rpm)	MaxSpeedFlag=1;
 			else
 			{
 				MaxSpeedFlag=0;

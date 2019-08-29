@@ -73,7 +73,7 @@
 #define complete									3
 
 
-
+#define max_rpm                3000
 
 
 

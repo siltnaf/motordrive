@@ -7,9 +7,10 @@ const char Str_off[4]={'o','f','f','\0'};
 const char Str_cw[3]={'c','w','\0'};
 const char Str_ccw[4]={'c','c','w','\0'};
 const char Str_on[3]={'o','n','\0'};
+//const char Str_state[6]={'s','t','a','t','e','\0'};
 
-
-            
+volatile uint8 store_state;       
+volatile uint16 store_rpm; 
 
 void UartSendByte(uint8 dat)
   {
@@ -74,6 +75,31 @@ void Check_Uart()
 {
 static uint16 tmp_rpm;
 	
+			if	(store_state!=current_state)
+						{
+						 
+							UartSendStr("Current state = ");
+							switch (current_state)
+								{
+	
+								case SystemOff:    UartSendStr("system off\n\r");
+																		break;
+								case Standby:      UartSendStr("standby\n\r");
+																		break;
+								case KickStart:		 UartSendStr("kick start\n\r");
+																		break;				
+								case NormalRun:		 UartSendStr("normal run\n\r");
+																		break;			
+								case FindSteadyPoint:	UartSendStr("find steady point\n\r");
+																		break;		
+								case SynMax: 				UartSendStr("syn max\n\r");
+																		break;	
+								}
+								store_state=current_state;
+					
+						}
+	
+	
 		if (UartRecFlag==1)
 			{
 			
@@ -82,11 +108,15 @@ static uint16 tmp_rpm;
 				if	(StrComp(UartData,Str_off)==1)
 						{
 							UartSendStr("Current Status is off\n\r");
-							current_state=SystemOff;
+							if (current_state!=Standby) store_rpm=new_rpm;
+							new_rpm=0;
+							MaxSpeedFlag=0;
+							current_state=Standby;
 						}
 				if	(StrComp(UartData,Str_on)==1)
 						{
 							UartSendStr("Current Status is running\n\r");
+							new_rpm=store_rpm;
 							current_state=Standby;
 						}
 				if	(StrComp(UartData,Str_cw)==1)
@@ -99,6 +129,7 @@ static uint16 tmp_rpm;
 							UartSendStr("Current direction is anti-clockwise\n\r");
 							direction=ccw; 
 						}
+		
 				if (UartRecIntFlag==1)
 						{
 									UartSendStr("Rpm is set to ");
@@ -110,9 +141,15 @@ static uint16 tmp_rpm;
 											new_rpm=tmp_rpm;
 											current_state=Standby;
 										}
-										else current_state=SystemOff;
+										else 
+											{
+											new_rpm=0;
+											MaxSpeedFlag=0;
+											current_state=Standby;
+											}
+									UartRecIntFlag=0;
 						}
-				UartRecIntFlag=1;
+		
 		
 		
 			}

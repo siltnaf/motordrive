@@ -254,8 +254,8 @@ static signed char int_tmp;
 			if (UartArrayPtr<UartDataLen) UartArrayPtr++;
 			 else UartArrayPtr=0;
 			 int_tmp=tmp-48;
-			if ((int_tmp<0)||(int_tmp>9))
-			 UartRecIntFlag=0;
+			if ((int_tmp>=0)&&(int_tmp<=9))
+			 UartRecIntFlag=1;
 			
 			
 		}

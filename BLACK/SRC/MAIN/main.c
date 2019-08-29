@@ -135,7 +135,7 @@ switch (current_state)
 											Triac1_Reset();
 											Triac2_Reset();	
 											Check_Speed();
-											if (rpm!=0) next_state=SystemOn;
+											if (new_rpm!=0) next_state=SystemOn;
 											break;
 	
 	case SystemOn: 			
@@ -243,15 +243,13 @@ void main()
 	
 	
 		while(1)
-			{
-	
+		{	
 		Check_Uart();
-	
 		Rebuild_Waveform();			
 		if (AcEdgeDetect==1){	State_Assign();AcEdgeDetect=0;}
 		Check_Error();
 		if ((current_state!=SystemOff)&&(FireZone==1)) Run_Motor();
-		if (AcRebuild==1) P55=1; else P55=0;                                      			
+		if (TRIAC1_PIN==1) P55=1; else P55=0;                                      			
 		}
 
    	
