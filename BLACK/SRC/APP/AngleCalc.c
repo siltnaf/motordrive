@@ -11,8 +11,11 @@
 *******************************************************************************/
 void Check_Speed()
 {
-	if (AcPeriodCount==H1PeriodCount) 
-			if (new_rpm==max_rpm)	MaxSpeedFlag=1;
+	
+	if ((AcPeriodCount==(H1PeriodCount-1))||(AcPeriodCount==H1PeriodCount)) 
+			{
+				if (new_rpm==max_rpm)	MaxSpeedFlag=1;
+			}
 			else
 			{
 				MaxSpeedFlag=0;
@@ -46,7 +49,7 @@ void Check_Speed()
 void Find_TargetFireAngle()
 {
 	
-						
+	static volatile uint16 diff;					
 
 		
 /***********************************************************************
@@ -58,7 +61,20 @@ void Find_TargetFireAngle()
 			if  (MaxSpeedFlag==1)
 			{
 				if (H1PhaseFallEdge>AcHalfPhase)
+				{
 					PID_Error=TargetAcH1-(H1PhaseFallEdge-AcHalfPhase);
+					if (PID_Error<0)
+							{
+									PID_Error=-PID_Error;
+									PID_Error=PID_Error>>8;
+									TargetFireAngle+=PID_Error;
+							}
+					else
+						{
+							PID_Error=PID_Error>>8;
+							TargetFireAngle -= PID_Error;
+						}
+				}					
 				
 		//PID error is +ve means motor is running too fast.		
 				
@@ -84,10 +100,11 @@ void Find_TargetFireAngle()
 			
 		
 				else 
-				
-					PID_Error=-(H1PhaseFallEdge+(AcHalfPhase-TargetAcH1));		
+				{
+					PID_Error=((H1PhaseFallEdge>>1)+((AcHalfPhase-TargetAcH1)>>1))>>7;  //divide by 2 to prevent negative value of PID_Error
+					TargetFireAngle += PID_Error;
 
-
+				}
 /************************************************************************
 ;   increment TargetFireAngle (increase power) if delta is right of Tar 
 ;   increase TargetFireAngle will move H1 to left so delta will decrease				
@@ -105,8 +122,7 @@ void Find_TargetFireAngle()
 ;         Targetphase is between falling edge of AC and falling edge of H1 
 ;	
 ;************************************************************************/
-
-				TargetFireAngle -= (PID_Error >> 8);               
+				       
 			
 			}
 			else
@@ -118,22 +134,31 @@ void Find_TargetFireAngle()
 ;
 **************************************************************************/
 				
-				
+			
 				
 				if (H1PeriodCount<TargetPeriodCount)
-					{
-							 TargetFireAngle-=(TargetPeriodCount-H1PeriodCount)>>1;							
+					{ 
+						diff =TargetPeriodCount-H1PeriodCount;
+						if (diff>5)
+ 						 TargetFireAngle -=5;
+							else TargetFireAngle-=diff>>1;
+						  
 					}	
 					else
 					{
-						 TargetFireAngle+=(H1PeriodCount-TargetPeriodCount);			
+						
+						diff =H1PeriodCount-TargetPeriodCount;
+						if (diff>10)
+ 						 TargetFireAngle+=10;
+							else TargetFireAngle+=diff ;
+						 		
 					}
 			}
 			
 				if (TargetFireAngle>MaxFireAngle)
 						TargetFireAngle=MaxFireAngle;
-				if (TargetFireAngle<InitFireAngle)
-						TargetFireAngle=InitFireAngle;
+				if (TargetFireAngle<No_Fire_Zone)
+						TargetFireAngle=No_Fire_Zone;
 			
 			
 }
@@ -161,8 +186,7 @@ static unsigned char Zone2_Flag;
 			
 				AcIncFlag=0;
 				AcPhase+=AcPhaseInc;
-//				Ac[AcPtr]=AcPhase;
-//				AcPtr++;
+
 			}	
 		else
 			AcPhasePrecise=AcPhase+(256-TL1)*3;    //each step of AcPhase increment is  ~320 , and there is 1200 count in T1 timer, so each count stand for 4/15 * counter_value
@@ -178,15 +202,17 @@ static unsigned char Zone2_Flag;
 	}	if (H1Phase>=H1FullPhase) H1Phase=0;
 	if (H1Phase<H1HalfPhase) H1Rebuild=1;else  H1Rebuild=0;
  			
+	
+	
 	//************rebuild H2 signal*************//
 	
 	if (H1Phase<(H1HalfPhase>>1)||(H1Phase>(H1HalfPhase+(H1HalfPhase>>1)))) 
 	{
-			if (direction ==cw) H2Rebuild=0; else H2Rebuild=1;
+			if (direction ==cw) H2Rebuild=1; else H2Rebuild=0;
 	}
   else 
 	{
-		if (direction==cw) H2Rebuild=1; else H2Rebuild=0;
+		if (direction==cw) H2Rebuild=0; else H2Rebuild=1;
 	}
  
 	

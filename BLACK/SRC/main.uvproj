@@ -161,7 +161,7 @@
             <CpuDllArguments></CpuDllArguments>
             <PeripheralDll></PeripheralDll>
             <PeripheralDllArguments></PeripheralDllArguments>
-            <InitializationFile></InitializationFile>
+            <InitializationFile>.\debug\waveform.ini</InitializationFile>
             <Driver>BIN\STCMON51.DLL</Driver>
           </TargetDlls>
         </DebugOption>

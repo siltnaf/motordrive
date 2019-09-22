@@ -156,7 +156,7 @@ void InitParameter(void)
 	AcPhaseInc=327;
 	AcHalfPhase=32767;
 	AcFullPhase=65535;
-	new_rpm=500;
+	new_rpm=1500;
 	H1Phase=0;
   DelayCount=0;
 	H1FireAngle=InitFireAngle;
@@ -169,7 +169,8 @@ void InitParameter(void)
 	AcPhase = 0;
 	PID_Error = 0;
 	TargetAcH1=InitAcH1Phase;
-	UpdateAcH1=0;
+	UpdateAcH1_ccw=0;
+	UpdateAcH1_cw=0;
 
 
 }

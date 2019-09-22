@@ -10,7 +10,7 @@ const char Str_on[3]={'o','n','\0'};
 //const char Str_state[6]={'s','t','a','t','e','\0'};
 
 volatile uint8 store_state;       
-volatile uint16 store_rpm; 
+
 
 void UartSendByte(uint8 dat)
   {
@@ -78,21 +78,21 @@ static uint16 tmp_rpm;
 			if	(store_state!=current_state)
 						{
 						 
-							UartSendStr("Current state = ");
+				
 							switch (current_state)
 								{
 	
-								case SystemOff:    UartSendStr("system off\n\r");
+								case SystemOff:    UartSendStr("Current state = system off\n\r");
 																		break;
-								case Standby:      UartSendStr("standby\n\r");
+								case Standby:      UartSendStr("Current state = standby\n\r");
 																		break;
-								case KickStart:		 UartSendStr("kick start\n\r");
+								case KickStart:		 UartSendStr("Current state = kick start\n\r");
 																		break;				
-								case NormalRun:		 UartSendStr("normal run\n\r");
+								case NormalRun:		 UartSendStr("Current state = normal run\n\r");
 																		break;			
-								case FindSteadyPoint:	UartSendStr("find steady point\n\r");
+								case FindSteadyPoint:	UartSendStr("Current state = find steady point\n\r");
 																		break;		
-								case SynMax: 				UartSendStr("syn max\n\r");
+								case SynMax: 				UartSendStr("Current state = syn max\n\r");
 																		break;	
 								}
 								store_state=current_state;
@@ -108,26 +108,28 @@ static uint16 tmp_rpm;
 				if	(StrComp(UartData,Str_off)==1)
 						{
 							UartSendStr("Current Status is off\n\r");
-							if (current_state!=Standby) store_rpm=new_rpm;
-							new_rpm=0;
+							
+							
 							MaxSpeedFlag=0;
-							current_state=Standby;
+							current_state=SystemOff;
 						}
 				if	(StrComp(UartData,Str_on)==1)
 						{
 							UartSendStr("Current Status is running\n\r");
-							new_rpm=store_rpm;
+							
 							current_state=Standby;
 						}
 				if	(StrComp(UartData,Str_cw)==1)
 						{
 							UartSendStr("Current direction is clockwise\n\r");
 							direction=cw;
+							if (current_state!=SystemOff) current_state=Standby;
 						}
 				if	(StrComp(UartData,Str_ccw)==1)
 						{
 							UartSendStr("Current direction is anti-clockwise\n\r");
 							direction=ccw; 
+							if (current_state!=SystemOff) current_state=Standby;
 						}
 		
 				if (UartRecIntFlag==1)
@@ -143,9 +145,9 @@ static uint16 tmp_rpm;
 										}
 										else 
 											{
-											new_rpm=0;
+											
 											MaxSpeedFlag=0;
-											current_state=Standby;
+											current_state=SystemOff;
 											}
 									UartRecIntFlag=0;
 						}

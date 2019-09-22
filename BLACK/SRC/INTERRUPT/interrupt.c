@@ -16,7 +16,7 @@ void extint0()   interrupt 0 using 1
 					TR0 =1;			
 					ET0 =1;			 
 					 AcEdgeDetect=1;
-           if(AC_PIN == 1)
+           if(AC_PIN == Ac_sign)													//Ac_sign=0 for reverse AC waveform after opamp
                       
                {							 
                 AcRisingEdgeDetect=1;                     // Synchronize phase angle with AC rising edge  
@@ -111,15 +111,27 @@ void extint2()   interrupt 10 using 1
 	
 		// apply seperate H2Fire angle if speed is below  max speed
 	
-	  if (MaxSpeedFlag==0)
-		{
-			if (H2Rebuild==1)
-						H2FireAngle+=((H1HalfPhase+(H1HalfPhase>>1)-H1Phase));
-				else H2FireAngle-=((H1Phase-(H1HalfPhase+(H1HalfPhase>>1))));
-			if (H2FireAngle>TargetFireAngle) H2FireAngle=TargetFireAngle;
-			if (H2FireAngle<InitFireAngle) H2FireAngle=InitFireAngle;
-		}
-		else H2FireAngle=TargetFireAngle;
+//	  if (MaxSpeedFlag==0)
+//		{
+//			if (H1PeriodCount<TargetPeriodCount)
+//					{ 
+// 					 H2FireAngle-=5;
+//						  
+//					}	
+//					else
+//					{
+//						 
+//						 H2FireAngle+=5;	
+//					}
+//			
+////			if (H2Rebuild==1)
+////						H2FireAngle+=((H1HalfPhase+(H1HalfPhase>>1)-H1Phase));
+////				else H2FireAngle-=((H1Phase-(H1HalfPhase+(H1HalfPhase>>1))));
+//			if (H2FireAngle>TargetFireAngle) H2FireAngle=TargetFireAngle;
+//			if (H2FireAngle<No_Fire_Zone) H2FireAngle=No_Fire_Zone;
+//		}
+//		else H2FireAngle=TargetFireAngle;
+////		H2FireAngle=TargetFireAngle;            //test
 }
 
 
@@ -185,8 +197,9 @@ void tm0() interrupt 1 using 1
 			{
 				H1Phase=0;
 				H1RisingEdgeDetect=0;
-				H1PeriodCount=(H1PeriodCount+H1Duration)>>1  ;
-				H1Duration=0;
+//				H1PeriodCount=(H1PeriodCount+H1Duration)>>1  ;
+					H1PeriodCount= H1Duration   ;
+				H1Duration=1;
 			} 
 			else  
 			{

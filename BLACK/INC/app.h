@@ -162,10 +162,12 @@ extern volatile uint8 xdata PrioritySwitch;
 
 extern volatile int16 xdata H1PhaseFallEdge;
 extern volatile uint16 xdata TargetAcH1;
-extern volatile uint16 xdata SteadyAcH1;
+extern volatile uint16 xdata SteadyAcH1_cw;
+extern volatile uint16 xdata SteadyAcH1_ccw;
 extern volatile uint8 xdata SynFlag;
 
-extern volatile uint8 xdata UpdateAcH1;
+extern volatile uint8 xdata UpdateAcH1_cw;
+extern volatile uint8 xdata UpdateAcH1_ccw;
 extern volatile uint8 xdata MaxSpeedFlag;
 extern volatile int16 xdata PID_Error; 
 
@@ -175,8 +177,8 @@ extern volatile uint8 xdata UartRecFlag;
 extern volatile uint8 xdata UartRecIntFlag;
 extern volatile uint16 xdata UartRecInt;
  
-//extern volatile uint16 xdata Ac[400];
-//extern volatile uint8 xdata AcPtr;
+extern volatile uint16 xdata test[400];
+extern volatile uint8 xdata testPtr;
 
  
 

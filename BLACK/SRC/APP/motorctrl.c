@@ -31,13 +31,28 @@ void Run_Motor(void)
 			case refresh:
 				
 			//************find FirePower1 and FirePower2 start position**************//
-											if (((H1Rebuild == 1)&&(AcFirePos==1)&&(AcRebuild==1)) ||  ((H1Rebuild == 0)&&(AcFireNeg==1)&&(AcRebuild==0)))
-											Fire1Reg=1;
-											else Fire1Reg=0;
-											if (((H2Rebuild == 1)&&(AcFireNeg==1)&&(AcRebuild==0)) ||  ((H2Rebuild == 0)&&(AcFirePos==1)&&(AcRebuild==1)))
-											Fire2Reg=1; 	
-											else Fire2Reg=0;
-											
+								
+			
+											if (direction==cw)
+												{
+														if (((H1_PIN== 0)&&(AcFirePos==1)&&(AcRebuild==1)) ||  ((H1_PIN == 1)&&(AcFireNeg==1)&&(AcRebuild==0)))
+																	Fire2Reg=1;
+															else Fire2Reg=0;
+														
+														if (((H2_PIN == 1)&&(AcFirePos==1)&&(AcRebuild==1)) ||  ((H2_PIN  == 0)&&(AcFireNeg==1)&&(AcRebuild==0)))
+																	Fire1Reg=1;
+															else Fire1Reg=0;
+												}
+											if (direction==ccw)
+												{
+													
+														if (((H2_PIN  == 0)&&(AcFirePos==1)&&(AcRebuild==1)) ||  ((H2_PIN  == 1)&&(AcFireNeg==1)&&(AcRebuild==0)))
+																	Fire2Reg=1;
+															else Fire2Reg=0;
+															if (((H1_PIN == 0)&&(AcFirePos==1)&&(AcRebuild==1)) ||  ((H1_PIN == 1)&&(AcFireNeg==1)&&(AcRebuild==0)))
+																	Fire1Reg=1;
+															else Fire1Reg=0;
+												}
 			
 											if ((Fire1Reg==1)||(Fire2Reg==1)) FireSeq=start;
 

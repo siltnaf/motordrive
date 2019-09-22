@@ -13,15 +13,17 @@
 
 //Fire angle is count from falling edge of AC and backwards
 
-#define	InitFireAngle				 		(10000)
-#define StartFireAngle				 	(15000)
+#define	InitFireAngle				 		(8000)
+#define StartFireAngle				 	(10000)
 #define MaxFireAngle            (30000)        //max value is 32700-deadzone
 
 
-#define InitAcH1Phase       		(5000)    //10012 <=> 55 degree between AC falling edge and HALL falling 
-#define MarginAcH1              (500)
+#define InitAcH1Phase       		(10000)    //10012 <=> 55 degree between AC falling edge and HALL falling 
+#define MarginAcH1              (200)
+#define RESET										(1000)
 
-#define No_Fire_Zone           	(5000)         //dead zone 
+
+#define No_Fire_Zone           	(2000)         //dead zone 
 #define No_Fire_Zone1            (No_Fire_Zone)
 #define No_Fire_Zone2            (AcHalfPhase-No_Fire_Zone)
 #define No_Fire_Zone3            (AcHalfPhase+No_Fire_Zone)
@@ -30,11 +32,11 @@
 
 #define Time0                 (50)				//0.5s
 #define Time1									(100)				//1s
-#define Time2									(200)				//3s
-#define Time3									(300)				//5s
+#define Time2									(200)				//2s
+#define Time3									(300)				//3s
+#define Time5                 (500)       //5s
 
-
-
+#define Ac_sign									(0)       //Ac-sign=0 ,AC signal is reverse
 
 
 #define MaxTriggerPulse						(10)
