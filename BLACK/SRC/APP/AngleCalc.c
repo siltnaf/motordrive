@@ -12,7 +12,7 @@
 void Check_Speed()
 {
 	
-	if ((AcPeriodCount==(H1PeriodCount-1))||(AcPeriodCount==H1PeriodCount)) 
+	if ((AcPeriodCount-2)<=H1PeriodCount) 
 			{
 				if (new_rpm==max_rpm)	MaxSpeedFlag=1;
 			}
@@ -46,114 +46,183 @@ void Check_Speed()
  Description: 
 *******************************************************************************/
 
-void Find_TargetFireAngle()
+void lock_TargetAcH1()
 {
 	
-	static volatile uint16 diff;					
-
-		
+ 
 /***********************************************************************
 ; In max steady speed
 ;	control the time interval of Ac rising edge and H1 falling edge to TargetAcH1 value
 ;
 **************************************************************************/
-	
-			if  (MaxSpeedFlag==1)
-			{
-				if (H1PhaseFallEdge>AcHalfPhase)
-				{
-					PID_Error=TargetAcH1-(H1PhaseFallEdge-AcHalfPhase);
-					if (PID_Error<0)
-							{
-									PID_Error=-PID_Error;
-									PID_Error=PID_Error>>8;
-									TargetFireAngle+=PID_Error;
-							}
-					else
-						{
-							PID_Error=PID_Error>>8;
-							TargetFireAngle -= PID_Error;
-						}
-				}					
+	 
+			
+					     if (H1PhaseRiseEdge<AcHalfPhase)
+							 {
+								PID_Error= TargetAcH1-H1PhaseRiseEdge;
+								if (PID_Error>0)
+									{
+										TargetFireAngle-=PID_Error>>8;
+									}
+									else 
+									{
+										PID_Error=-PID_Error;
+										TargetFireAngle+=PID_Error>>8;
+									}
+								}
+								 	else 
+									{
+										PID_Error=(H1PhaseRiseEdge-TargetAcH1);
+										TargetFireAngle+=PID_Error>>8;
+									}
+									
 				
 		//PID error is +ve means motor is running too fast.		
-				
+
+// cw direction								
 /************************************************************************
+;   case 1.  
 ;   decrement TargetFireAngle (reduce power) if delta is left of Tar
-;				decrease TargetFireAngle will shift H1 to right so delta will decrease
+;			
 ;				
-;                                    delta
-;                                  -->	<----			
-;                               --> Tar <---
-;                                  :   :
-;                           -------    :
-;          AC              |       |   :
-;             -------------         ----------------------
-;
-;                             -------
-;         H1                 |       |
-;               -------------         ----------------------
-;
-;                 Targetphase is between falling edge of AC and falling edge of H1 
+;                            delta
+;                        -->	    <----			
+;                        --> Tar<---
+;                          : :
+;               ---         -------         -------
+;          AC      |       | :     |       |       |
+;                   -------         -------         -----------
+;                            :
+;                              ----x---          ----x
+;         H1                  |        |        |
+;                -------------          ----x--- 
+;			
+;                        --------          --------
+;         H2            |        |        |        |
+;               --------          --------          ------------
+;										
+;        Targetphase is between rising edge of AC and rising edge of H1 
 ;	
 ;************************************************************************/
 			
-		
-				else 
-				{
-					PID_Error=((H1PhaseFallEdge>>1)+((AcHalfPhase-TargetAcH1)>>1))>>7;  //divide by 2 to prevent negative value of PID_Error
-					TargetFireAngle += PID_Error;
-
-				}
+			
+			
+			
 /************************************************************************
+;   case 2. H1 falling edge is within half cycle of AC
 ;   increment TargetFireAngle (increase power) if delta is right of Tar 
 ;   increase TargetFireAngle will move H1 to left so delta will decrease				
-;                      --> delta    <---      
-;                 --> Tar<---
-;                    :   :
-;                    :   :  
-;                 ---    :      -------
-;         AC         |   :     |       |
-;                     ---------         ----------------------
-; 		                      -------
-;          H1              |       |
-;             -------------         ----------------------						
+;                                  --> delta<---      
+;                                    --> Tar<---
+;                                       :  :
+;                                       :  :  
+;                 ---           --------   :       --------
+;         AC         |         | half ac|  :      |
+;                     ---------          --------
+; 		                        --x-----          --------
+;          H1                |        |        |
+;               -------------          -----x--			
+; 		                    --------          --------
+;          H2            |        |        |        |
+;               ---------          --------		       --------
+
+
+									
 ;
 ;         Targetphase is between falling edge of AC and falling edge of H1 
 ;	
 ;************************************************************************/
 				       
 			
-			}
-			else
-			{
-				
+		
+//								else 
+//									{
+//										PID_Error=(TargetAcH1+(AcHalfPhase-H1PhaseFallEdge))>>8;  //divide by 2 to prevent negative value of PID_Error
+//										TargetFireAngle -= PID_Error;
+
+//									}
+						
+//ccw direction 
+/************************* ***********************************************
+;   case 1. H1 falling edge is exceed half cycle of AC
+;   decrement TargetFireAngle (reduce power) if delta is left of Tar
+;				decrease TargetFireAngle will shift H1 to right so delta will decrease
+;				
+;                                    delta
+;                               -->	    <----			
+;                               --> Tar <---
+;                                  :   :
+;               ---         -------    :    -------
+;          AC      |       |half ac|   :   |       |
+;                   -------         -------         -----------
+;
+;                             --------          --------
+;         H1                 |        |        |        |
+;               -------------          --------          -----
+;			
+;               --------          ------x-          -----------
+;         H2            |        |        |        |
+;                        ------x-          --------         
+;										
+;                 Targetphase is between falling edge of AC and falling edge of H1 
+;	
+;************************************************************************/
+			
+			
+			
+			
+/************************************************************************
+;   case 2. H1 falling edge is within half cycle of AC
+;   increment TargetFireAngle (increase power) if delta is right of Tar 
+;   increase TargetFireAngle will move H1 to left so delta will decrease				
+;                                  --> delta<---      
+;                                    --> Tar<---
+;                                       :  :
+;                                       :  :  
+;                 ---           --------   :       --------
+;         AC         |         | half ac|  :      |
+;                     ---------          --------
+; 		                        --------          --------
+;          H1                |        |        |
+;               -------------          --------			
+; 		           --------          ------x-          ------
+;          H2            |        |        |        |
+;                         ------x-          --------		       
+;
+;         Targetphase is between falling edge of AC and falling edge of H1 
+;	
+;************************************************************************/
+		
+					}
+	 
 /***********************************************************************
 ; If speed is below max speed
 ;	control TargetFireAngle so that H1PeriodCount approach the calculated TargetPeriodCount
 ;
 **************************************************************************/
 				
-			
+void Find_TargetFireAngle()	
+{
+	volatile uint16 xdata diff;
 				
-				if (H1PeriodCount<TargetPeriodCount)
+				if (H1PeriodCount<=TargetPeriodCount)
 					{ 
 						diff =TargetPeriodCount-H1PeriodCount;
-						if (diff>5)
- 						 TargetFireAngle -=5;
-							else TargetFireAngle-=diff>>1;
+						if (diff>50) diff=diff>>1;else diff=diff>>4;
+ 						 TargetFireAngle -=diff;
+						
 						  
 					}	
 					else
 					{
 						
 						diff =H1PeriodCount-TargetPeriodCount;
-						if (diff>10)
- 						 TargetFireAngle+=10;
-							else TargetFireAngle+=diff ;
+					  if (diff>50) diff =diff>>1;else diff=diff>>4;
+ 						 TargetFireAngle+=diff ;
+						
 						 		
 					}
-			}
+			
 			
 				if (TargetFireAngle>MaxFireAngle)
 						TargetFireAngle=MaxFireAngle;
@@ -201,7 +270,12 @@ static unsigned char Zone2_Flag;
 		H1Phase+=H1PhaseInc;
 	}	if (H1Phase>=H1FullPhase) H1Phase=0;
 	if (H1Phase<H1HalfPhase) H1Rebuild=1;else  H1Rebuild=0;
- 			
+	//**********find H1 fall edge with respect to Ac //
+  if (H1Prev!=H1Rebuild) 
+		{
+			H1Prev=H1Rebuild;
+			if (H1Rebuild==0) 	H1PhaseFallEdge=AcPhasePrecise;
+		}
 	
 	
 	//************rebuild H2 signal*************//
@@ -229,18 +303,18 @@ static unsigned char Zone2_Flag;
 ;************************************************************************/
 	
 
-	if (( AcPhasePrecise> No_Fire_Zone1)&&( AcPhasePrecise<No_Fire_Zone2))	Zone1_Flag=1;	else Zone1_Flag=0;
-	if (( AcPhasePrecise> No_Fire_Zone3)&&( AcPhasePrecise<No_Fire_Zone4))	Zone2_Flag=1;	else Zone2_Flag=0;
+	if (( AcPhase > No_Fire_Zone1)&&( AcPhase <No_Fire_Zone2))	Zone1_Flag=1;	else Zone1_Flag=0;
+	if (( AcPhase > No_Fire_Zone3)&&( AcPhase <No_Fire_Zone4))	Zone2_Flag=1;	else Zone2_Flag=0;
 	if ((Zone1_Flag==1)||(Zone2_Flag==1)) FireZone=1;else FireZone=0;
 			
 	//********define positive wave fire region ***********//
-	if ((FireZone==1)&&(AcRebuild==1)&&(AcPhasePrecise> (AcHalfPhase-H1FireAngle))) 
+	if ((FireZone==1)&&(AcRebuild==1)&&(AcPhase > (AcHalfPhase-H1FireAngle))) 
 				AcFirePos=1;
 		else AcFirePos=0;
 		
  //**********define negative wave fire region*************//
 
-	if ((FireZone==1)&&(AcRebuild==0)&&(AcPhasePrecise> (AcFullPhase-H2FireAngle)))    
+	if ((FireZone==1)&&(AcRebuild==0)&&(AcPhase > (AcFullPhase-H2FireAngle)))    
 		{	
 			AcFireNeg=1;
 		
@@ -312,7 +386,7 @@ void Check_Error()
 						}
 					}
 				else 
-					if (DelayCount>Time3)
+					if (DelayTimer>Time3)
 						current_state=SystemOff;
 
 

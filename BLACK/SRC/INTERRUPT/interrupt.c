@@ -32,7 +32,8 @@ void extint0()   interrupt 0 using 1
 								AcActual=0;
 								 
 							 }
-           DelayCount++;
+           DelayTimer++;
+					 DelayTimer2++;	 
 				
 }
 
@@ -45,7 +46,7 @@ void extint1()   interrupt 2 using 1
 		if  (H1_PIN==1)                  //rising edge of H1 signal
 			{
 			H1RisingEdgeDetect=1;  
-					
+			H1PhaseRiseEdge=AcPhasePrecise ;	
 			}
 			else													//falling edge of H1 signal
 			{					
@@ -68,7 +69,7 @@ void extint1()   interrupt 2 using 1
 				
 // caputre falling edge of  H1
 				
-				H1PhaseFallEdge=AcPhasePrecise;
+//				H1PhaseFallEdge=AcPhasePrecise;
 				
 //					
 //			 if (AcPhasePrecise > AcHalfPhase)
@@ -197,8 +198,8 @@ void tm0() interrupt 1 using 1
 			{
 				H1Phase=0;
 				H1RisingEdgeDetect=0;
-//				H1PeriodCount=(H1PeriodCount+H1Duration)>>1  ;
-					H1PeriodCount= H1Duration   ;
+				H1PeriodCount=(H1PeriodCount+H1Duration)>>1  ;
+				
 				H1Duration=1;
 			} 
 			else  
@@ -214,9 +215,9 @@ void tm0() interrupt 1 using 1
 ;
 **************************************************************************************************/			
 				H1Duration++;
-				if (H1Duration==10)  H1PhaseInc=65535/H1PeriodCount;
-				if (H1Duration==20)  H1FullPhase=(H1PhaseInc*H1PeriodCount);
-				if (H1Duration==30)  H1HalfPhase=H1FullPhase>>1;
+				if (H1Duration==100)  H1PhaseInc=65535/H1PeriodCount;
+				if (H1Duration==200)  H1FullPhase=(H1PhaseInc*H1PeriodCount);
+				if (H1Duration==300)  H1HalfPhase=H1FullPhase>>1;
 			}
 	
 	

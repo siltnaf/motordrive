@@ -156,9 +156,9 @@ void InitParameter(void)
 	AcPhaseInc=327;
 	AcHalfPhase=32767;
 	AcFullPhase=65535;
-	new_rpm=1500;
+	new_rpm=0;
 	H1Phase=0;
-  DelayCount=0;
+  DelayTimer=0;
 	H1FireAngle=InitFireAngle;
 	H2FireAngle=InitFireAngle;
 	Triac1_Reset();
@@ -171,6 +171,6 @@ void InitParameter(void)
 	TargetAcH1=InitAcH1Phase;
 	UpdateAcH1_ccw=0;
 	UpdateAcH1_cw=0;
-
-
+	Check_Speed();
+	new_rpm=3000;
 }

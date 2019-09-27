@@ -93,7 +93,8 @@
 //***************variable rpm and direction***************//
 
 
-extern volatile uint16 xdata DelayCount;
+extern volatile uint16 xdata DelayTimer;
+extern volatile uint16 xdata DelayTimer2;
 extern volatile uint8 xdata direction;
 extern volatile uint16 xdata rpm;
 extern volatile uint16 xdata new_rpm;
@@ -120,7 +121,7 @@ extern volatile uint16 xdata AcPhasePrecise;
 extern volatile uint8 	xdata AcFallingEdgeDetect;
 
 //***********construct H1 ,H2 waveform**********************//
-
+extern volatile uint8 xdata H1Prev;
 extern volatile uint8 	xdata H1Rebuild;
 extern volatile uint8 	xdata H1PhaseIncFlag;
 extern volatile uint8 	xdata H1RisingEdgeDetect;
@@ -149,6 +150,7 @@ extern volatile uint8 xdata Triac1Ticker;
 extern volatile uint8 xdata Triac2Ticker;
 
 extern volatile uint16 xdata TargetFireAngle;
+extern volatile uint16 xdata SynMaxFireAngle;
 extern volatile uint16 xdata TargetPeriodCount;
 
 extern volatile uint8 xdata Fire1Reg;
@@ -161,6 +163,9 @@ extern volatile uint8 xdata PrioritySwitch;
 
 
 extern volatile int16 xdata H1PhaseFallEdge;
+extern volatile int16 xdata H1PhaseRiseEdge;
+extern volatile int16 xdata H2PhaseFallEdge;
+
 extern volatile uint16 xdata TargetAcH1;
 extern volatile uint16 xdata SteadyAcH1_cw;
 extern volatile uint16 xdata SteadyAcH1_ccw;
@@ -185,6 +190,7 @@ extern volatile uint8 xdata testPtr;
 extern void Run_Motor(void);
 extern void Check_Speed(void);
 extern void Find_TargetFireAngle(void);
+extern void lock_TargetAcH1();
 extern void Rebuild_Waveform(void);
 extern void Check_Error(void);
 extern void UartSendByte(uint8 dat);

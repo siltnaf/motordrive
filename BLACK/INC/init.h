@@ -18,8 +18,8 @@
 #define MaxFireAngle            (30000)        //max value is 32700-deadzone
 
 
-#define InitAcH1Phase       		(10000)    //10012 <=> 55 degree between AC falling edge and HALL falling 
-#define MarginAcH1              (200)
+#define InitAcH1Phase       		(8000)    //10012 <=> 55 degree between AC falling edge and HALL falling 
+#define MarginAcH1              (500)
 #define RESET										(1000)
 
 
@@ -35,6 +35,7 @@
 #define Time2									(200)				//2s
 #define Time3									(300)				//3s
 #define Time5                 (500)       //5s
+#define Time10								(1000)
 
 #define Ac_sign									(0)       //Ac-sign=0 ,AC signal is reverse
 
@@ -65,7 +66,7 @@
 #define	KickStart									4
 #define	SynMax										5
 #define FindSteadyPoint						6
-
+#define FindAcHallPhase						7
 
 //FireSeq
 
@@ -76,7 +77,7 @@
 
 
 #define max_rpm                3000
-
+#define ReduceSpeed              1
 
 
 
