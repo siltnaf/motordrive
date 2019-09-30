@@ -145,20 +145,30 @@
         <Ww>
           <count>2</count>
           <WinNumber>1</WinNumber>
-          <ItemText>TargetAcH1</ItemText>
+          <ItemText>PID_Error</ItemText>
         </Ww>
         <Ww>
           <count>3</count>
           <WinNumber>1</WinNumber>
-          <ItemText>PID_Error</ItemText>
+          <ItemText>TargetFireAngle</ItemText>
         </Ww>
         <Ww>
           <count>4</count>
           <WinNumber>1</WinNumber>
-          <ItemText>TargetFireAngle</ItemText>
+          <ItemText>MaxSpeedFlag</ItemText>
         </Ww>
         <Ww>
           <count>5</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>TargetAcHall</ItemText>
+        </Ww>
+        <Ww>
+          <count>6</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>H2PhaseRiseEdge</ItemText>
+        </Ww>
+        <Ww>
+          <count>7</count>
           <WinNumber>1</WinNumber>
           <ItemText>MaxSpeedFlag</ItemText>
         </Ww>

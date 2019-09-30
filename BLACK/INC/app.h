@@ -94,7 +94,7 @@
 
 
 extern volatile uint16 xdata DelayTimer;
-extern volatile uint16 xdata DelayTimer2;
+
 extern volatile uint8 xdata direction;
 extern volatile uint16 xdata rpm;
 extern volatile uint16 xdata new_rpm;
@@ -107,10 +107,10 @@ extern volatile uint16 xdata temp;
 //***********construct AC waveform***********************//
 
 extern volatile uint8 xdata AcActual;
-extern volatile uint8  xdata AcEdgeDetect;
+extern volatile uint8  xdata AcPrev;
 extern volatile uint8 	xdata AcRebuild;
 extern volatile uint8 	xdata AcIncFlag;
-extern volatile uint8 	xdata AcRisingEdgeDetect;
+extern volatile uint8 	xdata AcEdgeDetect;
 extern volatile uint8 	xdata AcPeriodCount;
 extern volatile uint8 	xdata AcDuration;
 extern volatile uint16 xdata AcPhaseInc; 
@@ -136,7 +136,8 @@ extern volatile uint16 xdata H1FireAngle;
 
 extern volatile uint8 xdata H2Rebuild;
 extern volatile uint16 xdata H2FireAngle;
- 
+extern volatile uint8 	xdata H2RisingEdgeDetect;
+extern volatile uint16 xdata H2Phase;
 //************trigger Triac***********************// 
 
 extern volatile uint8 xdata AcFirePos;
@@ -150,6 +151,9 @@ extern volatile uint8 xdata Triac1Ticker;
 extern volatile uint8 xdata Triac2Ticker;
 
 extern volatile uint16 xdata TargetFireAngle;
+extern volatile uint16 xdata SteadyFireAngle_cw;
+extern volatile uint16 xdata SteadyFireAngle_ccw;
+
 extern volatile uint16 xdata SynMaxFireAngle;
 extern volatile uint16 xdata TargetPeriodCount;
 
@@ -162,18 +166,25 @@ extern volatile uint8 xdata PrioritySwitch;
 //**********max speed steady control************//
 
 
-extern volatile int16 xdata H1PhaseFallEdge;
-extern volatile int16 xdata H1PhaseRiseEdge;
-extern volatile int16 xdata H2PhaseFallEdge;
 
+extern volatile int16 xdata H1PhaseRiseEdge;
+extern volatile int16 xdata H2PhaseRiseEdge;
+
+extern volatile uint16 xdata TargetAcHall;
 extern volatile uint16 xdata TargetAcH1;
-extern volatile uint16 xdata SteadyAcH1_cw;
-extern volatile uint16 xdata SteadyAcH1_ccw;
+extern volatile uint16 xdata TargetAcH2;
+
+
+extern volatile uint16 xdata SteadyAcH1;
+extern volatile uint16 xdata SteadyAcH2;
 extern volatile uint8 xdata SynFlag;
 
 extern volatile uint8 xdata UpdateAcH1_cw;
 extern volatile uint8 xdata UpdateAcH1_ccw;
 extern volatile uint8 xdata MaxSpeedFlag;
+extern volatile uint8 xdata OverSpeedFlag;
+extern volatile uint8 xdata ConvergeSpeed;
+extern volatile uint8 xdata LooseSpeedFlag;
 extern volatile int16 xdata PID_Error; 
 
 extern volatile uint8 xdata UartData[];

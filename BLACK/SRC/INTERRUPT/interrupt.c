@@ -5,35 +5,26 @@
 #include "app.h"
 
 
+/**************************************************************************************************
+;Hall2 Hall Signal(detect rising edge only)
+;
+;increase H2FireAngle if edge drop before H2Rebuild 
+;
+;decrease H2FireAngle if edge drop after H2Rebuild
+;
+;
+**************************************************************************************************/
 
-//AC Handler (detect both rising and falling edge)
+
 void extint0()   interrupt 0 using 1
 {					
-	
-					FireSeq=refresh;																//At each start of AC cycle, refresh the trigger position
-					TH0 =(65536-ACCounterWidth)/256;								//reset  timer0
-					TL0 = (65536-ACCounterWidth)%256;
-					TR0 =1;			
-					ET0 =1;			 
-					 AcEdgeDetect=1;
-           if(AC_PIN == Ac_sign)													//Ac_sign=0 for reverse AC waveform after opamp
-                      
-               {							 
-                AcRisingEdgeDetect=1;                     // Synchronize phase angle with AC rising edge  
-								AcPhase=0;
-								
-								 AcActual=1;																// for test AcRebuild and actual AC waveform difference			
-											 
-               }
-							 else 
-							 {
-								 AcFallingEdgeDetect=1;
-								 AcPhase=AcHalfPhase;
-								AcActual=0;
-								 
-							 }
-           DelayTimer++;
-					 DelayTimer2++;	 
+			if  (H2_PIN==1)                  //rising edge of H1 signal
+			{
+			H2RisingEdgeDetect=1;  
+				H2Phase=0;
+			H2PhaseRiseEdge=AcPhasePrecise ;	
+			}
+		
 				
 }
 
@@ -46,45 +37,12 @@ void extint1()   interrupt 2 using 1
 		if  (H1_PIN==1)                  //rising edge of H1 signal
 			{
 			H1RisingEdgeDetect=1;  
+					H1Phase=0;
 			H1PhaseRiseEdge=AcPhasePrecise ;	
 			}
-			else													//falling edge of H1 signal
-			{					
-				
-				
-									
-/************************************************************************
-;                           -------
-;          AC              |       |
-;             -------------         ----------------------
-;
-;                               -------
-;         H1                   |       |
-;                 -------------         ----------------------
-;
-;                 Targetphase is between falling edge of AC and falling edge of H1 
-;	
-;************************************************************************/
-				
-				
-// caputre falling edge of  H1
-				
-//				H1PhaseFallEdge=AcPhasePrecise;
-				
-//					
-//			 if (AcPhasePrecise > AcHalfPhase)
-//			 {
-//			PID_Error = TargetAcH1 - (AcPhasePrecise-AcHalfPhase);
 			
-//			 }
-//			 else 
-//			 {
-//			PID_Error=-(AcPhasePrecise+(AcHalfPhase-TargetAcH1)); 
-				
-//			 }
-				}
-				
-				
+					test[testPtr]=H2PhaseRiseEdge;
+				testPtr++;
 				
 			
 			
@@ -98,41 +56,23 @@ void extint1()   interrupt 2 using 1
 
 
 
-/**************************************************************************************************
-;Hall2 Hall Signal(detect falling edge only)
-;
-;increase H2FireAngle if edge drop before H2Rebuild 
-;
-;decrease H2FireAngle if edge drop after H2Rebuild
-;
-;
-**************************************************************************************************/
+
+
+//AC Handler (detect  falling edge)
+
 void extint2()   interrupt 10 using 1
 {
 	
-		// apply seperate H2Fire angle if speed is below  max speed
-	
-//	  if (MaxSpeedFlag==0)
-//		{
-//			if (H1PeriodCount<TargetPeriodCount)
-//					{ 
-// 					 H2FireAngle-=5;
-//						  
-//					}	
-//					else
-//					{
-//						 
-//						 H2FireAngle+=5;	
-//					}
-//			
-////			if (H2Rebuild==1)
-////						H2FireAngle+=((H1HalfPhase+(H1HalfPhase>>1)-H1Phase));
-////				else H2FireAngle-=((H1Phase-(H1HalfPhase+(H1HalfPhase>>1))));
-//			if (H2FireAngle>TargetFireAngle) H2FireAngle=TargetFireAngle;
-//			if (H2FireAngle<No_Fire_Zone) H2FireAngle=No_Fire_Zone;
-//		}
-//		else H2FireAngle=TargetFireAngle;
-////		H2FireAngle=TargetFireAngle;            //test
+//																	//At each start of AC cycle, refresh the trigger position
+					TH0 =(65536-ACCounterWidth)/256;								//reset  timer0
+					TL0 = (65536-ACCounterWidth)%256;
+					TR0 =1;			
+					ET0 =1;			 
+					  AcFallingEdgeDetect=1;
+					AcPhase=0;
+       
+           DelayTimer++;
+				
 }
 
 
@@ -185,9 +125,9 @@ void tm0() interrupt 1 using 1
 *********************************************************************************************/
 			
 			
-		if (AcRisingEdgeDetect==1) 
+		if (AcFallingEdgeDetect==1) 
 			{
-				AcRisingEdgeDetect=0;
+				AcFallingEdgeDetect=0;
 				
 				AcPeriodCount=(AcDuration+AcPeriodCount)>>1 ;    
 				AcDuration=1;
@@ -196,7 +136,7 @@ void tm0() interrupt 1 using 1
 			
 		if (H1RisingEdgeDetect==1) 
 			{
-				H1Phase=0;
+			
 				H1RisingEdgeDetect=0;
 				H1PeriodCount=(H1PeriodCount+H1Duration)>>1  ;
 				

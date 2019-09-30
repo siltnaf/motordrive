@@ -21,7 +21,7 @@
 
 
 volatile uint16 xdata DelayTimer;
-volatile uint16 xdata DelayTimer2;
+
 volatile uint8 xdata direction;
 volatile uint16 xdata rpm;
 volatile uint16 xdata new_rpm;
@@ -34,10 +34,10 @@ volatile uint16 xdata temp;
 //***********construct AC waveform***********************//
 
 volatile uint8 xdata AcActual;
-volatile uint8  xdata AcEdgeDetect;
+volatile uint8  xdata AcPrev;
 volatile uint8 	xdata AcRebuild;
 volatile uint8 	xdata AcIncFlag;
-volatile uint8 	xdata AcRisingEdgeDetect;
+volatile uint8 	xdata AcEdgeDetect;
 volatile uint8 	xdata AcPeriodCount;
 volatile uint8 	xdata AcDuration;
 volatile uint16 xdata AcPhaseInc; 
@@ -63,6 +63,8 @@ volatile uint16 xdata H1FireAngle;
 
 volatile uint8 xdata H2Rebuild;
 volatile uint16 xdata H2FireAngle;
+volatile uint8 	xdata H2RisingEdgeDetect;
+volatile uint16 xdata H2Phase;
  
 //************trigger Triac***********************// 
 
@@ -78,7 +80,8 @@ volatile uint8 xdata Triac2Ticker;
 
 volatile uint16 xdata TargetFireAngle;
 volatile uint16 xdata SynMaxFireAngle;
-
+volatile uint16 xdata SteadyFireAngle_cw;
+volatile uint16 xdata SteadyFireAngle_ccw;
 
 volatile uint16 xdata TargetPeriodCount;
 
@@ -90,18 +93,25 @@ volatile uint8 xdata PrioritySwitch;
 
 //**********max speed steady control************//
 
-volatile int16 xdata H1PhaseFallEdge;
 volatile int16 xdata H1PhaseRiseEdge;
-volatile int16 xdata H2PhaseFallEdge;
+volatile int16 xdata H2PhaseRiseEdge;
 
+volatile uint16 xdata TargetAcHall;
 volatile uint16 xdata TargetAcH1;
+volatile uint16 xdata TargetAcH2;
+
+
+
 
 volatile uint8 xdata MaxSpeedFlag;
+volatile uint8 xdata LooseSpeedFlag;
+volatile uint8 xdata OverSpeedFlag;
+volatile uint8 xdata ConvergeSpeed;
 volatile int16 xdata PID_Error; 
 volatile uint8 xdata UpdateAcH1_cw;
 volatile uint8 xdata UpdateAcH1_ccw;
-volatile uint16 xdata SteadyAcH1_cw;
-volatile uint16 xdata SteadyAcH1_ccw;
+volatile uint16 xdata SteadyAcH1;
+volatile uint16 xdata SteadyAcH2;
 volatile uint8 xdata SynFlag;
 
 
@@ -169,35 +179,44 @@ switch (current_state)
 											H2FireAngle=TargetFireAngle;	
 											break;
 	
-	case NormalRun:			if(DelayTimer >=Time2)
+	case NormalRun:			
+		
+										if(DelayTimer >=Time2)
 											{	    
 												if ((MaxSpeedFlag==1) && (new_rpm==max_rpm))   //reach max speed 
 													{
 										 
 														PID_Error=RESET;
-														if (direction==cw)      //phase difference between Ac rising edge and H1 falling edge should be less than half AC cycle
+														ConvergeSpeed=10;
+														if ((direction==cw)&&(Fire2Reg==0))      //phase difference between Ac rising edge and H1 falling edge should be less than half AC cycle
 															{
-																if ((UpdateAcH1_cw==0) && (H1PhaseRiseEdge<AcHalfPhase))
+																if (UpdateAcH1_cw==0) 
 																		{	
-																
-																			next_state=FindSteadyPoint;
-																
+															        
+																		 
+																			TargetAcHall=H1PhaseRiseEdge;
+																			next_state= FindSteadyPoint;
+																			 
 																		}
 																else
 																		{
+																			  TargetAcHall=TargetAcH1;
 																				SynFlag=0;	
 																				next_state=SynMax;
 																		}
-															}
-															else
+																}
+															if ((direction==ccw)&&(Fire1Reg==0)) 
 																{
 																	if ((UpdateAcH1_ccw==0))      //phase difference between Ac rising edge and H1 falling edge should be less than half AC cycle
 																		{	
-																				TargetAcH1=InitAcH1Phase+(AcHalfPhase>>1);
+																			
+																		
+																				TargetAcHall=H2PhaseRiseEdge;
 																				next_state=FindSteadyPoint;
 																		}
 																	else
 																		{
+																			TargetAcHall=TargetAcH2;
 																			SynFlag=0;
 																			next_state=SynMax;
 																		}
@@ -206,101 +225,130 @@ switch (current_state)
 														}
 														else DelayTimer=0;
 													}
-																				
-										  Find_TargetFireAngle();
+
+													
+											Find_TargetFireAngle();		
 											H1FireAngle=TargetFireAngle;	
 											H2FireAngle=TargetFireAngle;	
 											break;
 	
-	case FindSteadyPoint:								
-										
+	case FindSteadyPoint:			
+													
+														
+													lock_TargetAcH1();
 											
 														
-													if ((Fire2Reg==1)&&(direction==cw))
-																	{
-																		
-																		
-																		UpdateAcH1_cw=1;	
-																		DelayTimer=0;		//start timer count													
-																		SynFlag=0;			
-																		TargetFireAngle+=MarginAcH1 ;
-																		SteadyAcH1_cw=0;
-																		next_state=FindAcHallPhase;
-																	}
-																	else 
-																	{
-																		if(MaxSpeedFlag==1)
+													if((PID_Error<=1)&&(PID_Error>=0))
+													{
+														TargetAcHall+=ConvergeSpeed;
+														PID_Error=RESET;
+													}
+													
+												
+													if  ((LooseSpeedFlag==1)&&(direction==cw))
+																	
 																		{
-																				
-  		 
-																			TargetFireAngle-=ReduceSpeed;
-																		}
-																	}
-								 
+																	 
+																		SteadyFireAngle_cw=TargetFireAngle+MarginFireAngle;
+																		TargetAcH1=TargetAcHall-MarginAcHall  ;
+																		UpdateAcH1_cw=1;
+																		DelayTimer=0;															
+																		SynFlag=0;
+																		next_state=LoadAcHallPhase;
+																			}
+													if  ((LooseSpeedFlag==1)&&(direction==ccw))
+																	
+																		{
+																	 
+																		SteadyFireAngle_ccw=TargetFireAngle+MarginFireAngle;
+																		TargetAcH2=TargetAcHall-MarginAcHall  ;
+																		UpdateAcH1_ccw=1;
+																		DelayTimer=0;															
+																		SynFlag=0;
+																		next_state=LoadAcHallPhase;
+																			}				
+																			
+																			
+																 
+										  
+																	
 											H1FireAngle=TargetFireAngle;
 											H2FireAngle=TargetFireAngle;
 												
 											break;
 					
-case FindAcHallPhase:					
-											
-										
-											if ((DelayTimer<Time10)&&(DelayTimer>Time5))
-													{
-													  if (H1PhaseRiseEdge>SteadyAcH1_cw)
-														SteadyAcH1_cw=(H1PhaseRiseEdge+SteadyAcH1_cw)>>1;
-//													
-													}
+case LoadAcHallPhase:					
+											if (H1PeriodCount<AcPeriodCount) TargetFireAngle-=10;			
+											 
+											if (DelayTimer<Time2)
+											{
+													
+												if (direction==cw)	
+												{
+													TargetFireAngle=SteadyFireAngle_cw;
+													 
+												}
 													else 
-														if (DelayTimer>Time10)
+													{
+														TargetFireAngle=SteadyFireAngle_ccw;
+													 
+													}
+												
+							
+											}
+													else 
+													{
+													 if (DelayTimer<Time5) 
+													 {
+														 if (LooseSpeedFlag==1)
+														 {
+															 DelayTimer=0;
+															 TargetAcHall-=MarginAcHall;
+															 ConvergeSpeed=1;
+																next_state=FindSteadyPoint;
+														 }
+													 	lock_TargetAcH1();
+													 }
+													  else 
 														{
-//													
 															DelayTimer=0;
-															DelayTimer2=0;
 															next_state=SynMax;
+															 
+															
+																	
+																
 														}
+												 }
 											H1FireAngle=TargetFireAngle;
 											H2FireAngle=TargetFireAngle;
 											break;
 	case SynMax:			  
 											  
-											if (direction==cw)	TargetAcH1=SteadyAcH1_cw;else TargetAcH1=SteadyAcH1_ccw;  
-											
-//											if ((MaxSpeedFlag==0)&&(SynFlag==1))
-//												{		 
-//													
-//													if (DelayTimer2>Time3)  
-//													{				
-//														if (direction==cw) UpdateAcH1_cw=0;		
-//																else UpdateAcH1_ccw=0;								//if loss speed in 3 sec, jump to normal run            
-//														next_state=NormalRun; 
-//													}
-//												}
-//												else
-//												{
-//													Find_TargetFireAngle();
-//													DelayTimer=0;
-//													DelayTimer2=0;          //reset timer2  
-//													if (MaxSpeedFlag==1) SynFlag=1;
-//												
-//												}													
+										
+									 
+												
+	
+											if ((MaxSpeedFlag==0)&&(SynFlag==1))
+												{		 
+													
+													if (DelayTimer>Time3)  
+													{				
+														if (direction==cw) UpdateAcH1_cw=0;		
+																else UpdateAcH1_ccw=0;								//if loss speed in 3 sec, jump to normal run            
+														next_state=NormalRun; 
+													}
+												}
+												else
+												{
+													
+													DelayTimer=0;
+																													//reset timer2  
+													if (MaxSpeedFlag==1) SynFlag=1;
+												
+												}													
 										  
 										
-									
-//											
-													if ((Fire2Reg==1)&&(direction==cw))
-													{
-														SteadyAcH1_cw--;
-																DelayTimer=0;		
-													}											//reset timer and start lock phase
-													if (DelayTimer<Time5)
-															lock_TargetAcH1();
-													else 
-													{
-														SynFlag=1;
-														DelayTimer2=0;									//stop timer keep current TargetFireAngle
-														DelayTimer=Time5;
-													}
+							
 										
 											
 											H1FireAngle=TargetFireAngle;
@@ -315,9 +363,8 @@ case FindAcHallPhase:
 
 current_state=next_state;
 
-//current_state= KickStart;
 
-
+//current_state=KickStart;
 
 }
 
@@ -338,13 +385,13 @@ void main()
 		while(1)
 		{	
 //		Check_Uart();
-			
+			 
 		Rebuild_Waveform();		
 		Check_Speed();	
 	if (AcEdgeDetect==1){	State_Assign();AcEdgeDetect=0;}
 		Check_Error();
 		if ((current_state!=SystemOff)&&(FireZone==1)) Run_Motor();
-		if (H2_PIN==1) P55=1; else P55=0;                                      			
+ 		if (AcRebuild==1) P55=1; else P55=0;                                      			
 		}
 
    	

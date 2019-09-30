@@ -16,10 +16,11 @@
 #define	InitFireAngle				 		(8000)
 #define StartFireAngle				 	(10000)
 #define MaxFireAngle            (30000)        //max value is 32700-deadzone
+#define MarginFireAngle         (1000)
 
-
-#define InitAcH1Phase       		(8000)    //10012 <=> 55 degree between AC falling edge and HALL falling 
-#define MarginAcH1              (500)
+#define InitAcH1Phase       		(10000)    //10012 <=> 55 degree between AC falling edge and HALL falling 
+#define InitAcH2Phase       		(40000)
+#define MarginAcHall              (500)
 #define RESET										(1000)
 
 
@@ -30,23 +31,24 @@
 #define No_Fire_Zone4            (AcFullPhase-No_Fire_Zone)
 
 
-#define Time0                 (50)				//0.5s
-#define Time1									(100)				//1s
-#define Time2									(200)				//2s
-#define Time3									(300)				//3s
-#define Time5                 (500)       //5s
-#define Time10								(1000)
+#define Time0                 (25)				//0.5s
+#define Time1									(50)				//1s
+#define Time2									(100)				//2s
+#define Time3									(150)				//3s
+#define Time5                 (250)       //5s
+#define Time10								(500)
 
-#define Ac_sign									(0)       //Ac-sign=0 ,AC signal is reverse
 
+#define Ac_pos									(1)
+#define Ac_neg									(0)
 
 #define MaxTriggerPulse						(10)
 #define ON                        (1)
 #define OFF                       (0)
 
-#define H2_PIN                 		(P36)
+#define H2_PIN                 		(P32)
 #define H1_PIN                  	(P33)
-#define AC_PIN               			(P32)
+#define AC_PIN               			(P36)
 #define TRIAC2_PIN                (P22)
 #define TRIAC1_PIN                (P21)
 #define TEST_PA2_PIN6             (P55)
@@ -62,11 +64,11 @@
 #define	SystemOn									0
 #define SystemOff									1
 #define Standby										2
-#define NormalRun									3
-#define	KickStart									4
-#define	SynMax										5
-#define FindSteadyPoint						6
-#define FindAcHallPhase						7
+#define	KickStart									3
+#define NormalRun									4
+#define FindSteadyPoint						5
+#define LoadAcHallPhase						6
+#define	SynMax										7
 
 //FireSeq
 
@@ -77,7 +79,6 @@
 
 
 #define max_rpm                3000
-#define ReduceSpeed              1
 
 
 

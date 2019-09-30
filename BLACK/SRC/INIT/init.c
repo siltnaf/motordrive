@@ -165,10 +165,10 @@ void InitParameter(void)
 	Triac2_Reset();
 	AcIncFlag=0;
   current_state=Standby;
-	direction=cw;               //write direction =ccw or cw, control the rotation direction
+	direction=ccw;               //write direction =ccw or cw, control the rotation direction
 	AcPhase = 0;
 	PID_Error = 0;
-	TargetAcH1=InitAcH1Phase;
+	TargetAcHall=InitAcH1Phase;
 	UpdateAcH1_ccw=0;
 	UpdateAcH1_cw=0;
 	Check_Speed();
