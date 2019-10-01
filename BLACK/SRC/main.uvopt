@@ -122,7 +122,7 @@
         <SetRegEntry>
           <Number>0</Number>
           <Key>STCMON51</Key>
-          <Name>-S6 -B115200 -O0 -U0</Name>
+          <Name>-S9 -B115200 -O0 -U0</Name>
         </SetRegEntry>
         <SetRegEntry>
           <Number>0</Number>
@@ -135,42 +135,27 @@
         <Ww>
           <count>0</count>
           <WinNumber>1</WinNumber>
-          <ItemText>H1PhaseFallEdge</ItemText>
+          <ItemText>PID_Error</ItemText>
         </Ww>
         <Ww>
           <count>1</count>
           <WinNumber>1</WinNumber>
-          <ItemText>AcHalfPhase</ItemText>
+          <ItemText>TargetFireAngle</ItemText>
         </Ww>
         <Ww>
           <count>2</count>
           <WinNumber>1</WinNumber>
-          <ItemText>PID_Error</ItemText>
+          <ItemText>MaxSpeedFlag</ItemText>
         </Ww>
         <Ww>
           <count>3</count>
           <WinNumber>1</WinNumber>
-          <ItemText>TargetFireAngle</ItemText>
+          <ItemText>SpeedMatchCount</ItemText>
         </Ww>
         <Ww>
           <count>4</count>
           <WinNumber>1</WinNumber>
-          <ItemText>MaxSpeedFlag</ItemText>
-        </Ww>
-        <Ww>
-          <count>5</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>TargetAcHall</ItemText>
-        </Ww>
-        <Ww>
-          <count>6</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>H2PhaseRiseEdge</ItemText>
-        </Ww>
-        <Ww>
-          <count>7</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>MaxSpeedFlag</ItemText>
+          <ItemText>UpdateSpeedFlag</ItemText>
         </Ww>
       </WatchWindow1>
       <WatchWindow2>
@@ -198,6 +183,16 @@
           <count>4</count>
           <WinNumber>2</WinNumber>
           <ItemText>DelayCount</ItemText>
+        </Ww>
+        <Ww>
+          <count>5</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>LooseSpeedFlag</ItemText>
+        </Ww>
+        <Ww>
+          <count>6</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>H1Duration</ItemText>
         </Ww>
       </WatchWindow2>
       <MemoryWindow1>

@@ -155,9 +155,7 @@ void tm0() interrupt 1 using 1
 ;
 **************************************************************************************************/			
 				H1Duration++;
-				if (H1Duration==100)  H1PhaseInc=65535/H1PeriodCount;
-				if (H1Duration==200)  H1FullPhase=(H1PhaseInc*H1PeriodCount);
-				if (H1Duration==300)  H1HalfPhase=H1FullPhase>>1;
+
 			}
 	
 	

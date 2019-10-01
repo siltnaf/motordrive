@@ -167,6 +167,17 @@ void Find_TargetFireAngle()
 						TargetFireAngle=MaxFireAngle;
 				if (TargetFireAngle<No_Fire_Zone)
 						TargetFireAngle=No_Fire_Zone;
+				
+				 
+			
+				if (diff<5) LockSpeedFlag=1;
+								else LockSpeedFlag=0;
+			
+				if (TargetFireAngle>MaxFireAngle)
+						TargetFireAngle=MaxFireAngle;
+				if (TargetFireAngle<No_Fire_Zone)
+						TargetFireAngle=No_Fire_Zone;
+				
 			
 			
 }
@@ -204,6 +215,10 @@ static unsigned char Zone2_Flag;
 							AcRebuild=Ac_pos;else  AcRebuild=Ac_neg;
 	if (AcPrev!=AcRebuild) 
 			{
+				H1PhaseInc=65535/H1PeriodCount;
+				 H1FullPhase=(H1PhaseInc*H1PeriodCount);
+				 H1HalfPhase=H1FullPhase>>1;
+				
 				AcEdgeDetect=1;
 				AcPrev=AcRebuild;
 				FireSeq=refresh;	                 //AC edge detect

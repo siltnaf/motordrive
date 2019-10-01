@@ -151,6 +151,7 @@ extern volatile uint8 xdata Triac1Ticker;
 extern volatile uint8 xdata Triac2Ticker;
 
 extern volatile uint16 xdata TargetFireAngle;
+extern volatile uint16 xdata AverageFireAngle;
 extern volatile uint16 xdata SteadyFireAngle_cw;
 extern volatile uint16 xdata SteadyFireAngle_ccw;
 
@@ -183,6 +184,11 @@ extern volatile uint8 xdata UpdateAcH1_cw;
 extern volatile uint8 xdata UpdateAcH1_ccw;
 extern volatile uint8 xdata MaxSpeedFlag;
 extern volatile uint8 xdata OverSpeedFlag;
+extern volatile uint8 xdata UpdateSpeedFlag;
+extern volatile uint8 xdata LockSpeedFlag;
+extern volatile uint8 xdata SpeedMatchCount;
+
+
 extern volatile uint8 xdata ConvergeSpeed;
 extern volatile uint8 xdata LooseSpeedFlag;
 extern volatile int16 xdata PID_Error; 

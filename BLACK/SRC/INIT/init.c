@@ -159,16 +159,20 @@ void InitParameter(void)
 	new_rpm=0;
 	H1Phase=0;
   DelayTimer=0;
+	AverageFireAngle=InitFireAngle;
 	H1FireAngle=InitFireAngle;
 	H2FireAngle=InitFireAngle;
 	Triac1_Reset();
 	Triac2_Reset();
 	AcIncFlag=0;
   current_state=Standby;
-	direction=ccw;               //write direction =ccw or cw, control the rotation direction
+	direction=cw;               //write direction =ccw or cw, control the rotation direction
 	AcPhase = 0;
 	PID_Error = 0;
 	TargetAcHall=InitAcH1Phase;
+	UpdateSpeedFlag=1;
+	SpeedMatchCount=0;
+	LockSpeedFlag=0;
 	UpdateAcH1_ccw=0;
 	UpdateAcH1_cw=0;
 	Check_Speed();

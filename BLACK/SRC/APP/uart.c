@@ -123,12 +123,14 @@ static uint16 tmp_rpm;
 						{
 							UartSendStr("Current direction is clockwise\n\r");
 							direction=cw;
+							UpdateSpeedFlag=1;
 							if (current_state!=SystemOff) current_state=Standby;
 						}
 				if	(StrComp(UartData,Str_ccw)==1)
 						{
 							UartSendStr("Current direction is anti-clockwise\n\r");
 							direction=ccw; 
+							UpdateSpeedFlag=1;
 							if (current_state!=SystemOff) current_state=Standby;
 						}
 		
@@ -141,7 +143,8 @@ static uint16 tmp_rpm;
 									if ((tmp_rpm>0)&&(tmp_rpm<=3000))
 										{
 											new_rpm=tmp_rpm;
-											current_state=Standby;
+											UpdateSpeedFlag=1;
+											if (current_state!=NormalRun) current_state=Standby;
 										}
 										else 
 											{
@@ -149,6 +152,11 @@ static uint16 tmp_rpm;
 											MaxSpeedFlag=0;
 											current_state=SystemOff;
 											}
+										 if  (new_rpm==max_rpm)
+										{
+											current_state=Standby;
+											UpdateSpeedFlag=1;
+										}
 									UartRecIntFlag=0;
 						}
 		

@@ -79,6 +79,7 @@ volatile uint8 xdata Triac1Ticker;
 volatile uint8 xdata Triac2Ticker;
 
 volatile uint16 xdata TargetFireAngle;
+volatile uint16 xdata AverageFireAngle;
 volatile uint16 xdata SynMaxFireAngle;
 volatile uint16 xdata SteadyFireAngle_cw;
 volatile uint16 xdata SteadyFireAngle_ccw;
@@ -106,7 +107,12 @@ volatile uint16 xdata TargetAcH2;
 volatile uint8 xdata MaxSpeedFlag;
 volatile uint8 xdata LooseSpeedFlag;
 volatile uint8 xdata OverSpeedFlag;
+volatile uint8 xdata UpdateSpeedFlag;
+volatile uint8 xdata LockSpeedFlag;
+volatile uint8 xdata SpeedMatchCount;
+
 volatile uint8 xdata ConvergeSpeed;
+
 volatile int16 xdata PID_Error; 
 volatile uint8 xdata UpdateAcH1_cw;
 volatile uint8 xdata UpdateAcH1_ccw;
@@ -185,7 +191,7 @@ switch (current_state)
 											{	    
 												if ((MaxSpeedFlag==1) && (new_rpm==max_rpm))   //reach max speed 
 													{
-										 
+													  DelayTimer=0;
 														PID_Error=RESET;
 														ConvergeSpeed=10;
 														if ((direction==cw)&&(Fire2Reg==0))      //phase difference between Ac rising edge and H1 falling edge should be less than half AC cycle
@@ -193,7 +199,7 @@ switch (current_state)
 																if (UpdateAcH1_cw==0) 
 																		{	
 															        
-																		 
+																		
 																			TargetAcHall=H1PhaseRiseEdge;
 																			next_state= FindSteadyPoint;
 																			 
@@ -202,6 +208,7 @@ switch (current_state)
 																		{
 																			  TargetAcHall=TargetAcH1;
 																				SynFlag=0;	
+																			
 																				next_state=SynMax;
 																		}
 																}
@@ -218,6 +225,7 @@ switch (current_state)
 																		{
 																			TargetAcHall=TargetAcH2;
 																			SynFlag=0;
+																			
 																			next_state=SynMax;
 																		}
 												
@@ -226,23 +234,67 @@ switch (current_state)
 														else DelayTimer=0;
 													}
 
+													if ((DelayTimer>Time0)&&(UpdateSpeedFlag==1))	
+													{
+														
+														Find_TargetFireAngle();
+														
+														if (LockSpeedFlag==1) 
+															{	
+																AverageFireAngle=(AverageFireAngle+TargetFireAngle)>>1;
+																SpeedMatchCount++;
+															}
+														DelayTimer=0;
+													}
+											 
+											  if (SpeedMatchCount>100)
+												{
+														UpdateSpeedFlag=0;
+														SpeedMatchCount=0;
+												}
+												else 
+												{		
+													if ((MaxSpeedFlag==1) && (new_rpm==max_rpm)&&(SpeedMatchCount>10))
+															UpdateSpeedFlag=0;
 													
-											Find_TargetFireAngle();		
+												}
+													
+												if (UpdateSpeedFlag==0)
+														TargetFireAngle=AverageFireAngle;
+												
+													
+											
+														
 											H1FireAngle=TargetFireAngle;	
-											H2FireAngle=TargetFireAngle;	
+											H2FireAngle=TargetFireAngle;			
+														
+														
+														
+														
 											break;
 	
 	case FindSteadyPoint:			
 													
+													
+
+											if  (DelayTimer>Time0) 
+													{
 														
-													lock_TargetAcH1();
+														lock_TargetAcH1();
+														if((PID_Error<=1)&&(PID_Error>=0))
+															{
+																TargetAcHall+=ConvergeSpeed;
+																PID_Error=RESET;
+															}
+														 
+															}
+													else
+														DelayTimer=0;
+													 
+													
 											
 														
-													if((PID_Error<=1)&&(PID_Error>=0))
-													{
-														TargetAcHall+=ConvergeSpeed;
-														PID_Error=RESET;
-													}
+											
 													
 												
 													if  ((LooseSpeedFlag==1)&&(direction==cw))
@@ -376,7 +428,7 @@ void main()
 	
     IO_Init();				   //
 		InitTime0();					//divide 20ms into 200 time interval
-//		InitUart() ;
+		InitUart() ;
 		InitExtInterrupt();
 		InitParameter(); 
     ENABLE_ALL_INTERRUPT();
@@ -384,14 +436,13 @@ void main()
 
 		while(1)
 		{	
-//		Check_Uart();
-			 
-		Rebuild_Waveform();		
+		Check_Uart();
+			 		Rebuild_Waveform();		
 		Check_Speed();	
 	if (AcEdgeDetect==1){	State_Assign();AcEdgeDetect=0;}
 		Check_Error();
 		if ((current_state!=SystemOff)&&(FireZone==1)) Run_Motor();
- 		if (AcRebuild==1) P55=1; else P55=0;                                      			
+ 		if (UpdateSpeedFlag==1) P55=0; else P55=1;                                      			
 		}
 
    	
