@@ -144,10 +144,15 @@ void Find_TargetFireAngle()
 {
 	volatile uint16 xdata diff;
 				
+ 
 				if (H1PeriodCount<=TargetPeriodCount)
 					{ 
 						diff =TargetPeriodCount-H1PeriodCount;
-						if (diff>50) diff=diff>>1;else diff=diff>>4;
+						if (diff>50) diff=diff>>1;
+							else 
+							{
+								if (new_rpm!=max_rpm) diff=diff>>4;
+							}
  						 TargetFireAngle -=diff;
 						
 						  
@@ -156,11 +161,17 @@ void Find_TargetFireAngle()
 					{
 						
 						diff =H1PeriodCount-TargetPeriodCount;
-					  if (diff>50) diff =diff>>1;else diff=diff>>4;
+					  if (diff>50) diff =diff>>1;
+								else
+								{
+									if (new_rpm!=max_rpm) diff=diff>>4;
+								}
  						 TargetFireAngle+=diff ;
 						
 						 		
 					}
+			 
+			 
 			
 			
 				if (TargetFireAngle>MaxFireAngle)

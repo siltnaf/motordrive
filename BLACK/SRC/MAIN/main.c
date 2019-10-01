@@ -277,8 +277,6 @@ switch (current_state)
 													
 													
 
-											if  (DelayTimer>Time0) 
-													{
 														
 														lock_TargetAcH1();
 														if((PID_Error<=1)&&(PID_Error>=0))
@@ -287,7 +285,7 @@ switch (current_state)
 																PID_Error=RESET;
 															}
 														 
-															}
+														
 													else
 														DelayTimer=0;
 													 
@@ -428,7 +426,7 @@ void main()
 	
     IO_Init();				   //
 		InitTime0();					//divide 20ms into 200 time interval
-		InitUart() ;
+//		InitUart() ;
 		InitExtInterrupt();
 		InitParameter(); 
     ENABLE_ALL_INTERRUPT();
@@ -436,7 +434,7 @@ void main()
 
 		while(1)
 		{	
-		Check_Uart();
+//		Check_Uart();
 			 		Rebuild_Waveform();		
 		Check_Speed();	
 	if (AcEdgeDetect==1){	State_Assign();AcEdgeDetect=0;}
