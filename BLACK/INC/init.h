@@ -16,12 +16,13 @@
 #define	InitFireAngle				 		(8000)
 #define StartFireAngle				 	(10000)
 #define MaxFireAngle            (30000)        //max value is 32700-deadzone
-#define MarginFireAngle         (1000)
+#define MarginFireAngle         (500)
 
 #define InitAcH1Phase       		(10000)    //10012 <=> 55 degree between AC falling edge and HALL falling 
 #define InitAcH2Phase       		(40000)
 #define MarginAcHall              (500)
 #define RESET										(1000)
+#define buffer                   (3000)
 
 
 #define No_Fire_Zone           	(2000)         //dead zone 
@@ -66,9 +67,10 @@
 #define Standby										2
 #define	KickStart									3
 #define NormalRun									4
-#define FindSteadyPoint						5
-#define LoadAcHallPhase						6
-#define	SynMax										7
+#define FindSigma									5
+#define FindSteadyPoint						6
+#define LoadAcHallPhase						7
+#define	SynMax										8
 
 //FireSeq
 

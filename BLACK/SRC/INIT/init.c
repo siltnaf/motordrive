@@ -173,8 +173,9 @@ void InitParameter(void)
 	UpdateSpeedFlag=1;
 	SpeedMatchCount=0;
 	LockSpeedFlag=0;
-	UpdateAcH1_ccw=0;
+	UpdateAcH2_ccw=0;
 	UpdateAcH1_cw=0;
+	sigma=0;
 	Check_Speed();
 	new_rpm=3000;
 }

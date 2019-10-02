@@ -167,6 +167,8 @@ extern volatile uint8 xdata PrioritySwitch;
 //**********max speed steady control************//
 
 
+extern volatile int16 xdata test_sigma;
+extern volatile int16 xdata sigma;
 
 extern volatile int16 xdata H1PhaseRiseEdge;
 extern volatile int16 xdata H2PhaseRiseEdge;
@@ -181,7 +183,7 @@ extern volatile uint16 xdata SteadyAcH2;
 extern volatile uint8 xdata SynFlag;
 
 extern volatile uint8 xdata UpdateAcH1_cw;
-extern volatile uint8 xdata UpdateAcH1_ccw;
+extern volatile uint8 xdata UpdateAcH2_ccw;
 extern volatile uint8 xdata MaxSpeedFlag;
 extern volatile uint8 xdata OverSpeedFlag;
 extern volatile uint8 xdata UpdateSpeedFlag;

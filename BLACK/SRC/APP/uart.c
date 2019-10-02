@@ -8,6 +8,7 @@ const char Str_cw[3]={'c','w','\0'};
 const char Str_ccw[4]={'c','c','w','\0'};
 const char Str_on[3]={'o','n','\0'};
 //const char Str_state[6]={'s','t','a','t','e','\0'};
+const char Str_reset[6]={'r','e','s','e','t','\0'};
 
 volatile uint8 store_state;       
 
@@ -104,7 +105,15 @@ static uint16 tmp_rpm;
 			{
 			
 				UartRecFlag=0;	
-				  
+				  	  
+				if	(StrComp(UartData,Str_reset)==1)
+						{
+							UartSendStr("Current Status is reset\n\r");
+							UpdateSpeedFlag=1;
+							UpdateAcH1_cw=0;
+							UpdateAcH2_ccw=0;
+					
+						}
 				if	(StrComp(UartData,Str_off)==1)
 						{
 							UartSendStr("Current Status is off\n\r");

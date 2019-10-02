@@ -27,7 +27,7 @@ volatile uint16 xdata rpm;
 volatile uint16 xdata new_rpm;
 volatile uint8 xdata current_state;
 volatile uint8 xdata next_state;
-
+volatile uint8 xdata Count;
 volatile uint16 xdata temp;	
 
 
@@ -102,7 +102,8 @@ volatile uint16 xdata TargetAcH1;
 volatile uint16 xdata TargetAcH2;
 
 
-
+volatile int16 xdata test_sigma;
+volatile int16 xdata sigma;
 
 volatile uint8 xdata MaxSpeedFlag;
 volatile uint8 xdata LooseSpeedFlag;
@@ -115,7 +116,7 @@ volatile uint8 xdata ConvergeSpeed;
 
 volatile int16 xdata PID_Error; 
 volatile uint8 xdata UpdateAcH1_cw;
-volatile uint8 xdata UpdateAcH1_ccw;
+volatile uint8 xdata UpdateAcH2_ccw;
 volatile uint16 xdata SteadyAcH1;
 volatile uint16 xdata SteadyAcH2;
 volatile uint8 xdata SynFlag;
@@ -180,52 +181,46 @@ switch (current_state)
 									     DelayTimer=0;                 
 											next_state=NormalRun;
 											}
+									
 											TargetFireAngle=StartFireAngle;
 											H1FireAngle=TargetFireAngle;
 											H2FireAngle=TargetFireAngle;	
 											break;
 	
 	case NormalRun:			
-		
-										if(DelayTimer >=Time2)
+
+										if(DelayTimer >=Time1)
 											{	    
 												if ((MaxSpeedFlag==1) && (new_rpm==max_rpm))   //reach max speed 
 													{
-													  DelayTimer=0;
-														PID_Error=RESET;
-														ConvergeSpeed=10;
-														if ((direction==cw)&&(Fire2Reg==0))      //phase difference between Ac rising edge and H1 falling edge should be less than half AC cycle
+  
+														if ((direction==cw)&&(Fire2Reg==0))      //if UpdateAcH1_cw=0 or UpdateAcH2_ccw=0 ,it should go through the calibration process to find minimum power
 															{
 																if (UpdateAcH1_cw==0) 
 																		{	
-															        
-																		
-																			TargetAcHall=H1PhaseRiseEdge;
+															        DelayTimer=0;								 
 																			next_state= FindSteadyPoint;
 																			 
 																		}
 																else
 																		{
-																			  TargetAcHall=TargetAcH1;
+																			 DelayTimer=0;		
 																				SynFlag=0;	
-																			
 																				next_state=SynMax;
 																		}
 																}
 															if ((direction==ccw)&&(Fire1Reg==0)) 
 																{
-																	if ((UpdateAcH1_ccw==0))      //phase difference between Ac rising edge and H1 falling edge should be less than half AC cycle
+																	if ((UpdateAcH2_ccw==0))      //phase difference between Ac rising edge and H1 falling edge should be less than half AC cycle
 																		{	
 																			
-																		
-																				TargetAcHall=H2PhaseRiseEdge;
-																				next_state=FindSteadyPoint;
+																		 DelayTimer=0;
+																			next_state= FindSteadyPoint;
 																		}
 																	else
-																		{
-																			TargetAcHall=TargetAcH2;
-																			SynFlag=0;
-																			
+																	{				
+																		 DelayTimer=0;		
+																			SynFlag=0;	
 																			next_state=SynMax;
 																		}
 												
@@ -241,6 +236,7 @@ switch (current_state)
 														
 														if (LockSpeedFlag==1) 
 															{	
+																	
 																AverageFireAngle=(AverageFireAngle+TargetFireAngle)>>1;
 																SpeedMatchCount++;
 															}
@@ -254,7 +250,7 @@ switch (current_state)
 												}
 												else 
 												{		
-													if ((MaxSpeedFlag==1) && (new_rpm==max_rpm)&&(SpeedMatchCount>10))
+													if ((MaxSpeedFlag==1) && (new_rpm==max_rpm)&&(SpeedMatchCount>5))
 															UpdateSpeedFlag=0;
 													
 												}
@@ -273,49 +269,50 @@ switch (current_state)
 														
 											break;
 	
-	case FindSteadyPoint:			
-													
-													
-
-														
-														lock_TargetAcH1();
-														if((PID_Error<=1)&&(PID_Error>=0))
-															{
-																TargetAcHall+=ConvergeSpeed;
-																PID_Error=RESET;
-															}
-														 
-														
-													else
-														DelayTimer=0;
-													 
-													
-											
-														
-											
-													
+	
 												
-													if  ((LooseSpeedFlag==1)&&(direction==cw))
+	case FindSteadyPoint:		
+													
+															
+												if (DelayTimer>Time0)
+												{
+													DelayTimer=0;
+												 
+
+										    if (direction==cw) sigma=(AcHalfPhase-H1PhaseRiseEdge-TargetFireAngle-buffer);
+														else sigma=(AcFullPhase-H2PhaseRiseEdge-TargetFireAngle-buffer);
+												
+													if (sigma>0) 
+													{
+														sigma=sigma>>8;
+														if (MaxSpeedFlag==1) TargetFireAngle-=sigma;
+												
+													 }
+												 }
+
+											
+													if  ((sigma<0)&&(direction==cw))
 																	
 																		{
-																	 
-																		SteadyFireAngle_cw=TargetFireAngle+MarginFireAngle;
-																		TargetAcH1=TargetAcHall-MarginAcHall  ;
+															
+																	TargetFireAngle+=MarginFireAngle;
+																			SteadyFireAngle_cw=TargetFireAngle;
 																		UpdateAcH1_cw=1;
+																		UpdateSpeedFlag=1;
 																		DelayTimer=0;															
 																		SynFlag=0;
-																		next_state=LoadAcHallPhase;
+																		next_state=NormalRun;
 																			}
-													if  ((LooseSpeedFlag==1)&&(direction==ccw))
+													if  ((sigma<0)&&(direction==ccw))
 																	
 																		{
-																	 
-																		SteadyFireAngle_ccw=TargetFireAngle+MarginFireAngle;
-																		TargetAcH2=TargetAcHall-MarginAcHall  ;
-																		UpdateAcH1_ccw=1;
+																	 UpdateSpeedFlag=1;
+																		TargetFireAngle+=MarginFireAngle;
+																		SteadyFireAngle_ccw=TargetFireAngle  ;
+																		UpdateAcH2_ccw=1;
 																		DelayTimer=0;															
 																		SynFlag=0;
-																		next_state=LoadAcHallPhase;
+																		next_state=NormalRun;
 																			}				
 																			
 																			
@@ -327,54 +324,11 @@ switch (current_state)
 												
 											break;
 					
-case LoadAcHallPhase:					
-											if (H1PeriodCount<AcPeriodCount) TargetFireAngle-=10;			
-											 
-											if (DelayTimer<Time2)
-											{
-													
-												if (direction==cw)	
-												{
-													TargetFireAngle=SteadyFireAngle_cw;
-													 
-												}
-													else 
-													{
-														TargetFireAngle=SteadyFireAngle_ccw;
-													 
-													}
-												
-							
-											}
-													else 
-													{
-													 if (DelayTimer<Time5) 
-													 {
-														 if (LooseSpeedFlag==1)
-														 {
-															 DelayTimer=0;
-															 TargetAcHall-=MarginAcHall;
-															 ConvergeSpeed=1;
-																next_state=FindSteadyPoint;
-														 }
-													 	lock_TargetAcH1();
-													 }
-													  else 
-														{
-															DelayTimer=0;
-															next_state=SynMax;
-															 
-															
-																	
-																
-														}
-												 }
-											H1FireAngle=TargetFireAngle;
-											H2FireAngle=TargetFireAngle;
-											break;
+ 
 	case SynMax:			  
 											  
-										
+										if (direction==cw) TargetFireAngle=SteadyFireAngle_cw;
+														else TargetFireAngle=SteadyFireAngle_ccw;
 									 
 												
 	
@@ -384,7 +338,9 @@ case LoadAcHallPhase:
 													if (DelayTimer>Time3)  
 													{				
 														if (direction==cw) UpdateAcH1_cw=0;		
-																else UpdateAcH1_ccw=0;								//if loss speed in 3 sec, jump to normal run            
+																else UpdateAcH2_ccw=0;															//if loss speed in 3 sec, jump to normal run            
+														DelayTimer=0;
+														UpdateSpeedFlag=1;
 														next_state=NormalRun; 
 													}
 												}
@@ -396,10 +352,10 @@ case LoadAcHallPhase:
 													if (MaxSpeedFlag==1) SynFlag=1;
 												
 												}													
-										  
-										
 							
-										
+											sigma= (TargetFireAngle-SteadyFireAngle_cw);
+											TargetFireAngle-=sigma>>8;
+												
 											
 											H1FireAngle=TargetFireAngle;
 											H2FireAngle=TargetFireAngle;
@@ -426,7 +382,7 @@ void main()
 	
     IO_Init();				   //
 		InitTime0();					//divide 20ms into 200 time interval
-//		InitUart() ;
+		InitUart() ;
 		InitExtInterrupt();
 		InitParameter(); 
     ENABLE_ALL_INTERRUPT();
@@ -434,13 +390,13 @@ void main()
 
 		while(1)
 		{	
-//		Check_Uart();
+		Check_Uart();
 			 		Rebuild_Waveform();		
 		Check_Speed();	
 	if (AcEdgeDetect==1){	State_Assign();AcEdgeDetect=0;}
 		Check_Error();
 		if ((current_state!=SystemOff)&&(FireZone==1)) Run_Motor();
- 		if (UpdateSpeedFlag==1) P55=0; else P55=1;                                      			
+ 		if (MaxSpeedFlag==1) P55=0; else P55=1;                                      			
 		}
 
    	

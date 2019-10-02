@@ -62,78 +62,78 @@ void Check_Speed()
  Description: 
 *******************************************************************************/
 
-void lock_TargetAcH1()
-{
-	
-static uint16 xdata HallPhaseRiseEdge;
-			
-				
-				
-// cw direction								
-/************************************************************************
-;   case 1.  
-;   decrement TargetFireAngle (reduce power) if delta is left of Tar
-;			
-;				
-;                            delta
-;                        -->	    <----			
-;                        --> Tar<---
-;                          : :
-;               ---         -------         -------
-;          AC      |       | :     |       |       |
-;                   -------         -------         -----------
-;                            :
-;                              ----x---          ----x
-;         H1                  |        |        |
-;                -------------          ----x--- 
-;			
-;                        --------          --------
-;         H2            |        |        |        |
-;               --------          --------          ------------
-;										
-;        Targetphase is between rising edge of AC and rising edge of H1 
-;	
-;************************************************************************/
-							if (direction ==cw) 
-								{
-									HallPhaseRiseEdge=H1PhaseRiseEdge;
-									 
-								}
-									else 
-									{
-										HallPhaseRiseEdge=H2PhaseRiseEdge;
-								 
-									}
-						
-						
-						
-							PID_Error= HallPhaseRiseEdge-TargetAcHall;
-				
-					     
-								if (PID_Error>0)
-									{
-										PID_Error=PID_Error>>8;
-										TargetFireAngle+=PID_Error;
-									}
-									else 
-									{
-										PID_Error=-PID_Error;
-										PID_Error=PID_Error>>8;
-										TargetFireAngle-=PID_Error;
-									}
-								
-								 	
-			
-			
-	
-			
-			
+//void lock_TargetAcH1()
+//{
+//	
+//static uint16 xdata HallPhaseRiseEdge;
+//			
+//				
+//				
+//// cw direction								
+///************************************************************************
+//;   case 1.  
+//;   decrement TargetFireAngle (reduce power) if delta is left of Tar
+//;			
+//;				
+//;                            delta
+//;                        -->	    <----			
+//;                        --> Tar<---
+//;                          : :
+//;               ---         -------         -------
+//;          AC      |       | :     |       |       |
+//;                   -------         -------         -----------
+//;                            :
+//;                              ----x---          ----x
+//;         H1                  |        |        |
+//;                -------------          ----x--- 
+//;			
+//;                        --------          --------
+//;         H2            |        |        |        |
+//;               --------          --------          ------------
+//;										
+//;        Targetphase is between rising edge of AC and rising edge of H1 
+//;	
+//;************************************************************************/
+//							if (direction ==cw) 
+//								{
+//									HallPhaseRiseEdge=H1PhaseRiseEdge;
+//									 
+//								}
+//									else 
+//									{
+//										HallPhaseRiseEdge=H2PhaseRiseEdge;
+//								 
+//									}
+//						
+//						
+//						
+//							PID_Error= (HallPhaseRiseEdge-TargetAcHall);
+//				
+//					     
+//								if (PID_Error>0)
+//									{
+//										PID_Error=PID_Error>>4;
+//										TargetFireAngle+=PID_Error;
+//									}
+//									else 
+//									{
+//										PID_Error=-PID_Error;
+//										PID_Error=PID_Error>>4;
+//										TargetFireAngle-=PID_Error;
+//									}
+//								
+//								 	
+//			
+//			
+//	
+//			
+//			
 
-			
-			 
-		
-					}
-	 
+//			
+//			 
+//		
+//					}
+//	 
 /***********************************************************************
 ; If speed is below max speed
 ;	control TargetFireAngle so that H1PeriodCount approach the calculated TargetPeriodCount
@@ -151,7 +151,7 @@ void Find_TargetFireAngle()
 						if (diff>50) diff=diff>>1;
 							else 
 							{
-								if (new_rpm!=max_rpm) diff=diff>>4;
+								 diff=diff>>4;
 							}
  						 TargetFireAngle -=diff;
 						
@@ -164,13 +164,14 @@ void Find_TargetFireAngle()
 					  if (diff>50) diff =diff>>1;
 								else
 								{
-									if (new_rpm!=max_rpm) diff=diff>>4;
+								 diff=diff>>4;
 								}
  						 TargetFireAngle+=diff ;
 						
 						 		
 					}
 			 
+					if ((new_rpm==max_rpm)&&(MaxSpeedFlag==0)) TargetFireAngle+=100;
 			 
 			
 			
