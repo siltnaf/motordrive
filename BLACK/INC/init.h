@@ -14,7 +14,7 @@
 //Fire angle is count from falling edge of AC and backwards
 
 #define	InitFireAngle				 		(8000)
-#define StartFireAngle				 	(10000)
+#define StartFireAngle				 	(15000)
 #define MaxFireAngle            (30000)        //max value is 32700-deadzone
 #define MarginFireAngle         (500)
 

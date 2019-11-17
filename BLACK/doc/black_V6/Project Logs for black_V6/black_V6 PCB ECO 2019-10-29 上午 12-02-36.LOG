@@ -1,0 +1,6 @@
+Change Component Designator: OldDesignator=R24 NewDesignator=R2
+Change Component Designator: OldDesignator=R25 NewDesignator=R5
+Change Component Designator: OldDesignator=R27 NewDesignator=R11
+Added Member To Class: ClassName=black_V6 Member=Component R2 200
+Added Member To Class: ClassName=black_V6 Member=Component R5 2k
+Added Member To Class: ClassName=black_V6 Member=Component R11 2k

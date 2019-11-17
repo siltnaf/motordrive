@@ -1,0 +1,24 @@
+Added Component: Designator=J1(J1)
+Add component. Clean all parameters for all variants
+Added Pin To Net: NetName=P27 Pin=J1-1
+Added Pin To Net: NetName=P26 Pin=J1-2
+Added Pin To Net: NetName=P25 Pin=J1-3
+Added Pin To Net: NetName=P24 Pin=J1-4
+Added Pin To Net: NetName=P23 Pin=J1-5
+Added Pin To Net: NetName=P22 Pin=J1-6
+Added Pin To Net: NetName=P21 Pin=J1-7
+Added Pin To Net: NetName=P20 Pin=J1-8
+Added Pin To Net: NetName=A Pin=J1-9
+Added Pin To Net: NetName=B Pin=J1-10
+Added Pin To Net: NetName=P32 Pin=J1-11
+Added Pin To Net: NetName=P33 Pin=J1-12
+Added Pin To Net: NetName=P34 Pin=J1-13
+Added Pin To Net: NetName=P35 Pin=J1-14
+Added Pin To Net: NetName=P36 Pin=J1-15
+Added Pin To Net: NetName=P37 Pin=J1-16
+Added Pin To Net: NetName=P40 Pin=J1-17
+Added Pin To Net: NetName=P41 Pin=J1-18
+Added Pin To Net: NetName=P42 Pin=J1-19
+Added Pin To Net: NetName=P43 Pin=J1-20
+Added Pin To Net: NetName=P54 Pin=J1-21
+Added Member To Class: ClassName=black_V6 Member=Component J1 

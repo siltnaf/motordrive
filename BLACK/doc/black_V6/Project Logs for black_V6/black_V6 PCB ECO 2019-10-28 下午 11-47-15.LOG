@@ -1,0 +1,61 @@
+Removed Pin From Net: NetName=NetP3_4 Pin=R24-1
+Removed Pin From Net: NetName=NetC1_1 Pin=R25-1
+Removed Pin From Net: NetName=NetP3_2 Pin=R25-2
+Removed Pin From Net: NetName=NetP3_1 Pin=R27-1
+Removed Pin From Net: NetName=NetC2_1 Pin=R27-2
+Added Component: Designator=C3(1608[0603])
+Add component. Clean all parameters for all variants
+Add component (AddParameter): Name = "manufacturer"; Value = "Yageo"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "part number"; Value = "CC0603KRX7R9BB103"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "remark"; Value = "C-CAP 10N 50V X7R  0603 K"; VariantName = "[No Variations]"
+Added Component: Designator=C4(1608[0603])
+Add component. Clean all parameters for all variants
+Add component (AddParameter): Name = "manufacturer"; Value = "Yageo"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "part number"; Value = "CC0603KRX7R9BB103"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "remark"; Value = "C-CAP 10N 50V X7R  0603 K"; VariantName = "[No Variations]"
+Added Component: Designator=C5(1608[0603])
+Add component. Clean all parameters for all variants
+Add component (AddParameter): Name = "manufacturer"; Value = "Yageo"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "part number"; Value = "CC0603KRX7R9BB103"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "remark"; Value = "C-CAP 10N 50V X7R  0603 K"; VariantName = "[No Variations]"
+Added Component: Designator=R24(R0603)
+Add component. Clean all parameters for all variants
+Add component (AddParameter): Name = "manufacturer"; Value = "Yageo"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "part number"; Value = "RC0603JR-071KL"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "remark"; Value = "RES-TF 1K  0.1W 0603 5%"; VariantName = "[No Variations]"
+Added Component: Designator=R25(R0603)
+Add component. Clean all parameters for all variants
+Add component (AddParameter): Name = "manufacturer"; Value = "Yageo"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "part number"; Value = "RC0603JR-071KL"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "remark"; Value = "RES-TF 1K  0.1W 0603 5%"; VariantName = "[No Variations]"
+Added Component: Designator=R27(R0603)
+Add component. Clean all parameters for all variants
+Add component (AddParameter): Name = "manufacturer"; Value = "Yageo"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "part number"; Value = "RC0603JR-071KL"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "remark"; Value = "RES-TF 1K  0.1W 0603 5%"; VariantName = "[No Variations]"
+Added Pin To Net: NetName=NetC3_1 Pin=C3-1
+Added Pin To Net: NetName=GND Pin=C3-2
+Added Pin To Net: NetName=NetC4_1 Pin=C4-1
+Added Pin To Net: NetName=GND Pin=C4-2
+Added Pin To Net: NetName=NetC5_1 Pin=C5-1
+Added Pin To Net: NetName=GND Pin=C5-2
+Added Pin To Net: NetName=NetH1_1 Pin=R16-1
+Added Pin To Net: NetName=AC_DET Pin=R16-2
+Added Pin To Net: NetName=NetC21_1 Pin=R24-1
+Added Pin To Net: NetName=NetP3_4 Pin=R24-1
+Added Pin To Net: NetName=5V Pin=R24-2
+Added Pin To Net: NetName=GND Pin=R25-1
+Added Pin To Net: NetName=NetC1_1 Pin=R25-1
+Added Pin To Net: NetName=NetC21_1 Pin=R25-2
+Added Pin To Net: NetName=NetP3_2 Pin=R25-2
+Added Pin To Net: NetName=NetC20_1 Pin=R27-1
+Added Pin To Net: NetName=NetP3_1 Pin=R27-1
+Added Pin To Net: NetName=5V Pin=R27-2
+Added Pin To Net: NetName=NetC2_1 Pin=R27-2
+Added Member To Class: ClassName=black_V6 Member=Component C3 0.1u
+Added Member To Class: ClassName=black_V6 Member=Component C4 0.01u
+Added Member To Class: ClassName=black_V6 Member=Component C5 0.01u
+Added Member To Class: ClassName=black_V6 Member=Component R16 470
+Added Member To Class: ClassName=black_V6 Member=Component R24 200
+Added Member To Class: ClassName=black_V6 Member=Component R25 20k
+Added Member To Class: ClassName=black_V6 Member=Component R27 2k

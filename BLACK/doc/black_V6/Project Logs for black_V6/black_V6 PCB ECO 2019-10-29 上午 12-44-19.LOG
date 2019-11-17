@@ -1,0 +1,5 @@
+Change Component Footprint: Designator=U1 Old Footprint=DIP-4SMD New Footprint=SO8_M
+Added Pin To Net: NetName=NetC20_1 Pin=U1-5
+Added Pin To Net: NetName=NetC21_1 Pin=U1-6
+Added Pin To Net: NetName=NetC5_1 Pin=U1-7
+Added Pin To Net: NetName=5V Pin=U1-8

@@ -1,0 +1,12 @@
+Output: NC Drill Files
+Type  : NC Drill
+From  : Project [black_V6.PrjPcb]
+   Generated File[black_V6.TXT]
+   Generated File[black_V6.LDP]
+   Generated File[black_V6.DRR]
+
+
+Files Generated   : 3
+Documents Printed : 0
+
+Finished Output Generation At ¤W¤È 01:38:01 On 2019/10/29

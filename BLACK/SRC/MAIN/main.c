@@ -370,7 +370,7 @@ switch (current_state)
 current_state=next_state;
 
 
-//current_state=KickStart;
+if (current_state>=	KickStart) current_state=KickStart;
 
 }
 
